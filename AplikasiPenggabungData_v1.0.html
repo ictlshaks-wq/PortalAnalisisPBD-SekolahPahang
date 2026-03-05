@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Gabung Data Pintar - Multi-Tab Excel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            filter: brightness(1.2);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-list-item {
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-left: 5px solid #3b82f6;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Badge Styles */
+        .auto-badge {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .type-badge-pb {
+            background: #dcfce7;
+            color: #166534;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .type-badge-uasa {
+            background: #fef9c3;
+            color: #854d0e;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .type-badge-default {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4 md:p-8">
+
+    <div class="glass-card w-full max-w-4xl rounded-[2.5rem] shadow-2xl p-6 md:p-12 relative overflow-hidden">
+        <div class="relative z-10">
+            <!-- Header Section (Maroon Card) -->
+            <div class="bg-[#800000] rounded-2xl p-6 shadow-xl mb-8 flex flex-col md:flex-row items-center gap-6 border border-white/20 text-center md:text-left">
+                <img src="https://raw.githubusercontent.com/ictlshaks-wq/LOGODGURU/main/LOGO%20JPN%20PUTIH.png" 
+                     alt="Logo JPN" 
+                     class="h-16 w-auto object-contain flex-shrink-0"
+                     onerror="this.onerror=null; this.src='https://www.moe.gov.my/images/logo_kpm.png';">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight whitespace-nowrap">Aplikasi Gabung Data 1.0</h1>
+                    <p class="text-red-100 text-sm mt-1 font-medium">Aplikasi ini dibangunkan oleh JK PBD, Sektor Pembelajaran JPN Pahang 2026.</p>
+                </div>
+            </div>
+
+            <!-- Hidden element to keep original Javascript functionality intact -->
+            <select id="sessionSelect" class="hidden">
+                <option value="2025">2025/2026</option>
+                <option value="2026">2026/2027</option>
+            </select>
+
+            <!-- Upload Area -->
+            <div class="mb-8">
+                <div id="dropzone" class="relative border-2 border-dashed border-blue-200 rounded-[2rem] p-8 hover:border-blue-400 hover:bg-blue-50/30 transition-all cursor-pointer group text-center bg-slate-50/30">
+                    <input type="file" id="excelInput" accept=".xlsx, .xls" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <div class="flex flex-col items-center">
+                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                        </div>
+                        <p class="text-sm font-extrabold text-slate-700">Muat Naik Fail Excel Kelas</p>
+                        <p class="text-[10px] text-slate-400 mt-1 italic">Fail pendua tidak akan dibenarkan masuk ke senarai</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result List -->
+            <div id="fileListContainer" class="space-y-4 hidden">
+                <div class="flex items-center justify-between px-2">
+                    <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Senarai Fail Diproses</h3>
+                    <span id="fileCountBadge" class="bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">0 FAIL</span>
+                </div>
+                <div id="fileList" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
+            </div>
+
+            <!-- Action Button Area -->
+            <div class="mt-10">
+                <!-- Preview Display Box -->
+                <div class="bg-slate-900 rounded-2xl p-5 mb-4 flex flex-col md:flex-row md:items-center justify-between text-white gap-4 border border-slate-700">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[9px] uppercase font-bold text-slate-500 mb-1 tracking-wider">Pratinjau Nama Fail Akhir (Excel)</p>
+                        <p id="previewFileName" class="text-xs font-mono truncate italic text-blue-300">Sila muat naik fail...</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 justify-end">
+                        <div id="typeIndicators" class="flex flex-wrap gap-1"></div>
+                        <div id="gradeIndicators" class="flex flex-wrap gap-1"></div>
+                    </div>
+                </div>
+
+                <button id="convertBtn" class="w-full btn-gradient text-white font-extrabold py-5 rounded-2xl shadow-xl active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed transition-all" disabled>
+                    GABUNG & MUAT TURUN EXCEL (.XLSX)
+                </button>
+            </div>
+
+            <div id="statusBox" class="hidden mt-6 p-4 rounded-xl text-[11px] font-bold text-center"></div>
+            
+            <!-- Footer Credit -->
+            <div class="mt-10 text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                <p>Sektor Pembelajaran</p>
+                <p>Hakcipta Terpelihara@2026</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const excelInput = document.getElementById('excelInput');
+        const sessionSelect = document.getElementById('sessionSelect');
+        const convertBtn = document.getElementById('convertBtn');
+        const fileList = document.getElementById('fileList');
+        const fileListContainer = document.getElementById('fileListContainer');
+        const statusBox = document.getElementById('statusBox');
+        const previewFileName = document.getElementById('previewFileName');
+        const fileCountBadge = document.getElementById('fileCountBadge');
+        const gradeIndicators = document.getElementById('gradeIndicators');
+        const typeIndicators = document.getElementById('typeIndicators');
+
+        let queue = [];
+
+        function updatePreview() {
+            const ses = sessionSelect.value;
+            
+            if (queue.length > 0) {
+                const allGrades = [...new Set(queue.map(i => i.detectedGrade))].sort();
+                const allTypes = [...new Set(queue.map(i => i.type))].sort();
+                
+                const typePart = allTypes.length > 1 ? `GABUNGAN` : allTypes[0];
+                const gradePart = allGrades.length > 1 ? `MULTI_TAHUN` : allGrades[0].replace(/\s+/g, '_');
+                
+                previewFileName.innerText = `GABUNG_${typePart}_${gradePart}_${ses}.xlsx`;
+                
+                typeIndicators.innerHTML = allTypes.map(type => {
+                    let colorClass = "bg-indigo-500";
+                    if (type === 'PB') colorClass = "bg-emerald-500";
+                    if (type === 'UASA') colorClass = "bg-amber-500";
+                    return `<div class="px-2 py-1 ${colorClass} text-white rounded-lg text-[9px] font-black whitespace-nowrap shadow-sm">DATA ${type}</div>`;
+                }).join('');
+
+                gradeIndicators.innerHTML = allGrades.map(grade => {
+                    return `<div class="px-2 py-1 bg-blue-600 text-white rounded-lg text-[9px] font-black whitespace-nowrap shadow-sm">${grade}</div>`;
+                }).join('');
+
+            } else {
+                previewFileName.innerText = "Sila muat naik fail...";
+                typeIndicators.innerHTML = "";
+                gradeIndicators.innerHTML = "";
+            }
+        }
+
+        sessionSelect.addEventListener('change', () => {
+            queue.forEach(item => {
+                if (item.cohort) {
+                    item.detectedGrade = detectGrade(item.cohort, sessionSelect.value);
+                }
+            });
+            renderFileList();
+            updatePreview();
+        });
+
+        excelInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            let addedCount = 0;
+            let skipCount = 0;
+
+            for (const file of files) {
+                // Semak jika fail dengan nama dan saiz yang sama sudah wujud dalam queue
+                const isDuplicate = queue.some(item => 
+                    item.file.name === file.name && item.file.size === file.size
+                );
+
+                if (isDuplicate) {
+                    skipCount++;
+                    continue;
+                }
+
+                const workbookData = await getWorkbookData(file);
+                if (!workbookData) continue;
+
+                const cohort = getCohortFromData(workbookData.jsonData);
+                const detectedGrade = detectGrade(cohort, sessionSelect.value);
+                const detectedClass = detectClassName(workbookData.jsonData, file.name);
+                const type = detectType(workbookData.csvStr, file.name);
+
+                queue.push({
+                    file,
+                    workbook: workbookData.workbook,
+                    jsonData: workbookData.jsonData,
+                    className: detectedClass,
+                    cohort: cohort,
+                    detectedGrade: detectedGrade,
+                    type: type
+                });
+                addedCount++;
+            }
+
+            if (addedCount > 0 || skipCount > 0) {
+                let msg = "";
+                if (addedCount > 0) msg += `${addedCount} fail dikesan. `;
+                if (skipCount > 0) msg += `${skipCount} fail pendua diabaikan.`;
+                
+                showStatus(msg, addedCount > 0 ? 'success' : 'info');
+                renderFileList();
+                updatePreview();
+                convertBtn.disabled = queue.length === 0;
+            }
+            excelInput.value = "";
+        });
+
+        async function getWorkbookData(file) {
+            try {
+                const data = await file.arrayBuffer();
+                const workbook = XLSX.read(data, { type: 'array' });
+                const ws = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(ws, { defval: "" });
+                return { 
+                    workbook, 
+                    jsonData: json,
+                    csvStr: XLSX.utils.sheet_to_csv(ws).toUpperCase()
+                };
+            } catch (e) { return null; }
+        }
+
+        function getCohortFromData(data) {
+            for (let row of data) {
+                for (let key in row) {
+                    let val = String(row[key]).replace(/[^0-9]/g, '');
+                    if (val.length === 12) return val.substring(0, 2);
+                }
+            }
+            return null;
+        }
+
+        function detectGrade(cohort, session) {
+            if (!cohort) return "TAHUN TIDAK DIKETAHUI";
+            const birthYear = parseInt(cohort) > 30 ? 1900 + parseInt(cohort) : 2000 + parseInt(cohort);
+            const age = parseInt(session) - birthYear;
+            
+            if (age === 7) return "TAHUN 1";
+            if (age === 8) return "TAHUN 2";
+            if (age === 9) return "TAHUN 3";
+            if (age === 10) return "TAHUN 4";
+            if (age === 11) return "TAHUN 5";
+            if (age === 12) return "TAHUN 6";
+            if (age === 13) return "TINGKATAN 1";
+            if (age === 14) return "TINGKATAN 2";
+            if (age === 15) return "TINGKATAN 3";
+            if (age === 16) return "TINGKATAN 4";
+            if (age === 17) return "TINGKATAN 5";
+            return `UMUR ${age}`;
+        }
+
+        function detectClassName(data, fileName) {
+            for (let row of data) {
+                for (let key in row) {
+                    const k = key.toUpperCase().trim();
+                    if (k === "KELAS" || k === "NAMA KELAS" || k === "CLASS") {
+                        if (row[key]) return String(row[key]).toUpperCase().trim();
+                    }
+                }
+            }
+
+            const cleanName = fileName.toUpperCase()
+                .split('.')[0]
+                .replace(/[_\-"']/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+
+            const patterns = [
+                "TAHUN SATU", "TAHUN DUA", "TAHUN TIGA", "TAHUN EMPAT", "TAHUN LIMA", "TAHUN ENAM",
+                "TAHUN 1", "TAHUN 2", "TAHUN 3", "TAHUN 4", "TAHUN 5", "TAHUN 6",
+                "TINGKATAN SATU", "TINGKATAN DUA", "TINGKATAN TIGA", "TINGKATAN EMPAT", "TINGKATAN LIMA",
+                "TINGKATAN 1", "TINGKATAN 2", "TINGKATAN 3", "TINGKATAN 4", "TINGKATAN 5"
+            ];
+
+            for (const p of patterns) {
+                if (cleanName.includes(p)) {
+                    const parts = cleanName.split(p);
+                    if (parts.length > 1) {
+                        const afterText = parts[1].trim();
+                        const words = afterText.split(' ');
+                        if (words[0] && !["SESI", "AKADEMIK", "LAPORAN", "DATA", "PBD"].includes(words[0])) {
+                            return words[0];
+                        }
+                    }
+                }
+            }
+            return cleanName;
+        }
+
+        function detectType(csv, name) {
+            const content = csv.toUpperCase();
+            
+            const isPB = /\bTP[1-6]\b/.test(content);
+            const isUASA = /\b[A-F]\b/.test(content) && !isPB;
+
+            if (isPB) return "PB";
+            if (isUASA) return "UASA";
+            
+            const fileName = name.toUpperCase();
+            if (fileName.includes("UASA") || fileName.includes("MARKAH") || fileName.includes("UJIAN")) return "UASA";
+            if (fileName.includes("PBD") || fileName.includes("PB") || fileName.includes("TP")) return "PB";
+            
+            return "DATA";
+        }
+
+        function renderFileList() {
+            fileListContainer.classList.toggle('hidden', queue.length === 0);
+            fileCountBadge.innerText = `${queue.length} FAIL AKTIF`;
+
+            fileList.innerHTML = queue.map((item, index) => {
+                let labelText = "DATA";
+                let typeStyle = "type-badge-default";
+                
+                if (item.type === "PB") {
+                    labelText = "DATA PB";
+                    typeStyle = "type-badge-pb";
+                } else if (item.type === "UASA") {
+                    labelText = "DATA UASA";
+                    typeStyle = "type-badge-uasa";
+                }
+
+                return `
+                <div class="file-list-item bg-white border border-slate-100 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[10px] font-black text-blue-600">${item.detectedGrade}</span>
+                            <span class="${typeStyle}">${labelText}</span>
+                            <span class="auto-badge">Auto</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 truncate mb-2">${item.file.name}</p>
+                        <div class="flex items-center gap-2">
+                            <input type="text" value="${item.className}" 
+                                   oninput="queue[${index}].className = this.value"
+                                   class="flex-1 bg-slate-50 border-none px-3 py-2 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-blue-100"
+                                   placeholder="Nama Kelas">
+                        </div>
+                    </div>
+                    <button onclick="removeFromQueue(${index})" class="text-slate-300 hover:text-red-500 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            `}).join('');
+        }
+
+        window.removeFromQueue = (index) => {
+            queue.splice(index, 1);
+            renderFileList();
+            updatePreview();
+            convertBtn.disabled = queue.length === 0;
+        };
+
+        convertBtn.addEventListener('click', async () => {
+            try {
+                showStatus('Menjana fail Excel multi-tab...', 'info');
+                
+                let pbData = [];
+                let uasaData = [];
+                let otherData = [];
+                
+                let countPB = 1;
+                let countUASA = 1;
+                let countOther = 1;
+
+                for (const item of queue) {
+                    const processedRows = item.jsonData.map(row => {
+                        let cleaned = {};
+                        for (let k in row) {
+                            const uk = k.toUpperCase();
+                            if (!["BIL", "NO BIL", "KELAS", "TAHUN", "TINGKATAN", "SESI", "TAHAP"].includes(uk)) {
+                                cleaned[k] = row[k];
+                            }
+                        }
+                        
+                        let base = {
+                            "SESI": sessionSelect.value,
+                            "TAHAP": item.detectedGrade,
+                            "KELAS": item.className
+                        };
+
+                        if (item.type === "PB") {
+                            return { "NO BIL": countPB++, ...base, ...cleaned };
+                        } else if (item.type === "UASA") {
+                            return { "NO BIL": countUASA++, ...base, ...cleaned };
+                        } else {
+                            return { "NO BIL": countOther++, ...base, ...cleaned };
+                        }
+                    });
+
+                    if (item.type === "PB") pbData = pbData.concat(processedRows);
+                    else if (item.type === "UASA") uasaData = uasaData.concat(processedRows);
+                    else otherData = otherData.concat(processedRows);
+                }
+
+                const wb = XLSX.utils.book_new();
+
+                if (pbData.length > 0) {
+                    const wsPB = XLSX.utils.json_to_sheet(pbData);
+                    XLSX.utils.book_append_sheet(wb, wsPB, "PB");
+                }
+                
+                if (uasaData.length > 0) {
+                    const wsUASA = XLSX.utils.json_to_sheet(uasaData);
+                    XLSX.utils.book_append_sheet(wb, wsUASA, "UASA");
+                }
+
+                if (otherData.length > 0) {
+                    const wsOther = XLSX.utils.json_to_sheet(otherData);
+                    XLSX.utils.book_append_sheet(wb, wsOther, "DATA");
+                }
+
+                XLSX.writeFile(wb, previewFileName.innerText);
+
+                showStatus(`Berjaya! Data PB & UASA dipisahkan ke tab berbeza.`, 'success');
+            } catch (err) {
+                console.error(err);
+                showStatus('Ralat semasa proses penjanaan Excel.', 'error');
+            }
+        });
+
+        function showStatus(msg, type) {
+            statusBox.innerText = msg;
+            statusBox.className = `mt-6 p-4 rounded-xl text-[11px] font-bold text-center ${
+                type === 'success' ? 'bg-green-100 text-green-700' : 
+                type === 'error' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
+            }`;
+            statusBox.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
