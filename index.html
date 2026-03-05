@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Utama - Sistem PBD Pahang 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; margin: 0; overflow: hidden; }
+        .glass-sidebar { background: white; border-right: 1px solid #e2e8f0; box-shadow: 2px 0 10px rgba(0,0,0,0.02); }
+        .nav-button { transition: all 0.2s ease-in-out; }
+        .nav-button.active { background-color: #eff6ff; color: #1d4ed8; border-right: 4px solid #1d4ed8; font-weight: 700; }
+        
+        /* Loading animation untuk pertukaran iframe */
+        #loader { transition: opacity 0.3s ease; }
+        .hidden-loader { opacity: 0; pointer-events: none; }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside id="sidebar" class="w-full md:w-64 glass-sidebar flex flex-col z-20 flex-shrink-0 relative transition-all duration-300">
+        <!-- Logo & Header -->
+        <div class="p-6 border-b border-slate-100 flex flex-col items-center text-center">
+            <img src="https://raw.githubusercontent.com/ictlshaks-wq/LOGODGURU/main/LOGO%20JPN.png" 
+                 alt="Logo JPN" class="h-16 w-auto mb-3 object-contain">
+            <h1 class="text-lg font-black text-slate-800 leading-tight">Portal Analisis<br>Sistem PBD 2026</h1>
+            <p class="text-[10px] uppercase tracking-widest text-slate-400 mt-2 font-bold">Sektor Pembelajaran</p>
+        </div>
+
+        <!-- Menu Butang -->
+        <nav class="flex-1 overflow-y-auto py-4 flex flex-col gap-1 px-3">
+            <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 mt-2">Pilihan Aplikasi</p>
+            
+            <!-- Pautan ke Fail 1 (Kini ditukar ke AplikasiPenggabungData_v1.0.html) -->
+            <button onclick="tukarAplikasi('AplikasiPenggabungData_v1.0.html', this)" 
+                    class="nav-button active flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 text-sm font-medium">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <div>
+                    <span class="block text-slate-800">Aplikasi Penggabung Data v1.0</span>
+                    <span class="text-[10px] text-slate-500 font-normal">Muat Naik Data Mentah SPPB idMe</span>
+                </div>
+            </button>
+
+            <!-- Pautan ke Fail 2 -->
+            <button onclick="tukarAplikasi('AplikasiAnalisisData_v1.0.html', this)" 
+                    class="nav-button flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 text-sm font-medium">
+                <i data-lucide="bar-chart-horizontal" class="w-5 h-5"></i>
+                <div>
+                    <span class="block text-slate-800">Aplikasi Analisis Data v1.0</span>
+                    <span class="text-[10px] text-slate-500 font-normal">Muat Naik Data Gabung</span>
+                </div>
+            </button>
+        </nav>
+
+        <!-- Footer Sidebar -->
+        <div class="p-4 border-t border-slate-100 bg-slate-50">
+            <p class="text-[10px] text-center text-slate-500 font-medium">
+                &copy; 2026 JPN Pahang<br>Dibangunkan oleh JK PBD
+            </p>
+        </div>
+    </aside>
+
+    <!-- KAWASAN PAPARAN UTAMA (IFRAME) -->
+    <main class="flex-1 bg-slate-50 relative h-full flex flex-col">
+        
+        <!-- Top Bar Ringkas -->
+        <header class="h-12 bg-white border-b border-slate-200 flex items-center px-4 justify-between flex-shrink-0 shadow-sm z-10">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="p-1.5 rounded-md hover:bg-slate-100 text-slate-600 focus:outline-none transition-colors" title="Sembunyi/Tunjuk Menu">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+                <h2 id="appTitle" class="text-sm font-bold text-slate-700 truncate">Aplikasi V1.0 - Dashboard Analisis Data PBD Sekolah</h2>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span class="hidden sm:inline">Sistem Sedia</span>
+            </div>
+        </header>
+
+        <!-- Container untuk Iframe -->
+        <div class="relative flex-1 w-full h-full overflow-hidden bg-slate-100">
+            
+            <!-- Loading Indicator -->
+            <div id="loader" class="absolute inset-0 bg-slate-50/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center hidden-loader">
+                <i data-lucide="loader-2" class="w-8 h-8 text-blue-600 animate-spin mb-3"></i>
+                <p class="text-sm font-bold text-slate-600">Memuatkan Aplikasi...</p>
+            </div>
+
+            <!-- Iframe Pemuat Fail Asal (Kini lalai ke Gabung_Data.html) -->
+            <iframe id="appFrame" 
+                    src="Gabung_Data.html" 
+                    class="w-full h-full border-0 absolute inset-0 bg-transparent">
+            </iframe>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        const frame = document.getElementById('appFrame');
+        const loader = document.getElementById('loader');
+        const appTitle = document.getElementById('appTitle');
+        const sidebar = document.getElementById('sidebar');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('hidden');
+        }
+
+        function tukarAplikasi(failURL, butangElement) {
+            // Tunjuk animasi loading
+            loader.classList.remove('hidden-loader');
+            
+            // Buang class 'active' dari semua butang
+            document.querySelectorAll('.nav-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Tambah class 'active' pada butang yang ditekan
+            if (butangElement) {
+                butangElement.classList.add('active');
+                // Kemaskini tajuk atas mengikut butang yang ditekan
+                const tajuk = butangElement.querySelector('span.block').innerText;
+                const subtajuk = butangElement.querySelector('span.text-\\[10px\\]').innerText;
+                appTitle.innerText = `${tajuk} - ${subtajuk}`;
+            }
+
+            // Tukar source iframe
+            frame.src = failURL;
+
+            // Sembunyikan sidebar secara automatik jika di skrin kecil (telefon bimbit)
+            if (window.innerWidth < 768) {
+                sidebar.classList.add('hidden');
+            }
+        }
+
+        function sembunyiLoader() {
+            // Sembunyikan animasi loading setelah iframe siap dimuatkan
+            loader.classList.add('hidden-loader');
+        }
+
+        // Pautkan event listener secara selamat pada iframe
+        frame.addEventListener('load', sembunyiLoader);
+    </script>
+</body>
+</html>
