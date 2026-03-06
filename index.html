@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Utama - Sistem PBD Pahang 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; margin: 0; overflow: hidden; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; margin: 0; overflow: hidden; }
         .glass-sidebar { background: white; border-right: 1px solid #e2e8f0; box-shadow: 2px 0 10px rgba(0,0,0,0.02); }
         .nav-button { transition: all 0.2s ease-in-out; }
         .nav-button.active { background-color: #eff6ff; color: #1d4ed8; border-right: 4px solid #1d4ed8; font-weight: 700; }
@@ -33,9 +36,8 @@
         <nav class="flex-1 overflow-y-auto py-4 flex flex-col gap-1 px-3">
             <p class="px-3 text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 mt-2">Pilihan Aplikasi</p>
             
-
             <button onclick="tukarAplikasi('AplikasiPenggabungData_v1.0.html', this)" 
-                    class="nav-button active flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 text-sm font-medium">
+                    class="nav-button flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 text-sm font-medium">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <div>
                     <span class="block text-slate-800">Aplikasi Penggabung Data v1.0</span>
@@ -71,7 +73,7 @@
                 <button onclick="toggleSidebar()" class="p-1.5 rounded-md hover:bg-slate-100 text-slate-600 focus:outline-none transition-colors" title="Sembunyi/Tunjuk Menu">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
-                <h2 id="appTitle" class="text-sm font-bold text-slate-700 truncate">Aplikasi V1.0 - Dashboard Analisis Data PBD Sekolah</h2>
+                <h2 id="appTitle" class="text-sm font-bold text-slate-700 truncate">Laman Utama - Sistem PBD 2026</h2>
             </div>
             <div class="flex items-center gap-2 text-xs text-slate-500">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span class="hidden sm:inline">Sistem Sedia</span>
@@ -81,16 +83,24 @@
         <!-- Container untuk Iframe -->
         <div class="relative flex-1 w-full h-full overflow-hidden bg-slate-100">
             
+            <!-- Paparan Laman Utama (Welcome Screen) -->
+            <div id="welcomeScreen" class="absolute inset-0 bg-slate-50 z-0 flex flex-col items-center justify-center p-6 text-center">
+                <img src="https://raw.githubusercontent.com/ictlshaks-wq/LOGODGURU/main/LOGO%20JPN.png" alt="Logo JPN" class="h-28 w-auto mb-6 object-contain opacity-90 drop-shadow-sm">
+                <h2 class="text-2xl font-bold text-slate-800 mb-3">Selamat Datang ke Portal PBD 2026</h2>
+                <p class="text-slate-500 text-sm max-w-md">Sila pilih modul aplikasi dari menu di sebelah kiri untuk memulakan tugasan muat naik atau analisis data anda.</p>
+                <i data-lucide="arrow-left" class="w-6 h-6 text-slate-300 mt-8 animate-bounce hidden md:block"></i>
+            </div>
+
             <!-- Loading Indicator -->
             <div id="loader" class="absolute inset-0 bg-slate-50/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center hidden-loader">
                 <i data-lucide="loader-2" class="w-8 h-8 text-blue-600 animate-spin mb-3"></i>
                 <p class="text-sm font-bold text-slate-600">Memuatkan Aplikasi...</p>
             </div>
 
-            <!-- Iframe Pemuat Fail Asal (Kini lalai ke Gabung_Data.html) -->
+            <!-- Iframe Pemuat Fail Asal (Disembunyikan pada permulaan) -->
             <iframe id="appFrame" 
-                    src="Gabung_Data.html" 
-                    class="w-full h-full border-0 absolute inset-0 bg-transparent">
+                    src="about:blank" 
+                    class="w-full h-full border-0 absolute inset-0 bg-transparent hidden">
             </iframe>
         </div>
     </main>
@@ -103,12 +113,17 @@
         const loader = document.getElementById('loader');
         const appTitle = document.getElementById('appTitle');
         const sidebar = document.getElementById('sidebar');
+        const welcomeScreen = document.getElementById('welcomeScreen');
 
         function toggleSidebar() {
             sidebar.classList.toggle('hidden');
         }
 
         function tukarAplikasi(failURL, butangElement) {
+            // Sembunyikan welcome screen dan paparkan iframe
+            if (welcomeScreen) welcomeScreen.classList.add('hidden');
+            frame.classList.remove('hidden');
+
             // Tunjuk animasi loading
             loader.classList.remove('hidden-loader');
             
@@ -145,4 +160,3 @@
     </script>
 </body>
 </html>
-
