@@ -15,7 +15,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Tambah library html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <script>
@@ -99,7 +98,7 @@
                 <label for="excelFileInput" class="text-sm font-semibold text-white mb-2 cursor-pointer hover:text-gray-200 flex items-center gap-2">
                     <i data-lucide="file-up" class="w-4 h-4"></i> Muat Naik Fail Excel (.xlsx)
                 </label>
-                <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="text-sm text-white/80 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-white file:text-[#800000] hover:file:bg-gray-100 cursor-pointer transition-colors">
+                <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="text-sm text-white/80 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-white file:text-[#800000] hover:file:bg-gray-100 cursor-pointer transition-colors">
             </div>
         </header>
 
@@ -122,7 +121,8 @@
                         </button>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Tahun / Tingkatan</label>
                         <select id="filterTahap" class="w-full border-slate-300 rounded-lg shadow-sm p-2.5 border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium" onchange="kemaskiniFilterKelas()">
@@ -135,10 +135,22 @@
                             <option value="Semua">Semua Kelas</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Mata Pelajaran</label>
-                        <select id="filterSubjek" class="w-full border-slate-300 rounded-lg shadow-sm p-2.5 border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium" onchange="kemaskiniDashboard()">
-                        </select>
+                    <!-- Custom Multi-Select Mata Pelajaran -->
+                    <div class="relative w-full" id="containerSubjek">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Mata Pelajaran (Boleh pilih banyak)</label>
+                        <div class="w-full border-slate-300 rounded-lg shadow-sm p-2.5 border bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 text-sm font-medium cursor-pointer flex justify-between items-center" onclick="toggleDropdown('dropdownSubjek')">
+                            <span id="multiSelectLabelSubjek" class="truncate text-slate-700">Semua Mata Pelajaran</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 pointer-events-none"></i>
+                        </div>
+                        <div id="dropdownSubjek" class="hidden absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar">
+                            <label class="flex items-center px-3 py-2.5 hover:bg-slate-50 cursor-pointer border-b border-slate-100 sticky top-0 bg-white z-10">
+                                <input type="checkbox" id="cbSemuaSubjek" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked onchange="toggleAll(this, 'subjek-checkbox', 'multiSelectLabelSubjek', 'Semua Mata Pelajaran')">
+                                <span class="ml-2 text-sm font-bold text-slate-800">Semua Mata Pelajaran</span>
+                            </label>
+                            <div id="multiSelectOptionsSubjek" class="py-1">
+                                <!-- Options populated by JS -->
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1.5 text-blue-600">Filter Khas</label>
@@ -152,6 +164,55 @@
                             <option value="GAGAL_SEMUA_PB">Tidak Menguasai Semua PB (TP1/TP2)</option>
                             <option value="JURANG_F_TP36">UASA F, TP Menguasai (3-6)</option>
                         </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Custom Multi-Select Filter PB -->
+                    <div class="relative w-full" id="containerPB">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Tahap Penguasaan (PB)</label>
+                        <div class="w-full border-slate-300 rounded-lg shadow-sm p-2.5 border bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 text-sm font-medium cursor-pointer flex justify-between items-center" onclick="toggleDropdown('dropdownPB')">
+                            <span id="multiSelectLabelPB" class="truncate text-slate-700">Semua TP</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 pointer-events-none"></i>
+                        </div>
+                        <div id="dropdownPB" class="hidden absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar">
+                            <label class="flex items-center px-3 py-2.5 hover:bg-slate-50 cursor-pointer border-b border-slate-100 sticky top-0 bg-white z-10">
+                                <input type="checkbox" id="cbSemuaPB" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked onchange="toggleAll(this, 'pb-checkbox', 'multiSelectLabelPB', 'Semua TP')">
+                                <span class="ml-2 text-sm font-bold text-slate-800">Semua TP</span>
+                            </label>
+                            <div class="py-1">
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="TP1" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 pb-checkbox" checked onchange="itemChanged('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP')"><span class="ml-2 text-sm text-slate-700">TP1</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="TP2" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 pb-checkbox" checked onchange="itemChanged('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP')"><span class="ml-2 text-sm text-slate-700">TP2</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="TP3" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 pb-checkbox" checked onchange="itemChanged('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP')"><span class="ml-2 text-sm text-slate-700">TP3</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="TP4" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 pb-checkbox" checked onchange="itemChanged('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP')"><span class="ml-2 text-sm text-slate-700">TP4</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="TP5" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 pb-checkbox" checked onchange="itemChanged('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP')"><span class="ml-2 text-sm text-slate-700">TP5</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="TP6" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 pb-checkbox" checked onchange="itemChanged('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP')"><span class="ml-2 text-sm text-slate-700">TP6</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="TD" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 pb-checkbox" checked onchange="itemChanged('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP')"><span class="ml-2 text-sm text-slate-700">TD</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Custom Multi-Select Filter UASA -->
+                    <div class="relative w-full" id="containerUASA">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Gred UASA</label>
+                        <div class="w-full border-slate-300 rounded-lg shadow-sm p-2.5 border bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 text-sm font-medium cursor-pointer flex justify-between items-center" onclick="toggleDropdown('dropdownUASA')">
+                            <span id="multiSelectLabelUASA" class="truncate text-slate-700">Semua Gred</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 pointer-events-none"></i>
+                        </div>
+                        <div id="dropdownUASA" class="hidden absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-scrollbar">
+                            <label class="flex items-center px-3 py-2.5 hover:bg-slate-50 cursor-pointer border-b border-slate-100 sticky top-0 bg-white z-10">
+                                <input type="checkbox" id="cbSemuaUASA" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked onchange="toggleAll(this, 'uasa-checkbox', 'multiSelectLabelUASA', 'Semua Gred')">
+                                <span class="ml-2 text-sm font-bold text-slate-800">Semua Gred</span>
+                            </label>
+                            <div class="py-1">
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="A" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 uasa-checkbox" checked onchange="itemChanged('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred')"><span class="ml-2 text-sm text-slate-700">A</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="B" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 uasa-checkbox" checked onchange="itemChanged('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred')"><span class="ml-2 text-sm text-slate-700">B</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="C" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 uasa-checkbox" checked onchange="itemChanged('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred')"><span class="ml-2 text-sm text-slate-700">C</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="D" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 uasa-checkbox" checked onchange="itemChanged('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred')"><span class="ml-2 text-sm text-slate-700">D</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="E" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 uasa-checkbox" checked onchange="itemChanged('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred')"><span class="ml-2 text-sm text-slate-700">E</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="F" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 uasa-checkbox" checked onchange="itemChanged('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred')"><span class="ml-2 text-sm text-slate-700">F</span></label>
+                                <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="TD" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 uasa-checkbox" checked onchange="itemChanged('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred')"><span class="ml-2 text-sm text-slate-700">TD</span></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -473,6 +534,22 @@
         
         let dataPaparanSemasa = [];
 
+        // Tutup dropdown apabila klik di luar
+        document.addEventListener('click', function(e) {
+            const dropdowns = [
+                { container: 'containerSubjek', dropdown: 'dropdownSubjek' },
+                { container: 'containerPB', dropdown: 'dropdownPB' },
+                { container: 'containerUASA', dropdown: 'dropdownUASA' }
+            ];
+            dropdowns.forEach(d => {
+                const c = document.getElementById(d.container);
+                const dd = document.getElementById(d.dropdown);
+                if (c && !c.contains(e.target) && dd && !dd.classList.contains('hidden')) {
+                    dd.classList.add('hidden');
+                }
+            });
+        });
+
         document.getElementById('excelFileInput').addEventListener('change', function(e) {
             const fail = e.target.files[0];
             if (!fail) return;
@@ -535,22 +612,97 @@
             sediakanFilter();
         }
 
+        // Generic Multi-Select Logic
+        function toggleDropdown(id) {
+            document.getElementById(id).classList.toggle('hidden');
+        }
+
+        function toggleAll(source, itemClass, labelId, defaultText) {
+            const checkboxes = document.querySelectorAll('.' + itemClass);
+            checkboxes.forEach(cb => cb.checked = source.checked);
+            updateLabel(itemClass, source.id, labelId, defaultText);
+            kemaskiniDashboard();
+        }
+
+        function itemChanged(itemClass, cbSemuaId, labelId, defaultText) {
+            const checkboxes = document.querySelectorAll('.' + itemClass);
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+            
+            const cbSemua = document.getElementById(cbSemuaId);
+            cbSemua.checked = allChecked;
+            cbSemua.indeterminate = someChecked && !allChecked;
+            
+            updateLabel(itemClass, cbSemuaId, labelId, defaultText);
+            kemaskiniDashboard();
+        }
+
+        function updateLabel(itemClass, cbSemuaId, labelId, defaultText) {
+            const cbSemua = document.getElementById(cbSemuaId);
+            const label = document.getElementById(labelId);
+            const checkboxes = document.querySelectorAll('.' + itemClass);
+            const checked = Array.from(document.querySelectorAll('.' + itemClass + ':checked'));
+            
+            if (cbSemua.checked || checked.length === checkboxes.length) {
+                label.textContent = defaultText;
+                label.classList.remove('text-blue-600', 'font-bold');
+                label.classList.remove('text-red-500');
+            } else if (checked.length === 0) {
+                label.textContent = 'Tiada Pilihan';
+                label.classList.add('text-red-500');
+                label.classList.remove('text-blue-600', 'font-bold');
+            } else if (checked.length <= 2) {
+                label.textContent = checked.map(cb => cb.value).join(', ');
+                label.classList.add('text-blue-600', 'font-bold');
+                label.classList.remove('text-red-500');
+            } else {
+                label.textContent = `${checked.length} Pilihan`;
+                label.classList.add('text-blue-600', 'font-bold');
+                label.classList.remove('text-red-500');
+            }
+        }
+
         function sediakanFilter() {
-            const dropSubjek = document.getElementById('filterSubjek');
+            const dropSubjekOptions = document.getElementById('multiSelectOptionsSubjek');
             const dropTambahan1 = document.getElementById('subjekTambahan1');
             const dropTambahan2 = document.getElementById('subjekTambahan2');
-            dropSubjek.innerHTML = '<option value="Semua">Semua Mata Pelajaran</option>';
+            
+            dropSubjekOptions.innerHTML = '';
             dropTambahan1.innerHTML = '<option value="">-- Pilih Subjek Tambahan 1 --</option>';
             dropTambahan2.innerHTML = '<option value="">-- Pilih Subjek Tambahan 2 --</option>';
+            
             senaraiSubjek.forEach(subjek => {
-                dropSubjek.add(new Option(subjek, subjek));
+                dropSubjekOptions.innerHTML += `
+                    <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
+                        <input type="checkbox" value="${subjek}" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 subjek-checkbox" checked onchange="itemChanged('subjek-checkbox', 'cbSemuaSubjek', 'multiSelectLabelSubjek', 'Semua Mata Pelajaran')">
+                        <span class="ml-2 text-sm text-slate-700">${subjek}</span>
+                    </label>
+                `;
                 dropTambahan1.add(new Option(subjek, subjek));
                 dropTambahan2.add(new Option(subjek, subjek));
             });
+            
+            // Set Subjek Default
+            document.getElementById('cbSemuaSubjek').checked = true;
+            document.getElementById('cbSemuaSubjek').indeterminate = false;
+            updateLabel('subjek-checkbox', 'cbSemuaSubjek', 'multiSelectLabelSubjek', 'Semua Mata Pelajaran');
+
+            // Set PB & UASA Default
+            document.getElementById('cbSemuaPB').checked = true;
+            document.getElementById('cbSemuaPB').indeterminate = false;
+            document.querySelectorAll('.pb-checkbox').forEach(cb => cb.checked = true);
+            updateLabel('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP');
+
+            document.getElementById('cbSemuaUASA').checked = true;
+            document.getElementById('cbSemuaUASA').indeterminate = false;
+            document.querySelectorAll('.uasa-checkbox').forEach(cb => cb.checked = true);
+            updateLabel('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred');
+
             const setTahap = new Set(dataGlobal.map(d => d.tahap).filter(t => t));
             const dropTahap = document.getElementById('filterTahap');
             dropTahap.innerHTML = '<option value="Semua">Semua Tahap</option>';
             Array.from(setTahap).sort().forEach(tahap => dropTahap.add(new Option(tahap, tahap)));
+            
             document.getElementById('emptyState').classList.add('hidden');
             document.getElementById('dashboardSection').classList.remove('hidden');
             kemaskiniFilterKelas(); 
@@ -558,10 +710,28 @@
 
         function resetFilters() {
             document.getElementById('filterTahap').value = 'Semua';
-            document.getElementById('filterSubjek').value = 'Semua';
             document.getElementById('filterKhas').value = 'SEMUA';
             document.getElementById('subjekTambahan1').value = '';
             document.getElementById('subjekTambahan2').value = '';
+
+            // Reset Subjek
+            document.getElementById('cbSemuaSubjek').checked = true;
+            document.getElementById('cbSemuaSubjek').indeterminate = false;
+            document.querySelectorAll('.subjek-checkbox').forEach(cb => cb.checked = true);
+            updateLabel('subjek-checkbox', 'cbSemuaSubjek', 'multiSelectLabelSubjek', 'Semua Mata Pelajaran');
+
+            // Reset PB
+            document.getElementById('cbSemuaPB').checked = true;
+            document.getElementById('cbSemuaPB').indeterminate = false;
+            document.querySelectorAll('.pb-checkbox').forEach(cb => cb.checked = true);
+            updateLabel('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP');
+
+            // Reset UASA
+            document.getElementById('cbSemuaUASA').checked = true;
+            document.getElementById('cbSemuaUASA').indeterminate = false;
+            document.querySelectorAll('.uasa-checkbox').forEach(cb => cb.checked = true);
+            updateLabel('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred');
+
             kemaskiniFilterKelas();
         }
 
@@ -579,8 +749,18 @@
             tutupDetail();
             const tahap = document.getElementById('filterTahap').value;
             const kelas = document.getElementById('filterKelas').value;
-            const subjek = document.getElementById('filterSubjek').value;
             const filterKhas = document.getElementById('filterKhas').value;
+
+            // Get selected Multi-Select values
+            let checkedSubjek = Array.from(document.querySelectorAll('.subjek-checkbox:checked')).map(cb => cb.value);
+            let subjekUntukDikira = checkedSubjek.length > 0 ? checkedSubjek : senaraiSubjek;
+            let isSemuaSubjek = document.getElementById('cbSemuaSubjek').checked || checkedSubjek.length === 0 || checkedSubjek.length === senaraiSubjek.length;
+
+            let checkedPB = Array.from(document.querySelectorAll('.pb-checkbox:checked')).map(cb => cb.value);
+            let isSemuaPB = document.getElementById('cbSemuaPB').checked || checkedPB.length === 0 || checkedPB.length === 7;
+
+            let checkedUASA = Array.from(document.querySelectorAll('.uasa-checkbox:checked')).map(cb => cb.value);
+            let isSemuaUASA = document.getElementById('cbSemuaUASA').checked || checkedUASA.length === 0 || checkedUASA.length === 7;
 
             let dataPB_Taburan = { 'TP1':0, 'TP2':0, 'TP3':0, 'TP4':0, 'TP5':0, 'TP6':0, 'TD':0 };
             let dataUASA_Taburan = { 'A':0, 'B':0, 'C':0, 'D':0, 'E':0, 'F':0, 'TD':0 };
@@ -596,15 +776,22 @@
 
             const sub1 = document.getElementById('subjekTambahan1').value;
             const sub2 = document.getElementById('subjekTambahan2').value;
-            const subjekUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJ', 'SEJARAH']; // Incase SEJARAH or SEJ exists
-            let subjekPapar = [...subjekUtama].filter(s => senaraiSubjek.includes(s));
-            if (subjekPapar.length === 0) subjekPapar = senaraiSubjek.slice(0, 5); // fallback if those don't exist
             
-            if (sub1 && !subjekPapar.includes(sub1)) subjekPapar.push(sub1);
-            if (sub2 && !subjekPapar.includes(sub2)) subjekPapar.push(sub2);
+            // Setup kolum untuk Jadual Paparan
+            let subjekPapar = [];
+            if (isSemuaSubjek) {
+                const subjekUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJ', 'SEJARAH']; 
+                subjekPapar = [...subjekUtama].filter(s => senaraiSubjek.includes(s));
+                if (subjekPapar.length === 0) subjekPapar = senaraiSubjek.slice(0, 5); 
+                if (sub1 && !subjekPapar.includes(sub1)) subjekPapar.push(sub1);
+                if (sub2 && !subjekPapar.includes(sub2)) subjekPapar.push(sub2);
+            } else {
+                // Jika pilih spesifik, papar apa yang dipesan sahaja di jadual
+                subjekPapar = [...subjekUntukDikira];
+                if (sub1 && !subjekPapar.includes(sub1)) subjekPapar.push(sub1);
+                if (sub2 && !subjekPapar.includes(sub2)) subjekPapar.push(sub2);
+            }
 
-            let subjekUntukDikira = subjek === 'Semua' ? senaraiSubjek : [subjek];
-            
             // Inisialisasi statSubjekComp
             senaraiSubjek.forEach(s => {
                 statSubjekComp[s] = {
@@ -616,31 +803,40 @@
 
             const jadualHead = document.getElementById('dataTableHead');
             let theadHTML = `<tr><th class="w-8 text-center border-r border-blue-800">Bil</th><th class="w-1/4 border-r border-blue-800">Nama Murid</th><th class="w-24 border-r border-blue-800">Tahap/Kelas</th><th class="w-12 text-center border-r border-blue-800">Jantina</th>`;
-            subjekPapar.forEach(sub => { theadHTML += `<th class="text-center border-r border-blue-800 p-1">${sub} <br><span class="text-[9px] text-blue-200 font-normal">PB <span class="mx-0.5 text-blue-300">|</span> UASA</span></th>`; });
+            subjekPapar.forEach(sub => { theadHTML += `<th class="text-center border-r border-blue-800 p-1 min-w-[80px]">${sub} <br><span class="text-[9px] text-blue-200 font-normal">PB <span class="mx-0.5 text-blue-300">|</span> UASA</span></th>`; });
             theadHTML += `</tr>`;
             jadualHead.innerHTML = theadHTML;
 
             let dataSemasa = dataGlobal.filter(d => {
-                let pTahap = (tahap === 'Semua' || d.tahap === tahap), pKelas = (kelas === 'Semua' || d.kelas === kelas), pKhas = true, adaData = false;
-                if (subjek === 'Semua') {
-                    adaData = senaraiSubjek.some(s => d.pb[s] || d.uasa[s]);
-                    if (filterKhas === 'L' || filterKhas === 'P') pKhas = (d.jantina === filterKhas);
-                    else if (filterKhas === 'MENGUASAI') pKhas = !senaraiSubjek.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s])) && adaData;
-                    else if (filterKhas === 'KRITIKAL') pKhas = senaraiSubjek.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
-                    else if (filterKhas === 'GAGAL_SEMUA_UASA') { let u = senaraiSubjek.filter(s => d.uasa[s] && !['-', 'TD'].includes(d.uasa[s])); pKhas = u.length > 0 && u.every(s => d.uasa[s] === 'F'); }
-                    else if (filterKhas === 'GAGAL_SEMUA_PB') { let b = senaraiSubjek.filter(s => d.pb[s] && !['-', 'TD'].includes(d.pb[s])); pKhas = b.length > 0 && b.every(s => ['TP1', 'TP2'].includes(d.pb[s])); }
-                    else if (filterKhas === 'JURANG_F_TP36') pKhas = senaraiSubjek.some(s => d.uasa[s] === 'F' && ['TP3','TP4','TP5','TP6'].includes(d.pb[s]));
-                } else {
-                    let nPB = d.pb[subjek] || '', nU = d.uasa[subjek] || '';
-                    adaData = nPB !== '' || nU !== '';
-                    if (filterKhas === 'L' || filterKhas === 'P') pKhas = (d.jantina === filterKhas);
-                    else if (filterKhas === 'MENGUASAI') pKhas = (['TP3','TP4','TP5','TP6'].includes(nPB) && ['A','B','C','D','E'].includes(nU));
-                    else if (filterKhas === 'KRITIKAL') pKhas = (['TP1','TP2'].includes(nPB) || ['F'].includes(nU));
-                    else if (filterKhas === 'GAGAL_SEMUA_UASA') { let u = senaraiSubjek.filter(s => d.uasa[s] && !['-', 'TD'].includes(d.uasa[s])); pKhas = u.length > 0 && u.every(s => d.uasa[s] === 'F'); }
-                    else if (filterKhas === 'GAGAL_SEMUA_PB') { let b = senaraiSubjek.filter(s => d.pb[s] && !['-', 'TD'].includes(d.pb[s])); pKhas = b.length > 0 && b.every(s => ['TP1', 'TP2'].includes(d.pb[s])); }
-                    else if (filterKhas === 'JURANG_F_TP36') pKhas = (nU === 'F' && ['TP3','TP4','TP5','TP6'].includes(nPB));
+                let pTahap = (tahap === 'Semua' || d.tahap === tahap);
+                let pKelas = (kelas === 'Semua' || d.kelas === kelas);
+                let pKhas = true;
+                
+                // Pastikan pelajar ada rekod bagi subjek yang dipilih
+                let adaData = subjekUntukDikira.some(s => d.pb[s] || d.uasa[s]);
+
+                if (filterKhas === 'L' || filterKhas === 'P') {
+                    pKhas = (d.jantina === filterKhas);
+                } else if (filterKhas === 'MENGUASAI') {
+                    let adaGagal = subjekUntukDikira.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
+                    pKhas = adaData && !adaGagal;
+                } else if (filterKhas === 'KRITIKAL') {
+                    pKhas = subjekUntukDikira.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
+                } else if (filterKhas === 'GAGAL_SEMUA_UASA') {
+                    let u = subjekUntukDikira.filter(s => d.uasa[s] && !['-', 'TD'].includes(d.uasa[s]));
+                    pKhas = u.length > 0 && u.every(s => d.uasa[s] === 'F');
+                } else if (filterKhas === 'GAGAL_SEMUA_PB') {
+                    let b = subjekUntukDikira.filter(s => d.pb[s] && !['-', 'TD'].includes(d.pb[s]));
+                    pKhas = b.length > 0 && b.every(s => ['TP1', 'TP2'].includes(d.pb[s]));
+                } else if (filterKhas === 'JURANG_F_TP36') {
+                    pKhas = subjekUntukDikira.some(s => d.uasa[s] === 'F' && ['TP3','TP4','TP5','TP6'].includes(d.pb[s]));
                 }
-                return pTahap && pKelas && pKhas && adaData;
+
+                // Validasi Filter PB dan UASA (Multi-select baharu)
+                let pPB = isSemuaPB ? true : subjekUntukDikira.some(s => d.pb[s] && checkedPB.includes(d.pb[s]));
+                let pUASA = isSemuaUASA ? true : subjekUntukDikira.some(s => d.uasa[s] && checkedUASA.includes(d.uasa[s]));
+
+                return pTahap && pKelas && pKhas && pPB && pUASA && adaData;
             });
 
             dataPaparanSemasa = dataSemasa;
@@ -809,7 +1005,6 @@
         // MODAL LIST MURID (PAGE 3 DRILLDOWN)
         // ============================
         function paparSenaraiMuridSubjekDrilldown(subjek, jenisUjian, kriteriaClick) {
-            // kriteriaClick can be 'TP1', 'A', 'MENGUASAI', 'TIDAK MENGUASAI', 'TD'
             let filteredData = dataPaparanSemasa.filter(m => {
                 let nilai = jenisUjian === 'pb' ? m.pb[subjek] : m.uasa[subjek];
                 if (!nilai || nilai === '-') return false;
@@ -826,7 +1021,6 @@
                 return false;
             });
 
-            // Set Title
             let labelKriteria = kriteriaClick;
             if (kriteriaClick === 'MENGUASAI') labelKriteria = jenisUjian==='pb' ? 'Menguasai (TP3-6)' : 'Menguasai (A-E)';
             else if (kriteriaClick === 'TIDAK MENGUASAI') labelKriteria = jenisUjian==='pb' ? 'Tidak Menguasai (TP1-2)' : 'Tidak Menguasai (F)';
@@ -834,10 +1028,8 @@
             document.getElementById('modalSenaraiTajuk').textContent = `Senarai Murid: ${subjek} - ${jenisUjian.toUpperCase()} (${labelKriteria})`;
             document.getElementById('modalSenaraiSubtajuk').textContent = `Jumlah: ${filteredData.length} Murid`;
 
-            // Define columns (Clicked Subject + 5 Core Subjects)
             let coreSubjekList = ['BM', 'BI', 'MM', 'SAINS', 'SEJARAH', 'SEJ'];
             let matchedCore = coreSubjekList.filter(s => senaraiSubjek.includes(s));
-            // Ensure unique 'SEJARAH' or 'SEJ'
             if (matchedCore.includes('SEJARAH') && matchedCore.includes('SEJ')) {
                 matchedCore = matchedCore.filter(s => s !== 'SEJ');
             }
@@ -847,7 +1039,6 @@
                 if (!subjekPaparan.includes(s)) subjekPaparan.push(s);
             });
 
-            // Build Head
             let thead = `<tr>
                 <th class="p-2.5 border-r border-slate-200 w-12 text-center">Bil</th>
                 <th class="p-2.5 border-r border-slate-200 min-w-[150px]">Nama Murid</th>
@@ -861,7 +1052,6 @@
             thead += `</tr>`;
             document.getElementById('modalSenaraiHead').innerHTML = thead;
 
-            // Build Body
             let tbody = '';
             if (filteredData.length === 0) {
                 tbody = `<tr><td colspan="${3 + subjekPaparan.length}" class="p-6 text-center text-slate-500 italic">Tiada data murid untuk kategori ini.</td></tr>`;
@@ -893,8 +1083,6 @@
                 });
             }
             document.getElementById('modalSenaraiBody').innerHTML = tbody;
-
-            // Show Modal
             document.getElementById('modalSenaraiMurid').classList.remove('hidden');
         }
 
@@ -912,7 +1100,7 @@
 
         function janaCartaUASA(d) {
             const ctx = document.getElementById('chartUASA').getContext('2d'); if (chartInstanceUASA) chartInstanceUASA.destroy();
-            chartInstanceUASA = new Chart(ctx, { type: 'bar', data: { labels: ['A', 'B', 'C', 'D', 'E', 'F', 'TD'], datasets: [{ data: [d.A, d.B, d.C, d.D, d.E, d.F, d.TD], backgroundColor: ['#22c55e', '#3b82f6', '#3b82f6', '#3b82f6', '#ef4444', '#ef4444', '#cbd5e1'], borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#475569', font: { weight: 'bold', size: 10 }, textAlign: 'center', formatter: (v, c) => { if(v===0) return ''; let t=c.chart.data.datasets[0].data.reduce((a,b)=>a+b,0); return v+'\n('+ (t>0?((v/t)*100).toFixed(1):0) +'%)'; } } }, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } } });
+            chartInstanceUASA = new Chart(ctx, { type: 'bar', data: { labels: ['A', 'B', 'C', 'D', 'E', 'F', 'TD'], datasets: [{ data: [d.A, d.B, d.C, d.D, d.E, d.F, d.TD], backgroundColor: ['#22c55e', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#ef4444', '#cbd5e1'], borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#475569', font: { weight: 'bold', size: 10 }, textAlign: 'center', formatter: (v, c) => { if(v===0) return ''; let t=c.chart.data.datasets[0].data.reduce((a,b)=>a+b,0); return v+'\n('+ (t>0?((v/t)*100).toFixed(1):0) +'%)'; } } }, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } } });
         }
 
         function janaCartaKelasStacked(data) {
@@ -1052,8 +1240,8 @@
             const keys = Object.keys(data).sort();
             const pbKeys = ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD'];
             const uasaKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'TD'];
-            const colorsPB = ['#ef4444', '#f97316', '#eab308', '#3b82f6', '#8b5cf6', '#22c55e', '#000000'];
-            const colorsUASA = ['#22c55e', '#3b82f6', '#0ea5e9', '#8b5cf6', '#f97316', '#ef4444', '#000000'];
+            const colorsPB = ['#ef4444', '#ef4444', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#000000'];
+            const colorsUASA = ['#22c55e', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#ef4444', '#000000'];
 
             keys.forEach((key, index) => {
                 const tahapData = data[key];
@@ -1161,7 +1349,7 @@
 
             let validSubjects = subjekList.filter(s => data[s].ambilPB > 0 || data[s].ambilUASA > 0);
             
-            // Susun mata pelajaran ikut keutamaan: BM, BI, MM, SAINS, SEJARAH/SEJ, lain-lain ikut abjad
+            // Susun mata pelajaran ikut keutamaan
             const urutanUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJARAH', 'SEJ'];
             validSubjects.sort((a, b) => {
                 let idxA = urutanUtama.indexOf(a);
@@ -1196,7 +1384,6 @@
                 dataTD.push(totUASA === 0 ? 0 : ((d.uasa.td/totUASA)*100).toFixed(1));
             });
             
-            // Laras tinggi kontena berdasarkan jumlah bar graf (2x jumlah subjek)
             const chartHeight = Math.max(labels.length * 35 + 80, 400);
             document.getElementById('chartAllSubjekGabunganContainer').style.height = chartHeight + 'px';
 
@@ -1222,7 +1409,7 @@
                             const index = elements[0].index;
                             const datasetIndex = elements[0].datasetIndex;
                             
-                            const labelStr = chart.data.labels[index]; // e.g. "BM (PB)"
+                            const labelStr = chart.data.labels[index];
                             const subjek = labelStr.split(' (')[0];
                             const jenisUjian = labelStr.includes('(PB)') ? 'pb' : 'uasa';
                             
@@ -1269,8 +1456,8 @@
             
             const pbKeys = ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD'];
             const uasaKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'TD'];
-            const colorsPB = ['#ef4444', '#f97316', '#eab308', '#3b82f6', '#8b5cf6', '#22c55e', '#000000'];
-            const colorsUASA = ['#22c55e', '#3b82f6', '#0ea5e9', '#8b5cf6', '#f97316', '#ef4444', '#000000'];
+            const colorsPB = ['#ef4444', '#ef4444', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#000000'];
+            const colorsUASA = ['#22c55e', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#ef4444', '#000000'];
 
             labels.forEach((s, index) => {
                 const subjekData = data[s];
