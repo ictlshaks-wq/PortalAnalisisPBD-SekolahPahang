@@ -15,12 +15,6 @@
             min-height: 100vh;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
         .btn-gradient {
             background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
             transition: all 0.3s ease;
@@ -81,12 +75,13 @@
         }
     </style>
 </head>
-<body class="flex items-center justify-center p-4 md:p-8">
+<body class="flex flex-col items-center justify-center p-4 md:p-8">
 
-    <div class="glass-card w-full max-w-4xl rounded-[2.5rem] shadow-2xl p-6 md:p-12 relative overflow-hidden">
-        <div class="relative z-10">
+    <div class="w-full max-w-4xl relative">
+        <div class="relative z-10 space-y-6">
+            
             <!-- Header Section (Maroon Card) -->
-            <div class="bg-[#800000] rounded-2xl p-6 shadow-xl mb-8 flex flex-col md:flex-row items-center gap-6 border border-white/20 text-center md:text-left">
+            <div class="bg-[#800000] rounded-2xl p-6 shadow-md flex flex-col md:flex-row items-center gap-6 border border-white/10 text-center md:text-left">
                 <img src="https://raw.githubusercontent.com/ictlshaks-wq/LOGODGURU/main/LOGO%20JPN%20PUTIH.png" 
                      alt="Logo JPN" 
                      class="h-16 w-auto object-contain flex-shrink-0"
@@ -103,55 +98,64 @@
                 <option value="2026">2026/2027</option>
             </select>
 
-            <!-- Upload Area -->
-            <div class="mb-8">
-                <div id="dropzone" class="relative border-2 border-dashed border-blue-200 rounded-[2rem] p-8 hover:border-blue-400 hover:bg-blue-50/30 transition-all cursor-pointer group text-center bg-slate-50/30">
-                    <input type="file" id="excelInput" accept=".xlsx, .xls" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                    <div class="flex flex-col items-center">
-                        <div class="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                            <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+            <!-- Main Content Area (White Box) -->
+            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 md:p-12">
+                
+                <!-- Upload Area / Empty State -->
+                <div class="mb-8">
+                    <div id="dropzone" class="relative border-2 border-dashed border-slate-200 rounded-2xl p-10 hover:border-blue-300 hover:bg-blue-50/30 transition-all cursor-pointer group text-center bg-slate-50/50">
+                        <input type="file" id="excelInput" accept=".xlsx, .xls" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <div class="flex flex-col items-center">
+                            <!-- Icon from screenshot -->
+                            <div class="w-20 h-20 bg-[#f0f6ff] rounded-full flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                <svg class="w-10 h-10 text-[#0066ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <h2 class="text-xl font-bold text-slate-800 mb-2">Tiada Data Dianalisis</h2>
+                            <p class="text-sm text-slate-500 mb-2">Sila muat naik fail <strong class="text-slate-700">Excel (.xlsx)</strong> anda untuk memulakan sistem.</p>
+                            <p class="text-[10px] text-slate-400 mt-1 italic">Fail pendua tidak akan dibenarkan masuk ke senarai</p>
                         </div>
-                        <p class="text-sm font-extrabold text-slate-700">Muat Naik Fail Excel Kelas</p>
-                        <p class="text-[10px] text-slate-400 mt-1 italic">Fail pendua tidak akan dibenarkan masuk ke senarai</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Result List -->
-            <div id="fileListContainer" class="space-y-4 hidden">
-                <div class="flex items-center justify-between px-2">
-                    <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Senarai Fail Diproses</h3>
-                    <span id="fileCountBadge" class="bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">0 FAIL</span>
-                </div>
-                <div id="fileList" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
-            </div>
-
-            <!-- Action Button Area -->
-            <div class="mt-10">
-                <!-- Preview Display Box -->
-                <div class="bg-slate-900 rounded-2xl p-5 mb-4 flex flex-col md:flex-row md:items-center justify-between text-white gap-4 border border-slate-700">
-                    <div class="flex-1 min-w-0">
-                        <p class="text-[9px] uppercase font-bold text-slate-500 mb-1 tracking-wider">Pratinjau Nama Fail Akhir (Excel)</p>
-                        <p id="previewFileName" class="text-xs font-mono truncate italic text-blue-300">Sila muat naik fail...</p>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2 justify-end">
-                        <div id="typeIndicators" class="flex flex-wrap gap-1"></div>
-                        <div id="gradeIndicators" class="flex flex-wrap gap-1"></div>
                     </div>
                 </div>
 
-                <button id="convertBtn" class="w-full btn-gradient text-white font-extrabold py-5 rounded-2xl shadow-xl active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed transition-all" disabled>
-                    GABUNG & MUAT TURUN EXCEL (.XLSX)
-                </button>
-            </div>
+                <!-- Result List -->
+                <div id="fileListContainer" class="space-y-4 hidden">
+                    <div class="flex items-center justify-between px-2">
+                        <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Senarai Fail Diproses</h3>
+                        <span id="fileCountBadge" class="bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">0 FAIL</span>
+                    </div>
+                    <div id="fileList" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
+                </div>
 
-            <div id="statusBox" class="hidden mt-6 p-4 rounded-xl text-[11px] font-bold text-center"></div>
+                <!-- Action Button Area -->
+                <div class="mt-10">
+                    <!-- Preview Display Box -->
+                    <div class="bg-slate-900 rounded-2xl p-5 mb-4 flex flex-col md:flex-row md:items-center justify-between text-white gap-4 border border-slate-700">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[9px] uppercase font-bold text-slate-500 mb-1 tracking-wider">Pratinjau Nama Fail Akhir (Excel)</p>
+                            <p id="previewFileName" class="text-xs font-mono truncate italic text-blue-300">Sila muat naik fail...</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 justify-end">
+                            <div id="typeIndicators" class="flex flex-wrap gap-1"></div>
+                            <div id="gradeIndicators" class="flex flex-wrap gap-1"></div>
+                        </div>
+                    </div>
+
+                    <button id="convertBtn" class="w-full btn-gradient text-white font-extrabold py-5 rounded-2xl shadow-xl active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed transition-all" disabled>
+                        GABUNG & MUAT TURUN EXCEL (.XLSX)
+                    </button>
+                </div>
+
+                <div id="statusBox" class="hidden mt-6 p-4 rounded-xl text-[11px] font-bold text-center"></div>
+            </div> <!-- End of White Box -->
             
             <!-- Footer Credit -->
             <div class="mt-10 text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                 <p>Sektor Pembelajaran</p>
                 <p>Hakcipta Terpelihara@2026</p>
             </div>
+
         </div>
     </div>
 
