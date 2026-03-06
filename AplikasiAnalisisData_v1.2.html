@@ -137,7 +137,7 @@
                     </div>
                     <!-- Custom Multi-Select Mata Pelajaran -->
                     <div class="relative w-full" id="containerSubjek">
-                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Mata Pelajaran</label>
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Mata Pelajaran (Boleh pilih banyak)</label>
                         <div class="w-full border-slate-300 rounded-lg shadow-sm p-2.5 border bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 text-sm font-medium cursor-pointer flex justify-between items-center" onclick="toggleDropdown('dropdownSubjek')">
                             <span id="multiSelectLabelSubjek" class="truncate text-slate-700">Semua Mata Pelajaran</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 pointer-events-none"></i>
@@ -777,21 +777,6 @@
             const sub1 = document.getElementById('subjekTambahan1').value;
             const sub2 = document.getElementById('subjekTambahan2').value;
             
-            // Setup kolum untuk Jadual Paparan
-            let subjekPapar = [];
-            if (isSemuaSubjek) {
-                const subjekUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJ', 'SEJARAH']; 
-                subjekPapar = [...subjekUtama].filter(s => senaraiSubjek.includes(s));
-                if (subjekPapar.length === 0) subjekPapar = senaraiSubjek.slice(0, 5); 
-                if (sub1 && !subjekPapar.includes(sub1)) subjekPapar.push(sub1);
-                if (sub2 && !subjekPapar.includes(sub2)) subjekPapar.push(sub2);
-            } else {
-                // Jika pilih spesifik, papar apa yang dipesan sahaja di jadual
-                subjekPapar = [...subjekUntukDikira];
-                if (sub1 && !subjekPapar.includes(sub1)) subjekPapar.push(sub1);
-                if (sub2 && !subjekPapar.includes(sub2)) subjekPapar.push(sub2);
-            }
-
             // Inisialisasi statSubjekComp
             senaraiSubjek.forEach(s => {
                 statSubjekComp[s] = {
@@ -801,25 +786,17 @@
                 };
             });
 
-            const jadualHead = document.getElementById('dataTableHead');
-            let theadHTML = `<tr><th class="w-8 text-center border-r border-blue-800">Bil</th><th class="w-1/4 border-r border-blue-800">Nama Murid</th><th class="w-24 border-r border-blue-800">Tahap/Kelas</th><th class="w-12 text-center border-r border-blue-800">Jantina</th>`;
-            subjekPapar.forEach(sub => { theadHTML += `<th class="text-center border-r border-blue-800 p-1 min-w-[80px]">${sub} <br><span class="text-[9px] text-blue-200 font-normal">PB <span class="mx-0.5 text-blue-300">|</span> UASA</span></th>`; });
-            theadHTML += `</tr>`;
-            jadualHead.innerHTML = theadHTML;
-
+            // LOGIK MENAPIS MURID DAN MENCARI SUBJEK YANG TERLIBAT SAHAJA
             let dataSemasa = dataGlobal.filter(d => {
                 let pTahap = (tahap === 'Semua' || d.tahap === tahap);
                 let pKelas = (kelas === 'Semua' || d.kelas === kelas);
                 let pKhas = true;
-                
-                // Pastikan pelajar ada rekod bagi subjek yang dipilih
-                let adaData = subjekUntukDikira.some(s => d.pb[s] || d.uasa[s]);
 
                 if (filterKhas === 'L' || filterKhas === 'P') {
                     pKhas = (d.jantina === filterKhas);
                 } else if (filterKhas === 'MENGUASAI') {
                     let adaGagal = subjekUntukDikira.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
-                    pKhas = adaData && !adaGagal;
+                    pKhas = !adaGagal;
                 } else if (filterKhas === 'KRITIKAL') {
                     pKhas = subjekUntukDikira.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
                 } else if (filterKhas === 'GAGAL_SEMUA_UASA') {
@@ -832,12 +809,81 @@
                     pKhas = subjekUntukDikira.some(s => d.uasa[s] === 'F' && ['TP3','TP4','TP5','TP6'].includes(d.pb[s]));
                 }
 
-                // Validasi Filter PB dan UASA (Multi-select baharu)
-                let pPB = isSemuaPB ? true : subjekUntukDikira.some(s => d.pb[s] && checkedPB.includes(d.pb[s]));
-                let pUASA = isSemuaUASA ? true : subjekUntukDikira.some(s => d.uasa[s] && checkedUASA.includes(d.uasa[s]));
+                // Validasi: mesti ada rekod dalam mana-mana subjek yang terpilih
+                let adaData = subjekUntukDikira.some(s => d.pb[s] || d.uasa[s]);
 
-                return pTahap && pKelas && pKhas && pPB && pUASA && adaData;
+                // Tapis berdasarkan gabungan PB, UASA dan Khas (mesti cross dalam subjek yang SAMA)
+                let matchSubjek = subjekUntukDikira.some(s => {
+                    let hasData = (d.pb[s] && d.pb[s] !== '-' && d.pb[s] !== '') || (d.uasa[s] && d.uasa[s] !== '-' && d.uasa[s] !== '');
+                    if (!hasData) return false;
+                    
+                    let mPB = isSemuaPB ? true : (d.pb[s] && checkedPB.includes(d.pb[s]));
+                    let mUASA = isSemuaUASA ? true : (d.uasa[s] && checkedUASA.includes(d.uasa[s]));
+                    
+                    let mk = true;
+                    if (filterKhas === 'MENGUASAI') mk = (['TP3','TP4','TP5','TP6'].includes(d.pb[s]) && ['A','B','C','D','E'].includes(d.uasa[s]));
+                    else if (filterKhas === 'KRITIKAL') mk = (['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
+                    else if (filterKhas === 'JURANG_F_TP36') mk = (d.uasa[s] === 'F' && ['TP3','TP4','TP5','TP6'].includes(d.pb[s]));
+
+                    return mPB && mUASA && mk;
+                });
+
+                return pTahap && pKelas && pKhas && matchSubjek && adaData;
             });
+
+            // Setup kolum untuk Jadual Paparan (Hanya tunjuk subjek utama atau subjek yang match filter)
+            let subjekPaparSet = new Set();
+            if (isSemuaSubjek) {
+                const subjekUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJ', 'SEJARAH']; 
+                subjekUtama.filter(s => senaraiSubjek.includes(s)).forEach(s => subjekPaparSet.add(s));
+                if (subjekPaparSet.size === 0) senaraiSubjek.slice(0, 5).forEach(s => subjekPaparSet.add(s));
+            } else {
+                subjekUntukDikira.forEach(s => subjekPaparSet.add(s));
+            }
+
+            // Tambah lajur subjek secara dinamik jika ia merupakan sebab utama murid tersebut dipaparkan dalam jadual
+            if (!isSemuaPB || !isSemuaUASA || filterKhas !== 'SEMUA') {
+                dataSemasa.forEach(d => {
+                    subjekUntukDikira.forEach(s => {
+                        let hasData = (d.pb[s] && d.pb[s] !== '-' && d.pb[s] !== '') || (d.uasa[s] && d.uasa[s] !== '-' && d.uasa[s] !== '');
+                        if (!hasData) return;
+
+                        let mPB = isSemuaPB ? true : (d.pb[s] && checkedPB.includes(d.pb[s]));
+                        let mUASA = isSemuaUASA ? true : (d.uasa[s] && checkedUASA.includes(d.uasa[s]));
+                        let mKhas = true;
+                        
+                        if (filterKhas === 'MENGUASAI') mKhas = (['TP3','TP4','TP5','TP6'].includes(d.pb[s]) && ['A','B','C','D','E'].includes(d.uasa[s]));
+                        else if (filterKhas === 'KRITIKAL') mKhas = (['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
+                        else if (filterKhas === 'JURANG_F_TP36') mKhas = (d.uasa[s] === 'F' && ['TP3','TP4','TP5','TP6'].includes(d.pb[s]));
+                        
+                        // Jika lulus filter pada subjek ini, jadikan ia lajur kekal di table
+                        if (mPB && mUASA && mKhas) {
+                            subjekPaparSet.add(s);
+                        }
+                    });
+                });
+            }
+
+            if (sub1 && senaraiSubjek.includes(sub1)) subjekPaparSet.add(sub1);
+            if (sub2 && senaraiSubjek.includes(sub2)) subjekPaparSet.add(sub2);
+
+            let subjekPapar = Array.from(subjekPaparSet);
+            const urutanUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJARAH', 'SEJ'];
+            subjekPapar.sort((a, b) => {
+                let idxA = urutanUtama.indexOf(a);
+                let idxB = urutanUtama.indexOf(b);
+                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                if (idxA !== -1) return -1;
+                if (idxB !== -1) return 1;
+                return a.localeCompare(b);
+            });
+
+            // Set Tajuk Header Table
+            const jadualHead = document.getElementById('dataTableHead');
+            let theadHTML = `<tr><th class="w-8 text-center border-r border-blue-800">Bil</th><th class="w-1/4 border-r border-blue-800">Nama Murid</th><th class="w-24 border-r border-blue-800">Tahap/Kelas</th><th class="w-12 text-center border-r border-blue-800">Jantina</th>`;
+            subjekPapar.forEach(sub => { theadHTML += `<th class="text-center border-r border-blue-800 p-1 min-w-[80px]">${sub} <br><span class="text-[9px] text-blue-200 font-normal">PB <span class="mx-0.5 text-blue-300">|</span> UASA</span></th>`; });
+            theadHTML += `</tr>`;
+            jadualHead.innerHTML = theadHTML;
 
             dataPaparanSemasa = dataSemasa;
             let tableHTMLBuffer = [];
@@ -864,65 +910,65 @@
                 statTahapComp[murid.tahap].jumlahMurid++;
 
                 subjekUntukDikira.forEach(s => {
-                    let nPB = murid.pb[s] || '-', nU = murid.uasa[s] || '-';
+                    let nPB = murid.pb[s] || '-', nU_sub = murid.uasa[s] || '-';
                     let j = murid.jantina === 'L' || murid.jantina === 'P' ? murid.jantina : null;
 
-                    // Statistik Keseluruhan PB
-                    if (dataPB_Taburan[nPB] !== undefined) {
-                        dataPB_Taburan[nPB]++; stat.pbAmbil++;
-                        if (statTahapComp[murid.tahap].pb[nPB] !== undefined) statTahapComp[murid.tahap].pb[nPB]++;
-                        if (['TP3','TP4','TP5','TP6'].includes(nPB)) {
-                            stat.pbLulus++; 
-                            statKelasComp[combinedKey].pb.meng++; 
-                            if (j) sjB[j].meng++;
-                        } else if (['TP1', 'TP2'].includes(nPB)) {
-                            bilTP12++; 
-                            statKelasComp[combinedKey].pb.gag++; 
-                            if (j) sjB[j].gag++;
-                        } else if (nPB === 'TD') {
-                            statKelasComp[combinedKey].pb.td++; 
-                            if (j) sjB[j].td++;
+                    // Validasi khusus untuk HANYA mengira statistik yang ditekan dalam filter
+                    let mPB = isSemuaPB ? true : checkedPB.includes(nPB);
+                    let mUASA = isSemuaUASA ? true : checkedUASA.includes(nU_sub);
+                    let mKhas = true;
+                    if (filterKhas === 'MENGUASAI') mKhas = (['TP3','TP4','TP5','TP6'].includes(nPB) && ['A','B','C','D','E'].includes(nU_sub));
+                    else if (filterKhas === 'KRITIKAL') mKhas = (['TP1','TP2'].includes(nPB) || ['F'].includes(nU_sub));
+                    else if (filterKhas === 'JURANG_F_TP36') mKhas = (nU_sub === 'F' && ['TP3','TP4','TP5','TP6'].includes(nPB));
+
+                    // Hanya kumpul data statistik pada subjek yang match (Selain dari yang dipilih, TIDAK dikira dalam analisis)
+                    if (mPB && mUASA && mKhas && (nPB !== '-' || nU_sub !== '-')) {
+                        if (dataPB_Taburan[nPB] !== undefined) {
+                            dataPB_Taburan[nPB]++; stat.pbAmbil++;
+                            if (statTahapComp[murid.tahap].pb[nPB] !== undefined) statTahapComp[murid.tahap].pb[nPB]++;
+                            if (['TP3','TP4','TP5','TP6'].includes(nPB)) {
+                                stat.pbLulus++; statKelasComp[combinedKey].pb.meng++; if (j) sjB[j].meng++;
+                            } else if (['TP1', 'TP2'].includes(nPB)) {
+                                statKelasComp[combinedKey].pb.gag++; if (j) sjB[j].gag++;
+                            } else if (nPB === 'TD') {
+                                statKelasComp[combinedKey].pb.td++; if (j) sjB[j].td++;
+                            }
                         }
+                        
+                        if (dataUASA_Taburan[nU_sub] !== undefined) {
+                            dataUASA_Taburan[nU_sub]++; stat.uasaAmbil++;
+                            if (statTahapComp[murid.tahap].uasa[nU_sub] !== undefined) statTahapComp[murid.tahap].uasa[nU_sub]++;
+                            if (['A','B','C','D','E'].includes(nU_sub)) {
+                                stat.uasaLulus++; statKelasComp[combinedKey].uasa.meng++; if (j) sjU[j].meng++;
+                            } else if (['F'].includes(nU_sub)) {
+                                statKelasComp[combinedKey].uasa.gag++; if (j) sjU[j].gag++;
+                            } else if (nU_sub === 'TD') {
+                                statKelasComp[combinedKey].uasa.td++; if (j) sjU[j].td++;
+                            }
+                        }
+
+                        if (nPB !== '-' && nPB !== '') {
+                            statSubjekComp[s].ambilPB++;
+                            if (statSubjekComp[s].pb[nPB] !== undefined) statSubjekComp[s].pb[nPB]++;
+                            if (['TP3','TP4','TP5','TP6'].includes(nPB)) statSubjekComp[s].pb.meng++;
+                            else if (['TP1', 'TP2'].includes(nPB)) statSubjekComp[s].pb.gag++;
+                            else if (nPB === 'TD') statSubjekComp[s].pb.td++;
+                        }
+                        if (nU_sub !== '-' && nU_sub !== '') {
+                            statSubjekComp[s].ambilUASA++;
+                            if (statSubjekComp[s].uasa[nU_sub] !== undefined) statSubjekComp[s].uasa[nU_sub]++;
+                            if (['A','B','C','D','E'].includes(nU_sub)) statSubjekComp[s].uasa.meng++;
+                            else if (['F'].includes(nU_sub)) statSubjekComp[s].uasa.gag++;
+                            else if (nU_sub === 'TD') statSubjekComp[s].uasa.td++;
+                        }
+
                         if (nPB === 'TP6') { stat.totalTP6++; bilTP6++; }
+                        if (nU_sub === 'A') { stat.totalA++; bilA++; }
+                        if (['TP1', 'TP2'].includes(nPB)) bilTP12++;
+                        if (nU_sub === 'F') bilF++;
+                        if (['TP4','TP5','TP6'].includes(nPB) && ['F'].includes(nU_sub)) adaJurangKritikal = true;
+                        kiraanSubjekValid++;
                     }
-                    
-                    // Statistik Keseluruhan UASA
-                    if (dataUASA_Taburan[nU] !== undefined) {
-                        dataUASA_Taburan[nU]++; stat.uasaAmbil++;
-                        if (statTahapComp[murid.tahap].uasa[nU] !== undefined) statTahapComp[murid.tahap].uasa[nU]++;
-                        if (['A','B','C','D','E'].includes(nU)) {
-                            stat.uasaLulus++;
-                            statKelasComp[combinedKey].uasa.meng++; 
-                            if (j) sjU[j].meng++;
-                        } else if (['F'].includes(nU)) {
-                            if (nU === 'F') bilF++; 
-                            statKelasComp[combinedKey].uasa.gag++; 
-                            if (j) sjU[j].gag++;
-                        } else if (nU === 'TD') {
-                            statKelasComp[combinedKey].uasa.td++; 
-                            if (j) sjU[j].td++;
-                        }
-                        if (nU === 'A') { stat.totalA++; bilA++; }
-                    }
-
-                    // Pengiraan Data untuk Page 3 (Subjek Terperinci)
-                    if (nPB !== '-' && nPB !== '') {
-                        statSubjekComp[s].ambilPB++;
-                        if (statSubjekComp[s].pb[nPB] !== undefined) statSubjekComp[s].pb[nPB]++;
-                        if (['TP3','TP4','TP5','TP6'].includes(nPB)) statSubjekComp[s].pb.meng++;
-                        else if (['TP1', 'TP2'].includes(nPB)) statSubjekComp[s].pb.gag++;
-                        else if (nPB === 'TD') statSubjekComp[s].pb.td++;
-                    }
-                    if (nU !== '-' && nU !== '') {
-                        statSubjekComp[s].ambilUASA++;
-                        if (statSubjekComp[s].uasa[nU] !== undefined) statSubjekComp[s].uasa[nU]++;
-                        if (['A','B','C','D','E'].includes(nU)) statSubjekComp[s].uasa.meng++;
-                        else if (['F'].includes(nU)) statSubjekComp[s].uasa.gag++;
-                        else if (nU === 'TD') statSubjekComp[s].uasa.td++;
-                    }
-
-                    if (['TP4','TP5','TP6'].includes(nPB) && ['F'].includes(nU)) adaJurangKritikal = true;
-                    if (nPB !== '-' || nU !== '-') kiraanSubjekValid++;
                 });
 
                 if (adaJurangKritikal) stat.jurang++;
@@ -934,11 +980,32 @@
                 });
 
                 let rowHTML = `<tr class="hover:bg-blue-50 transition-colors"><td class="text-slate-500 text-center">${index + 1}</td><td class="font-bold text-blue-600 text-[11px] leading-tight cursor-pointer hover:underline hover:text-indigo-700 transition-colors no-print" onclick="paparDetailMurid(${index})">${murid.nama || 'Tiada Nama'}</td><td class="font-bold text-slate-800 text-[11px] hidden print:table-cell">${murid.nama || 'Tiada Nama'}</td><td class="text-[11px] leading-tight"><span class="font-bold text-slate-500 block">${murid.tahap}</span>${murid.kelas}</td><td class="text-center border-r border-slate-200">${murid.jantina}</td>`;
+                
                 subjekPapar.forEach(sub => {
                     let nPB_sub = murid.pb[sub] || '-', nU_sub = murid.uasa[sub] || '-';
+                    
+                    // Padamkan paparan Lencana/Gred yang TIDAK berkaitan dengan filter yang dipilih
+                    let mPB = isSemuaPB ? true : checkedPB.includes(nPB_sub);
+                    let mUASA = isSemuaUASA ? true : checkedUASA.includes(nU_sub);
+                    let mKhas = true;
+                    if (filterKhas === 'MENGUASAI') mKhas = (['TP3','TP4','TP5','TP6'].includes(nPB_sub) && ['A','B','C','D','E'].includes(nU_sub));
+                    else if (filterKhas === 'KRITIKAL') mKhas = (['TP1','TP2'].includes(nPB_sub) || ['F'].includes(nU_sub));
+                    else if (filterKhas === 'JURANG_F_TP36') mKhas = (nU_sub === 'F' && ['TP3','TP4','TP5','TP6'].includes(nPB_sub));
+                    
+                    let validSubjek = subjekUntukDikira.includes(sub) || isSemuaSubjek;
+
+                    if (!mPB || !mUASA || !mKhas || !validSubjek) {
+                        nPB_sub = '-';
+                        nU_sub = '-';
+                    }
+
                     let bPB = 'badge-white'; if (nPB_sub === 'TP6') bPB = 'badge-green'; else if (['TP3', 'TP4', 'TP5'].includes(nPB_sub)) bPB = 'badge-blue'; else if (['TP1', 'TP2'].includes(nPB_sub)) bPB = 'badge-red'; else if (nPB_sub === 'TD') bPB = 'bg-black text-white';
                     let bU = 'badge-white'; if (nU_sub === 'A') bU = 'badge-green'; else if (['B', 'C', 'D'].includes(nU_sub)) bU = 'badge-blue'; else if (nU_sub === 'F') bU = 'badge-red'; else if (nU_sub === 'E') bU = 'badge-orange'; else if (nU_sub === 'TD') bU = 'bg-black text-white';
-                    rowHTML += `<td class="text-center border-r border-slate-100 p-1"><div class="flex items-center justify-center gap-0.5"><span class="badge ${bPB}">${nPB_sub}</span><span class="badge ${bU}">${nU_sub}</span></div></td>`;
+                    
+                    let displayBadgePB = nPB_sub !== '-' ? `<span class="badge ${bPB} w-8 shadow-sm">${nPB_sub}</span>` : `<span class="w-8 text-center text-slate-300 font-medium">-</span>`;
+                    let displayBadgeU = nU_sub !== '-' ? `<span class="badge ${bU} w-8 shadow-sm">${nU_sub}</span>` : `<span class="w-8 text-center text-slate-300 font-medium">-</span>`;
+
+                    rowHTML += `<td class="text-center border-r border-slate-100 p-1"><div class="flex items-center justify-center gap-1">${displayBadgePB}${displayBadgeU}</div></td>`;
                 });
                 rowHTML += `</tr>`;
                 tableHTMLBuffer.push(rowHTML);
@@ -1607,4 +1674,3 @@
     </script>
 </body>
 </html>
-
