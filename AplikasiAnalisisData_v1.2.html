@@ -146,8 +146,8 @@
                             <option value="SEMUA">Semua Kumpulan</option>
                             <option value="L">Jantina: Lelaki Sahaja</option>
                             <option value="P">Jantina: Perempuan Sahaja</option>
-                            <option value="MENGUASAI">Menguasai (PB TP3+ & UASA A-D)</option>
-                            <option value="KRITIKAL">Kritikal (PB TP1-2 / UASA E-F)</option>
+                            <option value="MENGUASAI">Menguasai (PB TP3+ & UASA A-E)</option>
+                            <option value="KRITIKAL">Kritikal (PB TP1-2 / UASA F)</option>
                             <option value="GAGAL_SEMUA_UASA">Tidak Menguasai Semua UASA (F)</option>
                             <option value="GAGAL_SEMUA_PB">Tidak Menguasai Semua PB (TP1/TP2)</option>
                             <option value="JURANG_F_TP36">UASA F, TP Menguasai (3-6)</option>
@@ -201,7 +201,7 @@
 
                     <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-blue-500">
                         <div class="flex justify-between items-start">
-                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Menguasai UASA (A-D)</p>
+                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Menguasai UASA (A-E)</p>
                             <i data-lucide="award" class="w-5 h-5 text-blue-500 no-print"></i>
                         </div>
                         <p class="text-3xl font-black text-blue-600 mt-2" id="kpiUASA">0%</p>
@@ -625,8 +625,8 @@
                 if (subjek === 'Semua') {
                     adaData = senaraiSubjek.some(s => d.pb[s] || d.uasa[s]);
                     if (filterKhas === 'L' || filterKhas === 'P') pKhas = (d.jantina === filterKhas);
-                    else if (filterKhas === 'MENGUASAI') pKhas = !senaraiSubjek.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['E','F'].includes(d.uasa[s])) && adaData;
-                    else if (filterKhas === 'KRITIKAL') pKhas = senaraiSubjek.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['E','F'].includes(d.uasa[s]));
+                    else if (filterKhas === 'MENGUASAI') pKhas = !senaraiSubjek.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s])) && adaData;
+                    else if (filterKhas === 'KRITIKAL') pKhas = senaraiSubjek.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
                     else if (filterKhas === 'GAGAL_SEMUA_UASA') { let u = senaraiSubjek.filter(s => d.uasa[s] && !['-', 'TD'].includes(d.uasa[s])); pKhas = u.length > 0 && u.every(s => d.uasa[s] === 'F'); }
                     else if (filterKhas === 'GAGAL_SEMUA_PB') { let b = senaraiSubjek.filter(s => d.pb[s] && !['-', 'TD'].includes(d.pb[s])); pKhas = b.length > 0 && b.every(s => ['TP1', 'TP2'].includes(d.pb[s])); }
                     else if (filterKhas === 'JURANG_F_TP36') pKhas = senaraiSubjek.some(s => d.uasa[s] === 'F' && ['TP3','TP4','TP5','TP6'].includes(d.pb[s]));
@@ -634,8 +634,8 @@
                     let nPB = d.pb[subjek] || '', nU = d.uasa[subjek] || '';
                     adaData = nPB !== '' || nU !== '';
                     if (filterKhas === 'L' || filterKhas === 'P') pKhas = (d.jantina === filterKhas);
-                    else if (filterKhas === 'MENGUASAI') pKhas = (['TP3','TP4','TP5','TP6'].includes(nPB) && ['A','B','C','D'].includes(nU));
-                    else if (filterKhas === 'KRITIKAL') pKhas = (['TP1','TP2'].includes(nPB) || ['E','F'].includes(nU));
+                    else if (filterKhas === 'MENGUASAI') pKhas = (['TP3','TP4','TP5','TP6'].includes(nPB) && ['A','B','C','D','E'].includes(nU));
+                    else if (filterKhas === 'KRITIKAL') pKhas = (['TP1','TP2'].includes(nPB) || ['F'].includes(nU));
                     else if (filterKhas === 'GAGAL_SEMUA_UASA') { let u = senaraiSubjek.filter(s => d.uasa[s] && !['-', 'TD'].includes(d.uasa[s])); pKhas = u.length > 0 && u.every(s => d.uasa[s] === 'F'); }
                     else if (filterKhas === 'GAGAL_SEMUA_PB') { let b = senaraiSubjek.filter(s => d.pb[s] && !['-', 'TD'].includes(d.pb[s])); pKhas = b.length > 0 && b.every(s => ['TP1', 'TP2'].includes(d.pb[s])); }
                     else if (filterKhas === 'JURANG_F_TP36') pKhas = (nU === 'F' && ['TP3','TP4','TP5','TP6'].includes(nPB));
@@ -694,11 +694,11 @@
                     if (dataUASA_Taburan[nU] !== undefined) {
                         dataUASA_Taburan[nU]++; stat.uasaAmbil++;
                         if (statTahapComp[murid.tahap].uasa[nU] !== undefined) statTahapComp[murid.tahap].uasa[nU]++;
-                        if (['A','B','C','D'].includes(nU)) {
+                        if (['A','B','C','D','E'].includes(nU)) {
                             stat.uasaLulus++;
                             statKelasComp[combinedKey].uasa.meng++; 
                             if (j) sjU[j].meng++;
-                        } else if (['E','F'].includes(nU)) {
+                        } else if (['F'].includes(nU)) {
                             if (nU === 'F') bilF++; 
                             statKelasComp[combinedKey].uasa.gag++; 
                             if (j) sjU[j].gag++;
@@ -720,12 +720,12 @@
                     if (nU !== '-' && nU !== '') {
                         statSubjekComp[s].ambilUASA++;
                         if (statSubjekComp[s].uasa[nU] !== undefined) statSubjekComp[s].uasa[nU]++;
-                        if (['A','B','C','D'].includes(nU)) statSubjekComp[s].uasa.meng++;
-                        else if (['E','F'].includes(nU)) statSubjekComp[s].uasa.gag++;
+                        if (['A','B','C','D','E'].includes(nU)) statSubjekComp[s].uasa.meng++;
+                        else if (['F'].includes(nU)) statSubjekComp[s].uasa.gag++;
                         else if (nU === 'TD') statSubjekComp[s].uasa.td++;
                     }
 
-                    if (['TP4','TP5','TP6'].includes(nPB) && ['E','F'].includes(nU)) adaJurangKritikal = true;
+                    if (['TP4','TP5','TP6'].includes(nPB) && ['F'].includes(nU)) adaJurangKritikal = true;
                     if (nPB !== '-' || nU !== '-') kiraanSubjekValid++;
                 });
 
@@ -816,10 +816,10 @@
                 
                 if (kriteriaClick === 'MENGUASAI') {
                     if (jenisUjian === 'pb') return ['TP3','TP4','TP5','TP6'].includes(nilai);
-                    if (jenisUjian === 'uasa') return ['A','B','C','D'].includes(nilai);
+                    if (jenisUjian === 'uasa') return ['A','B','C','D','E'].includes(nilai);
                 } else if (kriteriaClick === 'TIDAK MENGUASAI') {
                     if (jenisUjian === 'pb') return ['TP1','TP2'].includes(nilai);
-                    if (jenisUjian === 'uasa') return ['E','F'].includes(nilai);
+                    if (jenisUjian === 'uasa') return ['F'].includes(nilai);
                 } else {
                     return nilai === kriteriaClick;
                 }
@@ -828,8 +828,8 @@
 
             // Set Title
             let labelKriteria = kriteriaClick;
-            if (kriteriaClick === 'MENGUASAI') labelKriteria = jenisUjian==='pb' ? 'Menguasai (TP3-6)' : 'Menguasai (A-D)';
-            else if (kriteriaClick === 'TIDAK MENGUASAI') labelKriteria = jenisUjian==='pb' ? 'Tidak Menguasai (TP1-2)' : 'Tidak Menguasai (E-F)';
+            if (kriteriaClick === 'MENGUASAI') labelKriteria = jenisUjian==='pb' ? 'Menguasai (TP3-6)' : 'Menguasai (A-E)';
+            else if (kriteriaClick === 'TIDAK MENGUASAI') labelKriteria = jenisUjian==='pb' ? 'Tidak Menguasai (TP1-2)' : 'Tidak Menguasai (F)';
             
             document.getElementById('modalSenaraiTajuk').textContent = `Senarai Murid: ${subjek} - ${jenisUjian.toUpperCase()} (${labelKriteria})`;
             document.getElementById('modalSenaraiSubtajuk').textContent = `Jumlah: ${filteredData.length} Murid`;
@@ -1064,10 +1064,9 @@
                 let percTP12 = totalSesiPB > 0 ? ((sumTP12 / totalSesiPB) * 100).toFixed(1) : 0;
                 
                 let totalSesiUASA = uasaKeys.reduce((sum, uk) => sum + tahapData.uasa[uk], 0);
-                let countE = tahapData.uasa['E'] || 0;
                 let countF = tahapData.uasa['F'] || 0;
-                let sumEF = countE + countF;
-                let percEF = totalSesiUASA > 0 ? ((sumEF / totalSesiUASA) * 100).toFixed(1) : 0;
+                let sumF = countF;
+                let percF = totalSesiUASA > 0 ? ((sumF / totalSesiUASA) * 100).toFixed(1) : 0;
                 
                 const wrapper = document.createElement('div');
                 wrapper.id = `block_tahap_${index}`;
@@ -1115,7 +1114,7 @@
                                         <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-500"></i>
                                         <span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span>
                                     </div>
-                                    <span class="text-sm font-black text-red-600">${percEF}% (${sumEF} Murid)</span>
+                                    <span class="text-sm font-black text-red-600">${percF}% (${sumF} Murid)</span>
                                 </div>
                             </div>
                             <div class="relative h-64 w-full mt-auto">
@@ -1207,8 +1206,8 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Menguasai (TP3-6 / A-D)', data: dataM, rawCounts: rawM, backgroundColor: '#22c55e' },
-                        { label: 'Tidak Menguasai (TP1-2 / E-F)', data: dataG, rawCounts: rawG, backgroundColor: '#ef4444' },
+                        { label: 'Menguasai (TP3-6 / A-E)', data: dataM, rawCounts: rawM, backgroundColor: '#22c55e' },
+                        { label: 'Tidak Menguasai (TP1-2 / F)', data: dataG, rawCounts: rawG, backgroundColor: '#ef4444' },
                         { label: 'TD', data: dataTD, rawCounts: rawTD, backgroundColor: '#000000' }
                     ]
                 },
@@ -1283,10 +1282,9 @@
                 let percTP12 = totalSesiPB > 0 ? ((sumTP12 / totalSesiPB) * 100).toFixed(1) : 0;
                 
                 let totalSesiUASA = uasaKeys.reduce((sum, uk) => sum + subjekData.uasa[uk], 0);
-                let countE = subjekData.uasa['E'] || 0;
                 let countF = subjekData.uasa['F'] || 0;
-                let sumEF = countE + countF;
-                let percEF = totalSesiUASA > 0 ? ((sumEF / totalSesiUASA) * 100).toFixed(1) : 0;
+                let sumF = countF;
+                let percF = totalSesiUASA > 0 ? ((sumF / totalSesiUASA) * 100).toFixed(1) : 0;
                 
                 const wrapper = document.createElement('div');
                 wrapper.id = `block_subjek_${index}`;
@@ -1334,7 +1332,7 @@
                                         <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-500"></i>
                                         <span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span>
                                     </div>
-                                    <span class="text-sm font-black text-red-600">${percEF}% (${sumEF} Murid)</span>
+                                    <span class="text-sm font-black text-red-600">${percF}% (${sumF} Murid)</span>
                                 </div>
                             </div>
                             <div class="relative h-64 w-full mt-auto">
@@ -1412,11 +1410,13 @@
                 link.click();
             }).catch(err => {
                 console.error("Ralat memuat turun imej:", err);
-                alert("Ralat semasa memuat turun imej. Pastikan pelayar web anda menyokong fungsi ini.");
+                const msg = document.createElement('div');
+                msg.className = "fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg shadow-xl z-50 font-bold";
+                msg.textContent = "Ralat semasa memuat turun imej. Pastikan pelayar web anda menyokong fungsi ini.";
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 4000);
             });
         }
     </script>
 </body>
-
 </html>
-
