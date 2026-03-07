@@ -137,7 +137,7 @@
                     </div>
                     <!-- Custom Multi-Select Mata Pelajaran -->
                     <div class="relative w-full" id="containerSubjek">
-                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Mata Pelajaran (Boleh pilih banyak)</label>
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Mata Pelajaran</label>
                         <div class="w-full border-slate-300 rounded-lg shadow-sm p-2.5 border bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 text-sm font-medium cursor-pointer flex justify-between items-center" onclick="toggleDropdown('dropdownSubjek')">
                             <span id="multiSelectLabelSubjek" class="truncate text-slate-700">Semua Mata Pelajaran</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 pointer-events-none"></i>
@@ -159,7 +159,7 @@
                             <option value="L">Jantina: Lelaki Sahaja</option>
                             <option value="P">Jantina: Perempuan Sahaja</option>
                             <option value="MENGUASAI">Menguasai (PB TP3+ & UASA A-E)</option>
-                            <option value="KRITIKAL">Kritikal (PB TP1-2 / UASA F)</option>
+                            <option value="KRITIKAL">Tidak Menguasai (PB TP1-2 / UASA F)</option>
                             <option value="GAGAL_SEMUA_UASA">Tidak Menguasai Semua UASA (F)</option>
                             <option value="GAGAL_SEMUA_PB">Tidak Menguasai Semua PB (TP1/TP2)</option>
                             <option value="JURANG_F_TP36">UASA F, TP Menguasai (3-6)</option>
@@ -242,40 +242,60 @@
 
             <!-- ===================== PAGE 1 CONTENT ===================== -->
             <div id="tab1Content" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-slate-400">
+                <!-- KPI CARDS - Dikemaskini menjadi 8 Kad -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    
+                    <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-slate-400 bg-slate-50/10">
                         <div class="flex justify-between items-start">
-                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Jumlah Murid Di Senarai</p>
+                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Jumlah Keseluruhan Kohort</p>
                             <i data-lucide="users" class="w-5 h-5 text-slate-400 no-print"></i>
                         </div>
                         <p class="text-3xl font-black text-slate-700 mt-2" id="kpiJumlah">0</p>
                     </div>
-                    
-                    <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-emerald-500">
-                        <div class="flex justify-between items-start">
-                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Menguasai PBD (TP3+)</p>
-                            <i data-lucide="trending-up" class="w-5 h-5 text-emerald-500 no-print"></i>
-                        </div>
-                        <p class="text-3xl font-black text-emerald-600 mt-2" id="kpiPBD">0%</p>
-                        <p class="text-[10px] text-emerald-600 font-medium mt-1" id="kpiPBDDetail">0 dari 0 dinilai</p>
-                    </div>
 
-                    <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-blue-500">
-                        <div class="flex justify-between items-start">
-                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Menguasai UASA (A-E)</p>
-                            <i data-lucide="award" class="w-5 h-5 text-blue-500 no-print"></i>
-                        </div>
-                        <p class="text-3xl font-black text-blue-600 mt-2" id="kpiUASA">0%</p>
-                        <p class="text-[10px] text-blue-600 font-medium mt-1" id="kpiUASADetail">0 dari 0 dinilai</p>
-                    </div>
-
-                    <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-orange-500 bg-orange-50/30">
+                    <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-orange-500 bg-orange-50/10">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] font-bold text-orange-700 uppercase tracking-wider">Amaran Jurang Penilaian</p>
                             <i data-lucide="alert-triangle" class="w-5 h-5 text-orange-500 no-print"></i>
                         </div>
                         <p class="text-3xl font-black text-orange-600 mt-2" id="kpiJurang">0</p>
                         <p class="text-[10px] text-orange-600 font-medium mt-1">PBD Tinggi (TP4+) tapi UASA Gagal</p>
+                    </div>
+                    
+                    <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-emerald-500 bg-emerald-50/10">
+                        <div class="flex justify-between items-start">
+                            <p class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Menguasai PBD (TP3+)</p>
+                            <i data-lucide="trending-up" class="w-5 h-5 text-emerald-500 no-print"></i>
+                        </div>
+                        <p class="text-3xl font-black text-emerald-600 mt-2" id="kpiPBD">0%</p>
+                        <p class="text-[10px] text-emerald-600 font-medium mt-1" id="kpiPBDDetail">0 dari 0 subjek dinilai</p>
+                    </div>
+
+                    <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-red-500 bg-red-50/10">
+                        <div class="flex justify-between items-start">
+                            <p class="text-[11px] font-bold text-red-700 uppercase tracking-wider">Tidak Menguasai PBD (TP1-2)</p>
+                            <i data-lucide="trending-down" class="w-5 h-5 text-red-500 no-print"></i>
+                        </div>
+                        <p class="text-3xl font-black text-red-600 mt-2" id="kpiPBDGagal">0%</p>
+                        <p class="text-[10px] text-red-600 font-medium mt-1" id="kpiPBDGagalDetail">0 dari 0 subjek dinilai</p>
+                    </div>
+
+                    <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-blue-500 bg-blue-50/10">
+                        <div class="flex justify-between items-start">
+                            <p class="text-[11px] font-bold text-blue-700 uppercase tracking-wider">Menguasai UASA (A-E)</p>
+                            <i data-lucide="award" class="w-5 h-5 text-blue-500 no-print"></i>
+                        </div>
+                        <p class="text-3xl font-black text-blue-600 mt-2" id="kpiUASA">0%</p>
+                        <p class="text-[10px] text-blue-600 font-medium mt-1" id="kpiUASADetail">0 dari 0 subjek dinilai</p>
+                    </div>
+
+                    <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-rose-500 bg-rose-50/10">
+                        <div class="flex justify-between items-start">
+                            <p class="text-[11px] font-bold text-rose-700 uppercase tracking-wider">Tidak Menguasai UASA (F)</p>
+                            <i data-lucide="x-circle" class="w-5 h-5 text-rose-500 no-print"></i>
+                        </div>
+                        <p class="text-3xl font-black text-rose-600 mt-2" id="kpiUASAGagal">0%</p>
+                        <p class="text-[10px] text-rose-600 font-medium mt-1" id="kpiUASAGagalDetail">0 dari 0 subjek dinilai</p>
                     </div>
 
                     <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-green-500 bg-green-50/30">
@@ -411,9 +431,9 @@
                     <div class="flex justify-between items-end mb-4">
                         <div>
                             <h3 class="text-lg font-bold text-slate-700">Senarai Penguasaan Murid</h3>
-                            <p class="text-sm text-slate-500 mt-1 no-print">Sila <b class="text-blue-600">klik pada nama murid</b> untuk melihat keputusan keseluruhan.</p>
+                            <p class="text-sm text-slate-500 mt-1 no-print">Paparan ditapis mengikut pilihan filter di atas.</p>
                         </div>
-                        <span class="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full" id="tableRecordCount">0 Rekod</span>
+                        <span class="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full" id="tableRecordCount">0 Rekod Dipapar</span>
                     </div>
                     
                     <div class="w-full max-h-[600px] overflow-y-auto custom-scrollbar border-b border-t border-slate-200">
@@ -533,6 +553,43 @@
         let chartInstancesSubjectUASA = [];
         
         let dataPaparanSemasa = [];
+
+        // Heler functions for styling stacked charts selectively (fade/blur)
+        function getStackedBgColor(ctx, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
+            const labelStr = ctx.chart.data.labels[ctx.dataIndex];
+            const isPB = labelStr ? labelStr.includes('(PB)') : false;
+            let isFaded = false;
+            if (ctx.datasetIndex === 0) { // Menguasai
+                if (isPB && !isSemuaPB && !checkedPB.some(v => ['TP3','TP4','TP5','TP6'].includes(v))) isFaded = true;
+                if (!isPB && !isSemuaUASA && !checkedUASA.some(v => ['A','B','C','D','E'].includes(v))) isFaded = true;
+                return isFaded ? '#dcfce7' : '#22c55e'; // light green vs green
+            } else if (ctx.datasetIndex === 1) { // Tidak Menguasai
+                if (isPB && !isSemuaPB && !checkedPB.some(v => ['TP1','TP2'].includes(v))) isFaded = true;
+                if (!isPB && !isSemuaUASA && !checkedUASA.some(v => ['F'].includes(v))) isFaded = true;
+                return isFaded ? '#fee2e2' : '#ef4444'; // light red vs red
+            } else { // TD
+                if (isPB && !isSemuaPB && !checkedPB.includes('TD')) isFaded = true;
+                if (!isPB && !isSemuaUASA && !checkedUASA.includes('TD')) isFaded = true;
+                return isFaded ? '#f1f5f9' : '#000000'; // light slate vs black
+            }
+        }
+        function getStackedFontColor(ctx, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
+            const labelStr = ctx.chart.data.labels[ctx.dataIndex];
+            const isPB = labelStr ? labelStr.includes('(PB)') : false;
+            let isFaded = false;
+            if (ctx.datasetIndex === 0) {
+                if (isPB && !isSemuaPB && !checkedPB.some(v => ['TP3','TP4','TP5','TP6'].includes(v))) isFaded = true;
+                if (!isPB && !isSemuaUASA && !checkedUASA.some(v => ['A','B','C','D','E'].includes(v))) isFaded = true;
+            } else if (ctx.datasetIndex === 1) {
+                if (isPB && !isSemuaPB && !checkedPB.some(v => ['TP1','TP2'].includes(v))) isFaded = true;
+                if (!isPB && !isSemuaUASA && !checkedUASA.some(v => ['F'].includes(v))) isFaded = true;
+            } else {
+                if (isPB && !isSemuaPB && !checkedPB.includes('TD')) isFaded = true;
+                if (!isPB && !isSemuaUASA && !checkedUASA.includes('TD')) isFaded = true;
+            }
+            if (isFaded) return 'transparent'; // blur hide text
+            return '#ffffff';
+        }
 
         // Tutup dropdown apabila klik di luar
         document.addEventListener('click', function(e) {
@@ -769,8 +826,7 @@
             let dataPB_Taburan = { 'TP1':0, 'TP2':0, 'TP3':0, 'TP4':0, 'TP5':0, 'TP6':0, 'TD':0 };
             let dataUASA_Taburan = { 'A':0, 'B':0, 'C':0, 'D':0, 'E':0, 'F':0, 'TD':0 };
             
-            // Variabel denominator untuk pengiraan peratusan tepat
-            let stat = { jumlah: 0, pbLulus: 0, pbAmbil: 0, uasaLulus: 0, uasaAmbil: 0, jurang: 0, totalTP6: 0, totalA: 0 };
+            let stat = { jumlah: 0, pbLulus: 0, pbGagal: 0, pbAmbil: 0, uasaLulus: 0, uasaGagal: 0, uasaAmbil: 0, jurang: 0, totalTP6: 0, totalA: 0 };
             let statKelasComp = {}; 
             let statTahapComp = {}; 
             let statSubjekComp = {};
@@ -782,7 +838,6 @@
             const sub1 = document.getElementById('subjekTambahan1').value;
             const sub2 = document.getElementById('subjekTambahan2').value;
             
-            // Inisialisasi statSubjekComp
             senaraiSubjek.forEach(s => {
                 statSubjekComp[s] = {
                     subjek: s, ambilPB: 0, ambilUASA: 0,
@@ -791,18 +846,35 @@
                 };
             });
 
-            // --- 1. Tapis Base Kohort (Abaikan penapisan gred buat masa ni) ---
+            // --- 1. Tapis Base Kohort Keseluruhan (TIDAK ditapis oleh Multi-select PB/UASA untuk pastikan graf kira keseluruhan) ---
             let dataKohort = dataGlobal.filter(d => {
                 let pTahap = (tahap === 'Semua' || d.tahap === tahap);
                 let pKelas = (kelas === 'Semua' || d.kelas === kelas);
                 let pJantina = true;
-                
                 if (filterKhas === 'L' || filterKhas === 'P') pJantina = (d.jantina === filterKhas);
+                
+                let pKhas = true;
+                let adaData = subjekUntukDikira.some(s => d.pb[s] || d.uasa[s]);
 
-                return pTahap && pKelas && pJantina;
+                if (filterKhas === 'MENGUASAI') {
+                    let adaGagal = subjekUntukDikira.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
+                    pKhas = adaData && !adaGagal;
+                } else if (filterKhas === 'KRITIKAL') {
+                    pKhas = subjekUntukDikira.some(s => ['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
+                } else if (filterKhas === 'GAGAL_SEMUA_UASA') {
+                    let u = subjekUntukDikira.filter(s => d.uasa[s] && !['-', 'TD'].includes(d.uasa[s]));
+                    pKhas = u.length > 0 && u.every(s => d.uasa[s] === 'F');
+                } else if (filterKhas === 'GAGAL_SEMUA_PB') {
+                    let b = subjekUntukDikira.filter(s => d.pb[s] && !['-', 'TD'].includes(d.pb[s]));
+                    pKhas = b.length > 0 && b.every(s => ['TP1', 'TP2'].includes(d.pb[s]));
+                } else if (filterKhas === 'JURANG_F_TP36') {
+                    pKhas = subjekUntukDikira.some(s => d.uasa[s] === 'F' && ['TP3','TP4','TP5','TP6'].includes(d.pb[s]));
+                }
+
+                return pTahap && pKelas && pJantina && pKhas && adaData;
             });
 
-            // --- 2. Tentukan Lajur Subjek Jadual Secara Dinamik ---
+            // --- 2. Tentukan Lajur Subjek Jadual ---
             let subjekPaparSet = new Set();
             if (isSemuaSubjek) {
                 const subjekUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJ', 'SEJARAH']; 
@@ -812,7 +884,6 @@
                 subjekUntukDikira.forEach(s => subjekPaparSet.add(s));
             }
 
-            // Tambah subjek dinamik jika ia merupakan sebab utama murid dipaparkan dalam jadual
             if (!isSemuaPB || !isSemuaUASA || filterKhas !== 'SEMUA') {
                 dataKohort.forEach(d => {
                     subjekUntukDikira.forEach(s => {
@@ -822,12 +893,7 @@
                         let mPB = isSemuaPB ? true : (d.pb[s] && checkedPB.includes(d.pb[s]));
                         let mUASA = isSemuaUASA ? true : (d.uasa[s] && checkedUASA.includes(d.uasa[s]));
                         
-                        let mKhas = true;
-                        if (filterKhas === 'MENGUASAI') mKhas = (['TP3','TP4','TP5','TP6'].includes(d.pb[s]) && ['A','B','C','D','E'].includes(d.uasa[s]));
-                        else if (filterKhas === 'KRITIKAL') mKhas = (['TP1','TP2'].includes(d.pb[s]) || ['F'].includes(d.uasa[s]));
-                        else if (filterKhas === 'JURANG_F_TP36') mKhas = (d.uasa[s] === 'F' && ['TP3','TP4','TP5','TP6'].includes(d.pb[s]));
-                        
-                        if (mPB && mUASA && mKhas) subjekPaparSet.add(s);
+                        if (mPB && mUASA) subjekPaparSet.add(s);
                     });
                 });
             }
@@ -853,14 +919,12 @@
             theadHTML += `</tr>`;
             jadualHead.innerHTML = theadHTML;
 
-            // --- 3. Kira Data (Asingkan Denominator & Numerator/Table) ---
+            // --- 3. Kira Data Carta dan Jadual ---
             let tableHTMLBuffer = [];
             let totalSenaraiMurid = 0;
+            stat.jumlah = dataKohort.length;
             
             dataKohort.forEach(murid => {
-                let masukTable = false;
-                let bilTP6 = 0, bilA = 0, bilTP12 = 0, bilF = 0, kiraanSubjekValid = 0, adaJurangKritikal = false;
-                
                 let combinedKey = murid.tahap + "_" + murid.kelas;
                 if (!statKelasComp[combinedKey]) {
                     statKelasComp[combinedKey] = { 
@@ -878,20 +942,7 @@
                     };
                 }
 
-                let studentHasDataInRequestedSubjects = false;
-                let studentMatchesAdvancedFilters = false;
-                
-                let isGagalSemuaUASA = false;
-                let isGagalSemuaPB = false;
-                if (filterKhas === 'GAGAL_SEMUA_UASA') {
-                    let u = subjekUntukDikira.filter(s => murid.uasa[s] && !['-', 'TD'].includes(murid.uasa[s]));
-                    isGagalSemuaUASA = u.length > 0 && u.every(s => murid.uasa[s] === 'F');
-                }
-                if (filterKhas === 'GAGAL_SEMUA_PB') {
-                    let b = subjekUntukDikira.filter(s => murid.pb[s] && !['-', 'TD'].includes(murid.pb[s]));
-                    isGagalSemuaPB = b.length > 0 && b.every(s => ['TP1', 'TP2'].includes(murid.pb[s]));
-                }
-
+                // Kira denominator (Penuh)
                 subjekUntukDikira.forEach(s => {
                     let nPB = murid.pb[s] || '-';
                     let nU_sub = murid.uasa[s] || '-';
@@ -900,140 +951,110 @@
                     let hasPB = nPB !== '-' && nPB !== '';
                     let hasUASA = nU_sub !== '-' && nU_sub !== '';
 
-                    if (hasPB || hasUASA) {
-                        studentHasDataInRequestedSubjects = true;
+                    if (hasPB) {
+                        stat.pbAmbil++;
+                        dataPB_Taburan[nPB]++;
+                        statTahapComp[murid.tahap].ambilPB++;
+                        statTahapComp[murid.tahap].pb[nPB]++;
+                        statSubjekComp[s].ambilPB++;
+                        statSubjekComp[s].pb[nPB]++;
+                        statKelasComp[combinedKey].pb.ambil++;
+                        if (j) sjB[j].ambil++;
 
-                        // === KIRAAN DENOMINATOR (KESELURUHAN KOHORT) ===
-                        if (hasPB) {
-                            stat.pbAmbil++;
-                            statTahapComp[murid.tahap].ambilPB++;
-                            statSubjekComp[s].ambilPB++;
-                            statKelasComp[combinedKey].pb.ambil++;
-                            if (j) sjB[j].ambil++;
+                        if (['TP3','TP4','TP5','TP6'].includes(nPB)) {
+                            stat.pbLulus++; statKelasComp[combinedKey].pb.meng++; if(j) sjB[j].meng++; statSubjekComp[s].pb.meng++;
+                        } else if (['TP1', 'TP2'].includes(nPB)) {
+                            stat.pbGagal++; statKelasComp[combinedKey].pb.gag++; if(j) sjB[j].gag++; statSubjekComp[s].pb.gag++;
+                        } else if (nPB === 'TD') {
+                            statKelasComp[combinedKey].pb.td++; if(j) sjB[j].td++; statSubjekComp[s].pb.td++;
                         }
-                        if (hasUASA) {
-                            stat.uasaAmbil++;
-                            statTahapComp[murid.tahap].ambilUASA++;
-                            statSubjekComp[s].ambilUASA++;
-                            statKelasComp[combinedKey].uasa.ambil++;
-                            if (j) sjU[j].ambil++;
-                        }
-
-                        // === KIRAAN NUMERATOR (DITAPIS GRED & JADUAL) ===
-                        let mPB = isSemuaPB ? true : checkedPB.includes(nPB);
-                        let mUASA = isSemuaUASA ? true : checkedUASA.includes(nU_sub);
-                        let mKhas = true;
-                        
-                        if (filterKhas === 'MENGUASAI') mKhas = (['TP3','TP4','TP5','TP6'].includes(nPB) && ['A','B','C','D','E'].includes(nU_sub));
-                        else if (filterKhas === 'KRITIKAL') mKhas = (['TP1','TP2'].includes(nPB) || ['F'].includes(nU_sub));
-                        else if (filterKhas === 'GAGAL_SEMUA_UASA') mKhas = isGagalSemuaUASA;
-                        else if (filterKhas === 'GAGAL_SEMUA_PB') mKhas = isGagalSemuaPB;
-                        else if (filterKhas === 'JURANG_F_TP36') mKhas = (nU_sub === 'F' && ['TP3','TP4','TP5','TP6'].includes(nPB));
-
-                        // Hanya kumpul data statistik pada subjek yang match (Selain dari yang dipilih, TIDAK dikira dalam analisis filter)
-                        if (mPB && mUASA && mKhas) {
-                            studentMatchesAdvancedFilters = true;
-                            kiraanSubjekValid++;
-                            
-                            if (hasPB && mPB) {
-                                dataPB_Taburan[nPB]++; 
-                                statTahapComp[murid.tahap].pb[nPB]++;
-                                statSubjekComp[s].pb[nPB]++;
-                                
-                                if (['TP3','TP4','TP5','TP6'].includes(nPB)) {
-                                    stat.pbLulus++; statKelasComp[combinedKey].pb.meng++; if (j) sjB[j].meng++;
-                                    statSubjekComp[s].pb.meng++;
-                                } else if (['TP1', 'TP2'].includes(nPB)) {
-                                    statKelasComp[combinedKey].pb.gag++; if (j) sjB[j].gag++;
-                                    statSubjekComp[s].pb.gag++;
-                                } else if (nPB === 'TD') {
-                                    statKelasComp[combinedKey].pb.td++; if (j) sjB[j].td++;
-                                    statSubjekComp[s].pb.td++;
-                                }
-                                
-                                if (nPB === 'TP6') { stat.totalTP6++; bilTP6++; }
-                                if (['TP1', 'TP2'].includes(nPB)) bilTP12++;
-                            }
-                            
-                            if (hasUASA && mUASA) {
-                                dataUASA_Taburan[nU_sub]++; 
-                                statTahapComp[murid.tahap].uasa[nU_sub]++;
-                                statSubjekComp[s].uasa[nU_sub]++;
-                                
-                                if (['A','B','C','D','E'].includes(nU_sub)) {
-                                    stat.uasaLulus++; statKelasComp[combinedKey].uasa.meng++; if (j) sjU[j].meng++;
-                                    statSubjekComp[s].uasa.meng++;
-                                } else if (['F'].includes(nU_sub)) {
-                                    statKelasComp[combinedKey].uasa.gag++; if (j) sjU[j].gag++;
-                                    statSubjekComp[s].uasa.gag++;
-                                } else if (nU_sub === 'TD') {
-                                    statKelasComp[combinedKey].uasa.td++; if (j) sjU[j].td++;
-                                    statSubjekComp[s].uasa.td++;
-                                }
-                                
-                                if (nU_sub === 'A') { stat.totalA++; bilA++; }
-                                if (nU_sub === 'F') bilF++;
-                            }
-
-                            if (['TP4','TP5','TP6'].includes(nPB) && ['F'].includes(nU_sub)) adaJurangKritikal = true;
-                        }
+                        if (nPB === 'TP6') { stat.totalTP6++; }
                     }
+
+                    if (hasUASA) {
+                        stat.uasaAmbil++;
+                        dataUASA_Taburan[nU_sub]++;
+                        statTahapComp[murid.tahap].ambilUASA++;
+                        statTahapComp[murid.tahap].uasa[nU_sub]++;
+                        statSubjekComp[s].ambilUASA++;
+                        statSubjekComp[s].uasa[nU_sub]++;
+                        statKelasComp[combinedKey].uasa.ambil++;
+                        if (j) sjU[j].ambil++;
+
+                        if (['A','B','C','D','E'].includes(nU_sub)) {
+                            stat.uasaLulus++; statKelasComp[combinedKey].uasa.meng++; if(j) sjU[j].meng++; statSubjekComp[s].uasa.meng++;
+                        } else if (['F'].includes(nU_sub)) {
+                            stat.uasaGagal++; statKelasComp[combinedKey].uasa.gag++; if(j) sjU[j].gag++; statSubjekComp[s].uasa.gag++;
+                        } else if (nU_sub === 'TD') {
+                            statKelasComp[combinedKey].uasa.td++; if(j) sjU[j].td++; statSubjekComp[s].uasa.td++;
+                        }
+                        if (nU_sub === 'A') { stat.totalA++; }
+                    }
+                    if (['TP4','TP5','TP6'].includes(nPB) && ['F'].includes(nU_sub)) stat.jurang++;
                 });
 
-                // --- RENDERING JADUAL (Hanya jika ada data yang match) ---
-                if (studentHasDataInRequestedSubjects) {
-                    statTahapComp[murid.tahap].jumlahMurid++; // Total cohort taking the selected subjects
+                // Kira Numerator Untuk Jadual Sahaja
+                let masukTable = false;
+                let rowHTMLSubjek = "";
+                let bilTP6 = 0, bilA = 0, bilTP12 = 0, bilF = 0;
 
-                    if (studentMatchesAdvancedFilters) {
-                        totalSenaraiMurid++;
-                        if (adaJurangKritikal) stat.jurang++;
-                        if (kiraanSubjekValid > 0) senaraiMuridStats.push({ 
-                            originalIndex: murid._index,
-                            nama: murid.nama, tahap: murid.tahap, kelas: murid.kelas, 
-                            bilTP6, bilA, bilTP12, bilF, 
-                            bilTerbaik: bilTP6 + bilA, bilKritikal: bilTP12 + bilF 
-                        });
+                subjekPapar.forEach(sub => {
+                    let nPB_sub = murid.pb[sub] || '-';
+                    let nU_sub = murid.uasa[sub] || '-';
+                    
+                    let validSubjek = subjekUntukDikira.includes(sub) || isSemuaSubjek;
 
-                        let rowHTML = `<tr class="hover:bg-blue-50 transition-colors"><td class="text-slate-500 text-center">${totalSenaraiMurid}</td><td class="font-bold text-blue-600 text-[11px] leading-tight cursor-pointer hover:underline hover:text-indigo-700 transition-colors no-print" onclick="paparDetailMurid(${murid._index})">${murid.nama || 'Tiada Nama'}</td><td class="font-bold text-slate-800 text-[11px] hidden print:table-cell">${murid.nama || 'Tiada Nama'}</td><td class="text-[11px] leading-tight"><span class="font-bold text-slate-500 block">${murid.tahap}</span>${murid.kelas}</td><td class="text-center border-r border-slate-200">${murid.jantina}</td>`;
-                        
-                        subjekPapar.forEach(sub => {
-                            let nPB_sub = murid.pb[sub] || '-', nU_sub = murid.uasa[sub] || '-';
-                            
-                            let mPB = isSemuaPB ? true : checkedPB.includes(nPB_sub);
-                            let mUASA = isSemuaUASA ? true : checkedUASA.includes(nU_sub);
-                            let mKhas = true;
-                            if (filterKhas === 'MENGUASAI') mKhas = (['TP3','TP4','TP5','TP6'].includes(nPB_sub) && ['A','B','C','D','E'].includes(nU_sub));
-                            else if (filterKhas === 'KRITIKAL') mKhas = (['TP1','TP2'].includes(nPB_sub) || ['F'].includes(nU_sub));
-                            else if (filterKhas === 'GAGAL_SEMUA_UASA') mKhas = isGagalSemuaUASA;
-                            else if (filterKhas === 'GAGAL_SEMUA_PB') mKhas = isGagalSemuaPB;
-                            else if (filterKhas === 'JURANG_F_TP36') mKhas = (nU_sub === 'F' && ['TP3','TP4','TP5','TP6'].includes(nPB_sub));
-                            
-                            let validSubjek = subjekUntukDikira.includes(sub) || isSemuaSubjek;
+                    let mPB = isSemuaPB ? true : checkedPB.includes(nPB_sub);
+                    let mUASA = isSemuaUASA ? true : checkedUASA.includes(nU_sub);
 
-                            // PENTING: Blank-kan gred yang tidak relevan dengan filter yang dipilih
-                            if (!validSubjek || !mKhas) {
-                                nPB_sub = '-'; nU_sub = '-';
-                            } else {
-                                if (!mPB) nPB_sub = '-';
-                                if (!mUASA) nU_sub = '-';
-                            }
-
-                            let bPB = 'badge-white'; if (nPB_sub === 'TP6') bPB = 'badge-green'; else if (['TP3', 'TP4', 'TP5'].includes(nPB_sub)) bPB = 'badge-blue'; else if (['TP1', 'TP2'].includes(nPB_sub)) bPB = 'badge-red'; else if (nPB_sub === 'TD') bPB = 'bg-black text-white';
-                            let bU = 'badge-white'; if (nU_sub === 'A') bU = 'badge-green'; else if (['B', 'C', 'D'].includes(nU_sub)) bU = 'badge-blue'; else if (nU_sub === 'F') bU = 'badge-red'; else if (nU_sub === 'E') bU = 'badge-orange'; else if (nU_sub === 'TD') bU = 'bg-black text-white';
-                            
-                            let dPB = nPB_sub !== '-' ? `<span class="badge ${bPB} w-8 shadow-sm">${nPB_sub}</span>` : `<span class="w-8 text-center text-slate-300 font-medium">-</span>`;
-                            let dU = nU_sub !== '-' ? `<span class="badge ${bU} w-8 shadow-sm">${nU_sub}</span>` : `<span class="w-8 text-center text-slate-300 font-medium">-</span>`;
-
-                            rowHTML += `<td class="text-center border-r border-slate-100 p-1"><div class="flex items-center justify-center gap-1">${dPB}${dU}</div></td>`;
-                        });
-                        rowHTML += `</tr>`;
-                        tableHTMLBuffer.push(rowHTML);
+                    if (validSubjek && (nPB_sub !== '-' || nU_sub !== '-')) {
+                        if (mPB && mUASA) masukTable = true;
                     }
+
+                    // Padamkan subjek yang tidak berkaitan dengan tapisan
+                    if (!validSubjek || !mPB || !mUASA) {
+                        nPB_sub = '-'; 
+                        nU_sub = '-';
+                    }
+
+                    let bPB = 'badge-white'; if (nPB_sub === 'TP6') bPB = 'badge-green'; else if (['TP3', 'TP4', 'TP5'].includes(nPB_sub)) bPB = 'badge-blue'; else if (['TP1', 'TP2'].includes(nPB_sub)) bPB = 'badge-red'; else if (nPB_sub === 'TD') bPB = 'bg-black text-white';
+                    let bU = 'badge-white'; if (nU_sub === 'A') bU = 'badge-green'; else if (['B', 'C', 'D'].includes(nU_sub)) bU = 'badge-blue'; else if (nU_sub === 'F') bU = 'badge-red'; else if (nU_sub === 'E') bU = 'badge-orange'; else if (nU_sub === 'TD') bU = 'bg-black text-white';
+                    
+                    let dPB = nPB_sub !== '-' ? `<span class="badge ${bPB} w-8 shadow-sm">${nPB_sub}</span>` : `<span class="w-8 text-center text-slate-300 font-medium">-</span>`;
+                    let dU = nU_sub !== '-' ? `<span class="badge ${bU} w-8 shadow-sm">${nU_sub}</span>` : `<span class="w-8 text-center text-slate-300 font-medium">-</span>`;
+
+                    rowHTMLSubjek += `<td class="text-center border-r border-slate-100 p-1"><div class="flex items-center justify-center gap-1">${dPB}${dU}</div></td>`;
+                });
+
+                if (masukTable) {
+                    totalSenaraiMurid++;
+                    
+                    subjekUntukDikira.forEach(s => {
+                        let nP = murid.pb[s] || '-';
+                        let nU = murid.uasa[s] || '-';
+                        if (nP === 'TP6') bilTP6++;
+                        if (nU === 'A') bilA++;
+                        if (['TP1','TP2'].includes(nP)) bilTP12++;
+                        if (nU === 'F') bilF++;
+                    });
+
+                    senaraiMuridStats.push({ 
+                        originalIndex: murid._index,
+                        nama: murid.nama, tahap: murid.tahap, kelas: murid.kelas, 
+                        bilTP6, bilA, bilTP12, bilF, 
+                        bilTerbaik: bilTP6 + bilA, bilKritikal: bilTP12 + bilF 
+                    });
+
+                    let rowHTML = `<tr class="hover:bg-blue-50 transition-colors"><td class="text-slate-500 text-center">${totalSenaraiMurid}</td><td class="font-bold text-blue-600 text-[11px] leading-tight cursor-pointer hover:underline hover:text-indigo-700 transition-colors no-print" onclick="paparDetailMurid(${murid._index})">${murid.nama || 'Tiada Nama'}</td><td class="font-bold text-slate-800 text-[11px] hidden print:table-cell">${murid.nama || 'Tiada Nama'}</td><td class="text-[11px] leading-tight"><span class="font-bold text-slate-500 block">${murid.tahap}</span>${murid.kelas}</td><td class="text-center border-r border-slate-200">${murid.jantina}</td>`;
+                    rowHTML += rowHTMLSubjek + `</tr>`;
+                    tableHTMLBuffer.push(rowHTML);
                 }
             });
 
             document.getElementById('dataTableBody').innerHTML = tableHTMLBuffer.join('');
-            document.getElementById('kpiJumlah').textContent = totalSenaraiMurid;
+            
+            // KPI Data berpandukan cohort base
+            document.getElementById('kpiJumlah').textContent = stat.jumlah; 
             document.getElementById('kpiJurang').textContent = stat.jurang;
             document.getElementById('kpiTotalTP6').textContent = stat.totalTP6;
             document.getElementById('kpiTotalA').textContent = stat.totalA;
@@ -1041,20 +1062,26 @@
             document.getElementById('kpiPBD').textContent = `${stat.pbAmbil > 0 ? ((stat.pbLulus / stat.pbAmbil) * 100).toFixed(1) : 0}%`;
             document.getElementById('kpiPBDDetail').textContent = `${stat.pbLulus} dari ${stat.pbAmbil} dinilai`;
             
+            document.getElementById('kpiPBDGagal').textContent = `${stat.pbAmbil > 0 ? ((stat.pbGagal / stat.pbAmbil) * 100).toFixed(1) : 0}%`;
+            document.getElementById('kpiPBDGagalDetail').textContent = `${stat.pbGagal} dari ${stat.pbAmbil} dinilai`;
+            
             document.getElementById('kpiUASA').textContent = `${stat.uasaAmbil > 0 ? ((stat.uasaLulus / stat.uasaAmbil) * 100).toFixed(1) : 0}%`;
             document.getElementById('kpiUASADetail').textContent = `${stat.uasaLulus} dari ${stat.uasaAmbil} dinilai`;
             
-            document.getElementById('tableRecordCount').textContent = `${totalSenaraiMurid} Rekod`;
+            document.getElementById('kpiUASAGagal').textContent = `${stat.uasaAmbil > 0 ? ((stat.uasaGagal / stat.uasaAmbil) * 100).toFixed(1) : 0}%`;
+            document.getElementById('kpiUASAGagalDetail').textContent = `${stat.uasaGagal} dari ${stat.uasaAmbil} dinilai`;
+            
+            document.getElementById('tableRecordCount').textContent = `${totalSenaraiMurid} Rekod Dipapar`;
 
-            // Draw Charts
-            janaCartaPB(dataPB_Taburan, stat.pbAmbil); 
-            janaCartaUASA(dataUASA_Taburan, stat.uasaAmbil); 
+            // Draw Charts with Visual Fading based on PB/UASA multi-selects
+            janaCartaPB(dataPB_Taburan, stat.pbAmbil, isSemuaPB, checkedPB); 
+            janaCartaUASA(dataUASA_Taburan, stat.uasaAmbil, isSemuaUASA, checkedUASA); 
             janaRankingTable(senaraiMuridStats);
-            janaCartaJantinaGabung(sjU, sjB); 
-            janaCartaKelasStacked(statKelasComp);
-            janaCartaPerbandinganTahap(statTahapComp);
-            janaCartaSemuaSubjek(statSubjekComp, subjekUntukDikira);
-            janaCartaPerbandinganSubjek(statSubjekComp, subjekUntukDikira);
+            janaCartaJantinaGabung(sjU, sjB, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA); 
+            janaCartaKelasStacked(statKelasComp, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
+            janaCartaPerbandinganTahap(statTahapComp, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
+            janaCartaSemuaSubjek(statSubjekComp, subjekUntukDikira, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
+            janaCartaPerbandinganSubjek(statSubjekComp, subjekUntukDikira, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
         }
 
         function janaRankingTable(senarai) {
@@ -1075,7 +1102,7 @@
         }
 
         function paparDetailMurid(index) {
-            const m = dataGlobal[index]; // Fetch directly from unfiltered dataset based on original index
+            const m = dataGlobal[index];
             if (!m) return;
             document.getElementById('detailNamaLengkap').textContent = m.nama;
             document.getElementById('detailInfoLanjut').textContent = `${m.tahap} | Kelas: ${m.kelas} | Jantina: ${m.jantina}`;
@@ -1097,7 +1124,6 @@
         // ============================
         function paparSenaraiMuridSubjekDrilldown(subjek, jenisUjian, kriteriaClick) {
             let filteredData = dataGlobal.filter(m => {
-                // Must pass basic Tahap/Kelas filtering
                 const tahap = document.getElementById('filterTahap').value;
                 const kelas = document.getElementById('filterKelas').value;
                 if (tahap !== 'Semua' && m.tahap !== tahap) return false;
@@ -1190,17 +1216,99 @@
         // ============================
         // FUNGSI UNTUK PAGE 1 & 2
         // ============================
-        function janaCartaPB(d, totalAmbil) {
+        function janaCartaPB(d, totalAmbil, isSemuaPB, checkedPB) {
             const ctx = document.getElementById('chartPB').getContext('2d'); if (chartInstancePB) chartInstancePB.destroy();
-            chartInstancePB = new Chart(ctx, { type: 'bar', data: { labels: ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD'], datasets: [{ data: [d.TP1, d.TP2, d.TP3, d.TP4, d.TP5, d.TP6, d.TD], backgroundColor: ['#ef4444', '#ef4444', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#cbd5e1'], borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#475569', font: { weight: 'bold', size: 10 }, textAlign: 'center', formatter: (v, c) => { if(v===0) return ''; return v+'\n('+ (totalAmbil>0?((v/totalAmbil)*100).toFixed(1):0) +'%)'; } } }, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } } });
+            const labels = ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD'];
+            
+            const bgColors = labels.map(lbl => {
+                let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
+                if (['TP1','TP2'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
+                if (['TP3','TP4','TP5'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6';
+                if (lbl === 'TP6') return isFaded ? '#dcfce7' : '#22c55e';
+                return isFaded ? '#f1f5f9' : '#cbd5e1';
+            });
+
+            chartInstancePB = new Chart(ctx, { 
+                type: 'bar', 
+                data: { 
+                    labels: labels, 
+                    datasets: [{ 
+                        data: [d.TP1, d.TP2, d.TP3, d.TP4, d.TP5, d.TP6, d.TD], 
+                        backgroundColor: bgColors, 
+                        borderRadius: 4 
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, 
+                    plugins: { 
+                        legend: { display: false }, 
+                        datalabels: { 
+                            anchor: 'end', align: 'top', 
+                            color: (ctx) => {
+                                let lbl = labels[ctx.dataIndex];
+                                let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
+                                return isFaded ? 'transparent' : '#475569';
+                            },
+                            font: { weight: 'bold', size: 10 }, 
+                            textAlign: 'center', 
+                            formatter: (v, c) => { 
+                                if(v===0) return ''; 
+                                return v+'\n('+ (totalAmbil>0?((v/totalAmbil)*100).toFixed(1):0) +'%)'; 
+                            } 
+                        } 
+                    }, 
+                    scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } 
+                } 
+            });
         }
 
-        function janaCartaUASA(d, totalAmbil) {
+        function janaCartaUASA(d, totalAmbil, isSemuaUASA, checkedUASA) {
             const ctx = document.getElementById('chartUASA').getContext('2d'); if (chartInstanceUASA) chartInstanceUASA.destroy();
-            chartInstanceUASA = new Chart(ctx, { type: 'bar', data: { labels: ['A', 'B', 'C', 'D', 'E', 'F', 'TD'], datasets: [{ data: [d.A, d.B, d.C, d.D, d.E, d.F, d.TD], backgroundColor: ['#22c55e', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#ef4444', '#cbd5e1'], borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#475569', font: { weight: 'bold', size: 10 }, textAlign: 'center', formatter: (v, c) => { if(v===0) return ''; return v+'\n('+ (totalAmbil>0?((v/totalAmbil)*100).toFixed(1):0) +'%)'; } } }, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } } });
+            const labels = ['A', 'B', 'C', 'D', 'E', 'F', 'TD'];
+            
+            const bgColors = labels.map(lbl => {
+                let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
+                if (['A'].includes(lbl)) return isFaded ? '#dcfce7' : '#22c55e';
+                if (['B','C','D'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6';
+                if (['E','F'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
+                return isFaded ? '#f1f5f9' : '#cbd5e1';
+            });
+
+            chartInstanceUASA = new Chart(ctx, { 
+                type: 'bar', 
+                data: { 
+                    labels: labels, 
+                    datasets: [{ 
+                        data: [d.A, d.B, d.C, d.D, d.E, d.F, d.TD], 
+                        backgroundColor: bgColors, 
+                        borderRadius: 4 
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, 
+                    plugins: { 
+                        legend: { display: false }, 
+                        datalabels: { 
+                            anchor: 'end', align: 'top', 
+                            color: (ctx) => {
+                                let lbl = labels[ctx.dataIndex];
+                                let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
+                                return isFaded ? 'transparent' : '#475569';
+                            }, 
+                            font: { weight: 'bold', size: 10 }, 
+                            textAlign: 'center', 
+                            formatter: (v, c) => { 
+                                if(v===0) return ''; 
+                                return v+'\n('+ (totalAmbil>0?((v/totalAmbil)*100).toFixed(1):0) +'%)'; 
+                            } 
+                        } 
+                    }, 
+                    scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } 
+                } 
+            });
         }
 
-        function janaCartaKelasStacked(data) {
+        function janaCartaKelasStacked(data, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
             const ctx = document.getElementById('chartKelasStacked').getContext('2d');
             if (chartInstanceKelasStacked) chartInstanceKelasStacked.destroy();
             const keys = Object.keys(data).sort();
@@ -1214,6 +1322,7 @@
             keys.forEach(key => {
                 const labelKelas = `${data[key].tahap} ${data[key].kelas}`;
                 labels.push(`${labelKelas} (PB)`, `${labelKelas} (UASA)`);
+                
                 let totalPB = data[key].pb.ambil;
                 rM.push(data[key].pb.meng); rG.push(data[key].pb.gag); rTD.push(data[key].pb.td);
                 if (totalPB === 0) { dM.push(0); dG.push(0); dTD.push(0); }
@@ -1222,6 +1331,7 @@
                     dG.push((data[key].pb.gag / totalPB * 100).toFixed(1));
                     dTD.push((data[key].pb.td / totalPB * 100).toFixed(1));
                 }
+                
                 let totalUA = data[key].uasa.ambil;
                 rM.push(data[key].uasa.meng); rG.push(data[key].uasa.gag); rTD.push(data[key].uasa.td);
                 if (totalUA === 0) { dM.push(0); dG.push(0); dTD.push(0); }
@@ -1237,9 +1347,9 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Menguasai', data: dM, rawCounts: rM, backgroundColor: '#22c55e' },
-                        { label: 'Tidak Menguasai', data: dG, rawCounts: rG, backgroundColor: '#ef4444' },
-                        { label: 'TD', data: dTD, rawCounts: rTD, backgroundColor: '#000000' }
+                        { label: 'Menguasai', data: dM, rawCounts: rM, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                        { label: 'Tidak Menguasai', data: dG, rawCounts: rG, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                        { label: 'TD', data: dTD, rawCounts: rTD, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) }
                     ]
                 },
                 options: {
@@ -1248,7 +1358,7 @@
                     plugins: {
                         legend: { position: 'bottom' },
                         datalabels: {
-                            color: (ctx) => ctx.datasetIndex === 2 ? '#000000' : '#ffffff',
+                            color: (c) => getStackedFontColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA),
                             anchor: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
                             align: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
                             font: { weight: 'bold', size: 10 },
@@ -1267,7 +1377,7 @@
             });
         }
 
-        function janaCartaJantinaGabung(sjU, sjB) {
+        function janaCartaJantinaGabung(sjU, sjB, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
             const ctx = document.getElementById('chartJantinaGabung').getContext('2d');
             if (chartInstanceJantinaGabung) chartInstanceJantinaGabung.destroy();
             const labels = ['Lelaki (PB)', 'Lelaki (UASA)', 'Perempuan (PB)', 'Perempuan (UASA)'];
@@ -1295,9 +1405,9 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Menguasai', data: meng, rawCounts: rM, backgroundColor: '#22c55e' },
-                        { label: 'Tidak Menguasai', data: gag, rawCounts: rG, backgroundColor: '#ef4444' },
-                        { label: 'TD', data: td, rawCounts: rTD, backgroundColor: '#000000' }
+                        { label: 'Menguasai', data: meng, rawCounts: rM, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                        { label: 'Tidak Menguasai', data: gag, rawCounts: rG, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                        { label: 'TD', data: td, rawCounts: rTD, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) }
                     ]
                 },
                 options: {
@@ -1306,7 +1416,7 @@
                     plugins: {
                         legend: { position: 'bottom' },
                         datalabels: {
-                            color: (ctx) => ctx.datasetIndex === 2 ? '#000000' : '#ffffff',
+                            color: (c) => getStackedFontColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA),
                             anchor: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
                             align: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
                             font: { weight: 'bold' },
@@ -1325,7 +1435,7 @@
             });
         }
 
-        function janaCartaPerbandinganTahap(data) {
+        function janaCartaPerbandinganTahap(data, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
             chartInstancesMultiPB.forEach(c => c.destroy());
             chartInstancesMultiUASA.forEach(c => c.destroy());
             chartInstancesMultiPB = [];
@@ -1337,8 +1447,6 @@
             const keys = Object.keys(data).sort();
             const pbKeys = ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD'];
             const uasaKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'TD'];
-            const colorsPB = ['#ef4444', '#ef4444', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#000000'];
-            const colorsUASA = ['#22c55e', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#ef4444', '#000000'];
 
             keys.forEach((key, index) => {
                 const tahapData = data[key];
@@ -1410,6 +1518,14 @@
                 `;
                 container.appendChild(wrapper);
 
+                const bgColorsPB = pbKeys.map(lbl => {
+                    let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
+                    if (['TP1','TP2'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
+                    if (['TP3','TP4','TP5'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6';
+                    if (lbl === 'TP6') return isFaded ? '#dcfce7' : '#22c55e';
+                    return isFaded ? '#f1f5f9' : '#cbd5e1';
+                });
+                
                 const ctxPB = document.getElementById(`chart_pb_tahap_${index}`).getContext('2d');
                 let dMPB = [], rMPB = [];
                 pbKeys.forEach(pk => {
@@ -1418,9 +1534,27 @@
                 });
                 chartInstancesMultiPB.push(new Chart(ctxPB, {
                     type: 'bar',
-                    data: { labels: pbKeys, datasets: [{ data: dMPB, rawCounts: rMPB, backgroundColor: colorsPB, borderRadius: 4 }] },
-                    options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, plugins: { legend: { display: false }, datalabels: { color: (ctx) => ctx.dataIndex === 6 ? '#000000' : '#475569', anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
+                    data: { labels: pbKeys, datasets: [{ data: dMPB, rawCounts: rMPB, backgroundColor: bgColorsPB, borderRadius: 4 }] },
+                    options: { 
+                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, 
+                        plugins: { legend: { display: false }, datalabels: { 
+                            color: (ctx) => {
+                                let lbl = pbKeys[ctx.dataIndex];
+                                let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
+                                return isFaded ? 'transparent' : '#475569';
+                            }, 
+                            anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', 
+                            formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } 
+                        }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
                 }));
+
+                const bgColorsUASA = uasaKeys.map(lbl => {
+                    let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
+                    if (['A'].includes(lbl)) return isFaded ? '#dcfce7' : '#22c55e';
+                    if (['B','C','D'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6';
+                    if (['E','F'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
+                    return isFaded ? '#f1f5f9' : '#cbd5e1';
+                });
 
                 const ctxUASA = document.getElementById(`chart_uasa_tahap_${index}`).getContext('2d');
                 let dMUASA = [], rMUASA = [];
@@ -1430,8 +1564,18 @@
                 });
                 chartInstancesMultiUASA.push(new Chart(ctxUASA, {
                     type: 'bar',
-                    data: { labels: uasaKeys, datasets: [{ data: dMUASA, rawCounts: rMUASA, backgroundColor: colorsUASA, borderRadius: 4 }] },
-                    options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, plugins: { legend: { display: false }, datalabels: { color: (ctx) => ctx.dataIndex === 6 ? '#000000' : '#475569', anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
+                    data: { labels: uasaKeys, datasets: [{ data: dMUASA, rawCounts: rMUASA, backgroundColor: bgColorsUASA, borderRadius: 4 }] },
+                    options: { 
+                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, 
+                        plugins: { legend: { display: false }, datalabels: { 
+                            color: (ctx) => {
+                                let lbl = uasaKeys[ctx.dataIndex];
+                                let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
+                                return isFaded ? 'transparent' : '#475569';
+                            }, 
+                            anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', 
+                            formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } 
+                        }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
                 }));
             });
             lucide.createIcons();
@@ -1440,13 +1584,12 @@
         // ============================
         // FUNGSI UNTUK PAGE 3 (SUBJEK)
         // ============================
-        function janaCartaSemuaSubjek(data, subjekList) {
+        function janaCartaSemuaSubjek(data, subjekList, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
             chartInstancesAllSubjek.forEach(c => c.destroy());
             chartInstancesAllSubjek = [];
 
             let validSubjects = subjekList.filter(s => data[s].ambilPB > 0 || data[s].ambilUASA > 0);
             
-            // Susun mata pelajaran ikut keutamaan
             const urutanUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJARAH', 'SEJ'];
             validSubjects.sort((a, b) => {
                 let idxA = urutanUtama.indexOf(a);
@@ -1490,9 +1633,9 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Menguasai (TP3-6 / A-E)', data: dataM, rawCounts: rawM, backgroundColor: '#22c55e' },
-                        { label: 'Tidak Menguasai (TP1-2 / F)', data: dataG, rawCounts: rawG, backgroundColor: '#ef4444' },
-                        { label: 'TD', data: dataTD, rawCounts: rawTD, backgroundColor: '#000000' }
+                        { label: 'Menguasai (TP3-6 / A-E)', data: dataM, rawCounts: rawM, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                        { label: 'Tidak Menguasai (TP1-2 / F)', data: dataG, rawCounts: rawG, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                        { label: 'TD', data: dataTD, rawCounts: rawTD, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) }
                     ]
                 },
                 options: {
@@ -1521,7 +1664,7 @@
                     plugins: {
                         legend: { position: 'bottom' },
                         datalabels: {
-                            color: (ctx) => ctx.datasetIndex === 2 ? '#000000' : '#ffffff',
+                            color: (c) => getStackedFontColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA),
                             anchor: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
                             align: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
                             font: { weight: 'bold', size: 10 },
@@ -1540,7 +1683,7 @@
             }));
         }
 
-        function janaCartaPerbandinganSubjek(data, subjekList) {
+        function janaCartaPerbandinganSubjek(data, subjekList, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
             chartInstancesSubjectPB.forEach(c => c.destroy());
             chartInstancesSubjectUASA.forEach(c => c.destroy());
             chartInstancesSubjectPB = [];
@@ -1553,8 +1696,6 @@
             
             const pbKeys = ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD'];
             const uasaKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'TD'];
-            const colorsPB = ['#ef4444', '#ef4444', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#000000'];
-            const colorsUASA = ['#22c55e', '#3b82f6', '#3b82f6', '#3b82f6', '#22c55e', '#ef4444', '#000000'];
 
             labels.forEach((s, index) => {
                 const subjekData = data[s];
@@ -1627,6 +1768,14 @@
                 `;
                 container.appendChild(wrapper);
 
+                const bgColorsPB = pbKeys.map(lbl => {
+                    let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
+                    if (['TP1','TP2'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
+                    if (['TP3','TP4','TP5'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6';
+                    if (lbl === 'TP6') return isFaded ? '#dcfce7' : '#22c55e';
+                    return isFaded ? '#f1f5f9' : '#cbd5e1';
+                });
+
                 const ctxPB = document.getElementById(`chart_pb_subjek_${index}`).getContext('2d');
                 let dMPB = [], rMPB = [];
                 pbKeys.forEach(pk => {
@@ -1635,7 +1784,7 @@
                 });
                 chartInstancesSubjectPB.push(new Chart(ctxPB, {
                     type: 'bar',
-                    data: { labels: pbKeys, datasets: [{ data: dMPB, rawCounts: rMPB, backgroundColor: colorsPB, borderRadius: 4 }] },
+                    data: { labels: pbKeys, datasets: [{ data: dMPB, rawCounts: rMPB, backgroundColor: bgColorsPB, borderRadius: 4 }] },
                     options: { 
                         responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } },
                         onHover: (event, chartElement) => { event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default'; },
@@ -1646,8 +1795,24 @@
                                 paparSenaraiMuridSubjekDrilldown(subjekData.subjek, 'pb', label);
                             }
                         },
-                        plugins: { legend: { display: false }, datalabels: { color: (ctx) => ctx.dataIndex === 6 ? '#000000' : '#475569', anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
+                        plugins: { legend: { display: false }, datalabels: { 
+                            color: (ctx) => {
+                                let lbl = pbKeys[ctx.dataIndex];
+                                let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
+                                return isFaded ? 'transparent' : '#475569';
+                            }, 
+                            anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', 
+                            formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } 
+                        }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
                 }));
+
+                const bgColorsUASA = uasaKeys.map(lbl => {
+                    let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
+                    if (['A'].includes(lbl)) return isFaded ? '#dcfce7' : '#22c55e';
+                    if (['B','C','D'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6';
+                    if (['E','F'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
+                    return isFaded ? '#f1f5f9' : '#cbd5e1';
+                });
 
                 const ctxUASA = document.getElementById(`chart_uasa_subjek_${index}`).getContext('2d');
                 let dMUASA = [], rMUASA = [];
@@ -1657,7 +1822,7 @@
                 });
                 chartInstancesSubjectUASA.push(new Chart(ctxUASA, {
                     type: 'bar',
-                    data: { labels: uasaKeys, datasets: [{ data: dMUASA, rawCounts: rMUASA, backgroundColor: colorsUASA, borderRadius: 4 }] },
+                    data: { labels: uasaKeys, datasets: [{ data: dMUASA, rawCounts: rMUASA, backgroundColor: bgColorsUASA, borderRadius: 4 }] },
                     options: { 
                         responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } },
                         onHover: (event, chartElement) => { event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default'; },
@@ -1668,7 +1833,15 @@
                                 paparSenaraiMuridSubjekDrilldown(subjekData.subjek, 'uasa', label);
                             }
                         },
-                        plugins: { legend: { display: false }, datalabels: { color: (ctx) => ctx.dataIndex === 6 ? '#000000' : '#475569', anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
+                        plugins: { legend: { display: false }, datalabels: { 
+                            color: (ctx) => {
+                                let lbl = uasaKeys[ctx.dataIndex];
+                                let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
+                                return isFaded ? 'transparent' : '#475569';
+                            }, 
+                            anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', 
+                            formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } 
+                        }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
                 }));
             });
             lucide.createIcons();
