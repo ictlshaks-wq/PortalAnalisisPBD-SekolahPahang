@@ -88,7 +88,7 @@
                      onerror="this.src='https://via.placeholder.com/60?text=JPN'">
                 <div>
                     <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-                        Aplikasi Analisis PBD 1.2
+                        Aplikasi Analisis PBD 1.6
                     </h1>
                     <p class="text-white/80 mt-1 text-sm md:text-base">Aplikasi ini dibangunkan oleh JK PBD, Sektor Pembelajaran JPN Pahang 2026.</p>
                 </div>
@@ -328,46 +328,54 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                         <div class="glass-panel p-6 flex flex-col">
-                            <h3 class="text-base font-bold text-slate-700 mb-6 flex justify-between items-center">
-                                <span>Prestasi PBD (Pentaksiran Berterusan)</span>
-                                <span class="text-xs font-normal px-2 py-1 bg-slate-100 rounded text-slate-500 no-print">Tahap Penguasaan</span>
+                            <h3 class="text-base font-bold text-slate-700 mb-6 flex justify-between items-start">
+                                <div class="flex flex-col">
+                                    <span>Prestasi PBD (Pentaksiran Berterusan)</span>
+                                    <div id="lblFilterChartPB"></div>
+                                </div>
+                                <span class="text-xs font-normal px-2 py-1 bg-slate-100 rounded text-slate-500 no-print mt-1">Tahap Penguasaan</span>
                             </h3>
-                            <div class="relative h-64 w-full">
+                            <div class="relative h-64 w-full mt-auto">
                                 <canvas id="chartPB"></canvas>
                             </div>
                         </div>
 
                         <div class="glass-panel p-6 flex flex-col">
-                            <h3 class="text-base font-bold text-slate-700 mb-6 flex justify-between items-center">
-                                <span>Prestasi UASA (Ujian Akhir Sesi)</span>
-                                <span class="text-xs font-normal px-2 py-1 bg-slate-100 rounded text-slate-500 no-print">Gred Ujian</span>
+                            <h3 class="text-base font-bold text-slate-700 mb-6 flex justify-between items-start">
+                                <div class="flex flex-col">
+                                    <span>Prestasi UASA (Ujian Akhir Sesi)</span>
+                                    <div id="lblFilterChartUASA"></div>
+                                </div>
+                                <span class="text-xs font-normal px-2 py-1 bg-slate-100 rounded text-slate-500 no-print mt-1">Gred Ujian</span>
                             </h3>
-                            <div class="relative h-64 w-full">
+                            <div class="relative h-64 w-full mt-auto">
                                 <canvas id="chartUASA"></canvas>
                             </div>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 gap-8">
-                        <div id="blockAnalisisKelas" class="bg-slate-50/50 rounded-xl p-4 border border-slate-100 relative bg-white">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-sm font-semibold text-slate-600 text-center w-full">Analisis Peratus Pencapaian Mengikut Kelas (%)</h3>
-                                <button data-html2canvas-ignore="true" onclick="muatTurunImej('blockAnalisisKelas', 'Analisis_Kelas')" class="absolute top-3 right-3 p-1.5 px-3 bg-slate-100 hover:bg-blue-100 hover:text-blue-700 rounded text-slate-500 transition-colors shadow-sm flex items-center gap-1.5 text-xs font-bold no-print" title="Muat Turun Gambar">
-                                    <i data-lucide="camera" class="w-3.5 h-3.5"></i> PNG
-                                </button>
+                        <div id="blockAnalisisKelas" class="bg-slate-50/50 rounded-xl p-4 border border-slate-100 relative bg-white flex flex-col">
+                            <div class="flex flex-col items-center justify-center mb-6 text-center w-full pt-2">
+                                <h3 class="text-sm font-semibold text-slate-600">Analisis Peratus Pencapaian Mengikut Kelas (%)</h3>
+                                <div id="lblFilterKelas"></div>
                             </div>
+                            <button data-html2canvas-ignore="true" onclick="muatTurunImej('blockAnalisisKelas', 'Analisis_Kelas')" class="absolute top-3 right-3 p-1.5 px-3 bg-slate-100 hover:bg-blue-100 hover:text-blue-700 rounded text-slate-500 transition-colors shadow-sm flex items-center gap-1.5 text-xs font-bold no-print" title="Muat Turun Gambar">
+                                <i data-lucide="camera" class="w-3.5 h-3.5"></i> PNG
+                            </button>
                             <div id="chartKelasContainer" class="relative w-full">
                                 <canvas id="chartKelasStacked"></canvas>
                             </div>
                         </div>
 
-                        <div id="blockAnalisisJantina" class="bg-slate-50/50 rounded-xl p-4 border border-slate-100 relative bg-white">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-sm font-semibold text-slate-600 text-center w-full">Analisis Peratus Pencapaian Mengikut Jantina (%)</h3>
-                                <button data-html2canvas-ignore="true" onclick="muatTurunImej('blockAnalisisJantina', 'Analisis_Jantina')" class="absolute top-3 right-3 p-1.5 px-3 bg-slate-100 hover:bg-blue-100 hover:text-blue-700 rounded text-slate-500 transition-colors shadow-sm flex items-center gap-1.5 text-xs font-bold no-print" title="Muat Turun Gambar">
-                                    <i data-lucide="camera" class="w-3.5 h-3.5"></i> PNG
-                                </button>
+                        <div id="blockAnalisisJantina" class="bg-slate-50/50 rounded-xl p-4 border border-slate-100 relative bg-white flex flex-col">
+                            <div class="flex flex-col items-center justify-center mb-6 text-center w-full pt-2">
+                                <h3 class="text-sm font-semibold text-slate-600">Analisis Peratus Pencapaian Mengikut Jantina (%)</h3>
+                                <div id="lblFilterJantina"></div>
                             </div>
+                            <button data-html2canvas-ignore="true" onclick="muatTurunImej('blockAnalisisJantina', 'Analisis_Jantina')" class="absolute top-3 right-3 p-1.5 px-3 bg-slate-100 hover:bg-blue-100 hover:text-blue-700 rounded text-slate-500 transition-colors shadow-sm flex items-center gap-1.5 text-xs font-bold no-print" title="Muat Turun Gambar">
+                                <i data-lucide="camera" class="w-3.5 h-3.5"></i> PNG
+                            </button>
                             <div class="relative h-80 w-full">
                                 <canvas id="chartJantinaGabung"></canvas>
                             </div>
@@ -432,6 +440,7 @@
                         <div>
                             <h3 class="text-lg font-bold text-slate-700">Senarai Penguasaan Murid</h3>
                             <p class="text-sm text-slate-500 mt-1 no-print">Paparan ditapis mengikut pilihan filter di atas.</p>
+                            <div id="lblFilterTableUtama"></div>
                         </div>
                         <span class="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full" id="tableRecordCount">0 Rekod Dipapar</span>
                     </div>
@@ -480,7 +489,10 @@
                     </div>
 
                     <div class="bg-slate-50/50 rounded-xl p-4 border border-slate-100">
-                        <h3 class="text-sm font-semibold text-slate-600 mb-4 text-center">Analisis PB & UASA: Menguasai vs Tidak Menguasai</h3>
+                        <div class="flex flex-col items-center justify-center mb-6 text-center w-full pt-2">
+                            <h3 class="text-sm font-semibold text-slate-600">Analisis PB & UASA: Menguasai vs Tidak Menguasai</h3>
+                            <div id="lblFilterAllSubjek"></div>
+                        </div>
                         <div id="chartAllSubjekGabunganContainer" class="relative w-full">
                             <canvas id="chartAllSubjekGabungan"></canvas>
                         </div>
@@ -553,6 +565,12 @@
         let chartInstancesSubjectUASA = [];
         
         let dataPaparanSemasa = [];
+
+        function getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
+            let pb = isSemuaPB ? "Semua TP" : (checkedPB.length > 0 ? checkedPB.join(', ') : "Tiada");
+            let uasa = isSemuaUASA ? "Semua Gred" : (checkedUASA.length > 0 ? checkedUASA.join(', ') : "Tiada");
+            return `<div class="mt-2 text-[10px] font-bold bg-blue-50 print:bg-transparent text-blue-700 print:text-slate-800 border border-blue-100 print:border-none px-2.5 print:px-0 py-1 rounded shadow-sm print:shadow-none inline-block text-left w-fit">📌 TAPISAN DATA: PB (${pb}) | UASA (${uasa})</div>`;
+        }
 
         // Heler functions for styling stacked charts selectively (fade/blur)
         function getStackedBgColor(ctx, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
@@ -1073,6 +1091,15 @@
             
             document.getElementById('tableRecordCount').textContent = `${totalSenaraiMurid} Rekod Dipapar`;
 
+            // Papar Label Tapisan pada setiap bahagian UI
+            let badgeHTML = getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
+            const lblPB = document.getElementById('lblFilterChartPB'); if(lblPB) lblPB.innerHTML = badgeHTML;
+            const lblUASA = document.getElementById('lblFilterChartUASA'); if(lblUASA) lblUASA.innerHTML = badgeHTML;
+            const lblKelas = document.getElementById('lblFilterKelas'); if(lblKelas) lblKelas.innerHTML = badgeHTML;
+            const lblJantina = document.getElementById('lblFilterJantina'); if(lblJantina) lblJantina.innerHTML = badgeHTML;
+            const lblTable = document.getElementById('lblFilterTableUtama'); if(lblTable) lblTable.innerHTML = badgeHTML;
+            const lblAllSub = document.getElementById('lblFilterAllSubjek'); if(lblAllSub) lblAllSub.innerHTML = badgeHTML;
+
             // Draw Charts with Visual Fading based on PB/UASA multi-selects
             janaCartaPB(dataPB_Taburan, stat.pbAmbil, isSemuaPB, checkedPB); 
             janaCartaUASA(dataUASA_Taburan, stat.uasaAmbil, isSemuaUASA, checkedUASA); 
@@ -1465,9 +1492,12 @@
                 wrapper.id = `block_tahap_${index}`;
                 wrapper.className = 'glass-panel p-6 border-t-4 border-t-indigo-500 mb-6 bg-white';
                 wrapper.innerHTML = `
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 border-b border-slate-100 pb-4">
-                        <h2 class="text-xl font-black text-slate-800 uppercase tracking-wide">${tahapData.tahap}</h2>
-                        <div class="flex items-center gap-2 no-print">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 border-b border-slate-100 pb-4">
+                        <div>
+                            <h2 class="text-xl font-black text-slate-800 uppercase tracking-wide">${tahapData.tahap}</h2>
+                            ${getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA)}
+                        </div>
+                        <div class="flex items-center gap-2 no-print mt-2 sm:mt-0">
                             <div class="bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 shadow-sm">
                                 <i data-lucide="users" class="w-4 h-4"></i>
                                 <span class="text-sm font-bold">Jumlah Murid: ${tahapData.jumlahMurid}</span>
@@ -1715,9 +1745,12 @@
                 wrapper.id = `block_subjek_${index}`;
                 wrapper.className = 'glass-panel p-6 border-t-4 border-t-purple-500 mb-6 bg-white';
                 wrapper.innerHTML = `
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 border-b border-slate-100 pb-4">
-                        <h2 class="text-xl font-black text-slate-800 uppercase tracking-wide">${subjekData.subjek}</h2>
-                        <div class="flex items-center gap-2 no-print">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 border-b border-slate-100 pb-4">
+                        <div>
+                            <h2 class="text-xl font-black text-slate-800 uppercase tracking-wide">${subjekData.subjek}</h2>
+                            ${getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA)}
+                        </div>
+                        <div class="flex items-center gap-2 no-print mt-2 sm:mt-0">
                             <div class="bg-purple-50 border border-purple-100 text-purple-700 px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 shadow-sm">
                                 <i data-lucide="book-open" class="w-4 h-4"></i>
                                 <span class="text-sm font-bold">PBD (${totalSesiPB} Murid) | UASA (${totalSesiUASA} Murid)</span>
