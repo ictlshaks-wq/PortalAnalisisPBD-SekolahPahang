@@ -12,7 +12,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -22,36 +22,31 @@
             theme: {
                 extend: {
                     colors: {
-                        jpn: {
-                            maroon: '#800000',
-                            blue: '#1e3a8a',
-                            light: '#f8fafc'
-                        }
+                        jpn: { maroon: '#800000', blue: '#1e3a8a', light: '#f8fafc' }
                     },
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] }
                 }
             }
         }
     </script>
 
     <style>
-        body { background-color: #f8fafc; font-family: 'Poppins', sans-serif; }
+        body { background-color: #f8fafc; font-family: 'Poppins', sans-serif; margin: 0; padding: 0;}
         .glass-panel { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid #f1f5f9; }
-        table { width: 100%; border-collapse: collapse; table-layout: auto; }
-        th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.8rem; line-height: 1.2; }
-        th { background-color: #1e3a8a; font-weight: 600; color: #ffffff; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.02em; }
-        tr:hover { background-color: #f1f5f9; }
+        
+        /* GAYA JADUAL UTAMA PBD/UASA */
+        table.utama { width: 100%; border-collapse: collapse; table-layout: auto; }
+        table.utama th, table.utama td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.8rem; line-height: 1.2; }
+        table.utama th { background-color: #1e3a8a; font-weight: 600; color: #ffffff; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.02em; position: sticky; top: 0; z-index: 10; }
+        table.utama th::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; border-bottom: 1px solid #1e40af; }
+        table.utama tr:hover { background-color: #f1f5f9; }
+        
         .badge { padding: 2px 4px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; display: inline-block; min-width: 32px; text-align: center; border: 1px solid transparent; }
         .badge-green { background-color: #22c55e; color: #ffffff; border-color: #16a34a; }
         .badge-blue { background-color: #3b82f6; color: #ffffff; border-color: #2563eb; }
         .badge-red { background-color: #ef4444; color: #ffffff; border-color: #dc2626; }
         .badge-orange { background-color: #f97316; color: #ffffff; border-color: #ea580c; }
         .badge-white { background-color: #ffffff; color: #475569; border-color: #cbd5e1; }
-        
-        thead th { position: sticky; top: 0; z-index: 10; background-color: #1e3a8a; }
-        thead th::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; border-bottom: 1px solid #1e40af; }
         
         .custom-scrollbar::-webkit-scrollbar { width: 8px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
@@ -70,10 +65,45 @@
             canvas { max-width: 100% !important; height: auto !important; }
             header { border-bottom: 2px solid #1e3a8a !important; padding-bottom: 10px !important; margin-bottom: 20px !important; }
             .badge { border: 1px solid #ccc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            th { background-color: #1e3a8a !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            table.utama th { background-color: #1e3a8a !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .page-break { page-break-before: always; }
-            #tab1Content, #tab2Content, #tab3Content { display: block !important; }
+            #tab1Content, #tab2Content, #tab3Content, #tab4Content { display: block !important; }
         }
+
+        /* ========================================================
+           GAYA CSS UNTUK MODAL (POP-UP)
+           ======================================================== */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; 
+            overflow: auto; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 5% auto; padding: 25px; border: 1px solid #888; 
+            width: 90%; max-width: 1100px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 1; margin-left: 15px;}
+        .close-btn:hover { color: #d9534f; }
+        .modal-header { border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .modal-header h3 { margin: 0; color: #1e3a8a; font-size: 1.25rem; font-weight: 700; font-family: 'Poppins', sans-serif;}
+        .btn-export { background-color: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; width: auto; font-family: 'Poppins', sans-serif;}
+        .btn-export:hover { background-color: #059669; }
+        
+        .table-container { overflow-x: auto; max-height: 500px; overflow-y: auto; }
+        table.modaltable { width: 100%; border-collapse: collapse; }
+        table.modaltable th, table.modaltable td { border: 1px solid #e5e7eb; padding: 10px 12px; text-align: left; font-size: 13px; font-family: 'Poppins', sans-serif;}
+        table.modaltable th { background-color: #f3f4f6; color: #374151; position: sticky; top: 0; box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1); z-index: 10;}
+        table.modaltable tr:nth-child(even) { background-color: #f9fafb; }
+        table.modaltable tr:hover { background-color: #eff6ff; }
+        
+        .badge-p4 { display: inline-block; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; margin: 2px; color: white;}
+        .badge-lemah { background-color: #ef4444; }
+        .badge-ujian { background-color: #f59e0b; }
+        .badge-pbd { background-color: #8b5cf6; }
     </style>
 </head>
 <body class="p-4 md:p-6 lg:p-8">
@@ -104,20 +134,18 @@
 
         <div id="dashboardSection" class="hidden space-y-6">
             
-            <!-- TETAPAN TAPISAN -->
+            <!-- TETAPAN TAPISAN KESELURUHAN -->
             <div class="glass-panel p-6 no-print">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
                     <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                        <i data-lucide="filter" class="w-4 h-4"></i> Tetapan Tapisan
+                        <i data-lucide="filter" class="w-4 h-4"></i> Tetapan Tapisan Utama
                     </h3>
                     <div class="flex gap-2 w-full sm:w-auto">
                         <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm flex-1 sm:flex-none">
-                            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-                            Cetak Paparan
+                            <i data-lucide="printer" class="w-3.5 h-3.5"></i> Cetak
                         </button>
                         <button onclick="resetFilters()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm flex-1 sm:flex-none">
-                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                            Reset Tapisan
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Reset Tapisan
                         </button>
                     </div>
                 </div>
@@ -167,8 +195,8 @@
                     </div>
                 </div>
 
+                <!-- Filters for Pages 1-3 (PB and UASA specific grades) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Custom Multi-Select Filter PB -->
                     <div class="relative w-full" id="containerPB">
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Tahap Penguasaan (PB)</label>
                         <div class="w-full border-slate-300 rounded-lg shadow-sm p-2.5 border bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 text-sm font-medium cursor-pointer flex justify-between items-center" onclick="toggleDropdown('dropdownPB')">
@@ -191,7 +219,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Custom Multi-Select Filter UASA -->
                     <div class="relative w-full" id="containerUASA">
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Gred UASA</label>
                         <div class="w-full border-slate-300 rounded-lg shadow-sm p-2.5 border bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 text-sm font-medium cursor-pointer flex justify-between items-center" onclick="toggleDropdown('dropdownUASA')">
@@ -216,6 +243,7 @@
                     </div>
                 </div>
 
+                <!-- Subjek Tambahan untuk Jadual Utama -->
                 <div class="mt-4 pt-4 border-t border-slate-200 no-print">
                     <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Subjek Tambahan (Jadual Senarai Murid)</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -236,15 +264,14 @@
             <!-- TAB NAVIGATION -->
             <div class="glass-panel p-2 flex flex-col sm:flex-row gap-2 no-print bg-slate-100">
                 <button id="tab1Btn" onclick="tukarTab(1)" class="px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold flex-1 transition-colors shadow-sm">Page 1: Analisis Utama</button>
-                <button id="tab2Btn" onclick="tukarTab(2)" class="px-4 py-2.5 bg-white text-slate-600 hover:bg-slate-50 rounded-lg text-sm font-bold flex-1 transition-colors border border-slate-200">Page 2: Analisis Mengikut Tahun/Tingkatan</button>
-                <button id="tab3Btn" onclick="tukarTab(3)" class="px-4 py-2.5 bg-white text-slate-600 hover:bg-slate-50 rounded-lg text-sm font-bold flex-1 transition-colors border border-slate-200">Page 3: Analisis Mata Pelajaran</button>
+                <button id="tab2Btn" onclick="tukarTab(2)" class="px-4 py-2.5 bg-white text-slate-600 hover:bg-slate-50 rounded-lg text-sm font-bold flex-1 transition-colors border border-slate-200">Page 2: Analisis Mengikut Tahun</button>
+                <button id="tab3Btn" onclick="tukarTab(3)" class="px-4 py-2.5 bg-white text-slate-600 hover:bg-slate-50 rounded-lg text-sm font-bold flex-1 transition-colors border border-slate-200">Page 3: Analisis Subjek</button>
+                <button id="tab4Btn" onclick="tukarTab(4)" class="px-4 py-2.5 bg-white text-slate-600 hover:bg-slate-50 rounded-lg text-sm font-bold flex-1 transition-colors border border-slate-200">Page 4: Taburan Murid</button>
             </div>
 
             <!-- ===================== PAGE 1 CONTENT ===================== -->
             <div id="tab1Content" class="space-y-6">
-                <!-- KPI CARDS - Dikemaskini menjadi 8 Kad -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    
                     <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-slate-400 bg-slate-50/10">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Jumlah Keseluruhan Kohort</p>
@@ -252,7 +279,6 @@
                         </div>
                         <p class="text-3xl font-black text-slate-700 mt-2" id="kpiJumlah">0</p>
                     </div>
-
                     <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-orange-500 bg-orange-50/10">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] font-bold text-orange-700 uppercase tracking-wider">Amaran Jurang Penilaian</p>
@@ -261,7 +287,6 @@
                         <p class="text-3xl font-black text-orange-600 mt-2" id="kpiJurang">0</p>
                         <p class="text-[10px] text-orange-600 font-medium mt-1">PBD Tinggi (TP4+) tapi UASA Gagal</p>
                     </div>
-                    
                     <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-emerald-500 bg-emerald-50/10">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Menguasai PBD (TP3+)</p>
@@ -270,7 +295,6 @@
                         <p class="text-3xl font-black text-emerald-600 mt-2" id="kpiPBD">0%</p>
                         <p class="text-[10px] text-emerald-600 font-medium mt-1" id="kpiPBDDetail">0 dari 0 subjek dinilai</p>
                     </div>
-
                     <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-red-500 bg-red-50/10">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] font-bold text-red-700 uppercase tracking-wider">Tidak Menguasai PBD (TP1-2)</p>
@@ -279,7 +303,6 @@
                         <p class="text-3xl font-black text-red-600 mt-2" id="kpiPBDGagal">0%</p>
                         <p class="text-[10px] text-red-600 font-medium mt-1" id="kpiPBDGagalDetail">0 dari 0 subjek dinilai</p>
                     </div>
-
                     <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-blue-500 bg-blue-50/10">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] font-bold text-blue-700 uppercase tracking-wider">Menguasai UASA (A-E)</p>
@@ -288,7 +311,6 @@
                         <p class="text-3xl font-black text-blue-600 mt-2" id="kpiUASA">0%</p>
                         <p class="text-[10px] text-blue-600 font-medium mt-1" id="kpiUASADetail">0 dari 0 subjek dinilai</p>
                     </div>
-
                     <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-rose-500 bg-rose-50/10">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] font-bold text-rose-700 uppercase tracking-wider">Tidak Menguasai UASA (F)</p>
@@ -297,7 +319,6 @@
                         <p class="text-3xl font-black text-rose-600 mt-2" id="kpiUASAGagal">0%</p>
                         <p class="text-[10px] text-rose-600 font-medium mt-1" id="kpiUASAGagalDetail">0 dari 0 subjek dinilai</p>
                     </div>
-
                     <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-green-500 bg-green-50/30">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] font-bold text-green-700 uppercase tracking-wider">Jumlah MP TP6</p>
@@ -305,7 +326,6 @@
                         </div>
                         <p class="text-3xl font-black text-green-600 mt-2" id="kpiTotalTP6">0</p>
                     </div>
-
                     <div class="glass-panel p-5 flex flex-col justify-between border-t-4 border-indigo-500 bg-indigo-50/30">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] font-bold text-indigo-700 uppercase tracking-wider">Jumlah MP UASA A</p>
@@ -325,35 +345,22 @@
                             <i data-lucide="camera" class="w-3.5 h-3.5"></i> PNG
                         </button>
                     </div>
-
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                         <div class="glass-panel p-6 flex flex-col">
                             <h3 class="text-base font-bold text-slate-700 mb-6 flex justify-between items-start">
-                                <div class="flex flex-col">
-                                    <span>Prestasi PBD (Pentaksiran Berterusan)</span>
-                                    <div id="lblFilterChartPB"></div>
-                                </div>
+                                <div class="flex flex-col"><span>Prestasi PBD (Pentaksiran Berterusan)</span><div id="lblFilterChartPB"></div></div>
                                 <span class="text-xs font-normal px-2 py-1 bg-slate-100 rounded text-slate-500 no-print mt-1">Tahap Penguasaan</span>
                             </h3>
-                            <div class="relative h-64 w-full mt-auto">
-                                <canvas id="chartPB"></canvas>
-                            </div>
+                            <div class="relative h-64 w-full mt-auto"><canvas id="chartPB"></canvas></div>
                         </div>
-
                         <div class="glass-panel p-6 flex flex-col">
                             <h3 class="text-base font-bold text-slate-700 mb-6 flex justify-between items-start">
-                                <div class="flex flex-col">
-                                    <span>Prestasi UASA (Ujian Akhir Sesi)</span>
-                                    <div id="lblFilterChartUASA"></div>
-                                </div>
+                                <div class="flex flex-col"><span>Prestasi UASA (Ujian Akhir Sesi)</span><div id="lblFilterChartUASA"></div></div>
                                 <span class="text-xs font-normal px-2 py-1 bg-slate-100 rounded text-slate-500 no-print mt-1">Gred Ujian</span>
                             </h3>
-                            <div class="relative h-64 w-full mt-auto">
-                                <canvas id="chartUASA"></canvas>
-                            </div>
+                            <div class="relative h-64 w-full mt-auto"><canvas id="chartUASA"></canvas></div>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 gap-8">
                         <div id="blockAnalisisKelas" class="bg-slate-50/50 rounded-xl p-4 border border-slate-100 relative bg-white flex flex-col">
                             <div class="flex flex-col items-center justify-center mb-6 text-center w-full pt-2">
@@ -363,11 +370,8 @@
                             <button data-html2canvas-ignore="true" onclick="muatTurunImej('blockAnalisisKelas', 'Analisis_Kelas')" class="absolute top-3 right-3 p-1.5 px-3 bg-slate-100 hover:bg-blue-100 hover:text-blue-700 rounded text-slate-500 transition-colors shadow-sm flex items-center gap-1.5 text-xs font-bold no-print" title="Muat Turun Gambar">
                                 <i data-lucide="camera" class="w-3.5 h-3.5"></i> PNG
                             </button>
-                            <div id="chartKelasContainer" class="relative w-full">
-                                <canvas id="chartKelasStacked"></canvas>
-                            </div>
+                            <div id="chartKelasContainer" class="relative w-full"><canvas id="chartKelasStacked"></canvas></div>
                         </div>
-
                         <div id="blockAnalisisJantina" class="bg-slate-50/50 rounded-xl p-4 border border-slate-100 relative bg-white flex flex-col">
                             <div class="flex flex-col items-center justify-center mb-6 text-center w-full pt-2">
                                 <h3 class="text-sm font-semibold text-slate-600">Analisis Peratus Pencapaian Mengikut Jantina (%)</h3>
@@ -376,60 +380,57 @@
                             <button data-html2canvas-ignore="true" onclick="muatTurunImej('blockAnalisisJantina', 'Analisis_Jantina')" class="absolute top-3 right-3 p-1.5 px-3 bg-slate-100 hover:bg-blue-100 hover:text-blue-700 rounded text-slate-500 transition-colors shadow-sm flex items-center gap-1.5 text-xs font-bold no-print" title="Muat Turun Gambar">
                                 <i data-lucide="camera" class="w-3.5 h-3.5"></i> PNG
                             </button>
-                            <div class="relative h-80 w-full">
-                                <canvas id="chartJantinaGabung"></canvas>
+                            <div class="relative h-80 w-full"><canvas id="chartJantinaGabung"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-8 mt-8">
+                    <div class="glass-panel p-4 border-t-4 border-emerald-500 flex flex-col">
+                        <h3 class="text-sm font-bold text-emerald-600 mb-3 flex items-center gap-2">
+                            <i data-lucide="medal" class="w-4 h-4 no-print"></i> Senarai Murid Cemerlang
+                        </h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left mb-0">
+                                <thead class="text-[10px] uppercase bg-slate-50 text-slate-500">
+                                    <tr>
+                                        <th class="p-2 border-r border-slate-200 w-12">Bil</th>
+                                        <th class="p-2 border-r border-slate-200">Nama Murid</th>
+                                        <th class="p-2 border-r border-slate-200 w-20">Tahun</th>
+                                        <th class="p-2 border-r border-slate-200 w-24">Kelas</th>
+                                        <th class="p-2 text-center font-bold border-r border-slate-200 w-20">MP TP6</th>
+                                        <th class="p-2 text-center font-bold w-24">MP UASA A</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="max-h-[350px] overflow-y-auto custom-scrollbar border-b border-slate-200">
+                                <table class="w-full text-xs text-left">
+                                    <tbody id="top10Body" class="text-slate-700"></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-1 gap-8 mt-8">
-                        <div class="glass-panel p-4 border-t-4 border-emerald-500 flex flex-col">
-                            <h3 class="text-sm font-bold text-emerald-600 mb-3 flex items-center gap-2">
-                                <i data-lucide="medal" class="w-4 h-4 no-print"></i> Senarai Murid Cemerlang
-                            </h3>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-xs text-left mb-0">
-                                    <thead class="text-[10px] uppercase bg-slate-50 text-slate-500">
-                                        <tr>
-                                            <th class="p-2 border-r border-slate-200 w-12">Bil</th>
-                                            <th class="p-2 border-r border-slate-200">Nama Murid</th>
-                                            <th class="p-2 border-r border-slate-200 w-20">Tahun</th>
-                                            <th class="p-2 border-r border-slate-200 w-24">Kelas</th>
-                                            <th class="p-2 text-center font-bold border-r border-slate-200 w-20">MP TP6</th>
-                                            <th class="p-2 text-center font-bold w-24">MP UASA A</th>
-                                        </tr>
-                                    </thead>
+                    <div class="glass-panel p-4 border-t-4 border-rose-500 flex flex-col">
+                        <h3 class="text-sm font-bold text-rose-600 mb-3 flex items-center gap-2">
+                            <i data-lucide="life-buoy" class="w-4 h-4 no-print"></i> Senarai Murid Kritikal
+                        </h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left mb-0">
+                                <thead class="text-[10px] uppercase bg-slate-50 text-slate-500">
+                                    <tr>
+                                        <th class="p-2 border-r border-slate-200 w-12">Bil</th>
+                                        <th class="p-2 border-r border-slate-200">Nama Murid</th>
+                                        <th class="p-2 border-r border-slate-200 w-20">Tahun</th>
+                                        <th class="p-2 border-r border-slate-200 w-24">Kelas</th>
+                                        <th class="p-2 text-center font-bold border-r border-slate-200 w-24">MP TP1 & 2</th>
+                                        <th class="p-2 text-center font-bold w-24">MP UASA F</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="max-h-[350px] overflow-y-auto custom-scrollbar border-b border-slate-200">
+                                <table class="w-full text-xs text-left">
+                                    <tbody id="bottom10Body" class="text-slate-700"></tbody>
                                 </table>
-                                <div class="max-h-[350px] overflow-y-auto custom-scrollbar border-b border-slate-200">
-                                    <table class="w-full text-xs text-left">
-                                        <tbody id="top10Body" class="text-slate-700"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="glass-panel p-4 border-t-4 border-rose-500 flex flex-col">
-                            <h3 class="text-sm font-bold text-rose-600 mb-3 flex items-center gap-2">
-                                <i data-lucide="life-buoy" class="w-4 h-4 no-print"></i> Senarai Murid Kritikal
-                            </h3>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-xs text-left mb-0">
-                                    <thead class="text-[10px] uppercase bg-slate-50 text-slate-500">
-                                        <tr>
-                                            <th class="p-2 border-r border-slate-200 w-12">Bil</th>
-                                            <th class="p-2 border-r border-slate-200">Nama Murid</th>
-                                            <th class="p-2 border-r border-slate-200 w-20">Tahun</th>
-                                            <th class="p-2 border-r border-slate-200 w-24">Kelas</th>
-                                            <th class="p-2 text-center font-bold border-r border-slate-200 w-24">MP TP1 & 2</th>
-                                            <th class="p-2 text-center font-bold w-24">MP UASA F</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                                <div class="max-h-[350px] overflow-y-auto custom-scrollbar border-b border-slate-200">
-                                    <table class="w-full text-xs text-left">
-                                        <tbody id="bottom10Body" class="text-slate-700"></tbody>
-                                    </table>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -444,9 +445,8 @@
                         </div>
                         <span class="text-xs font-bold bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full" id="tableRecordCount">0 Rekod Dipapar</span>
                     </div>
-                    
                     <div class="w-full max-h-[600px] overflow-y-auto custom-scrollbar border-b border-t border-slate-200">
-                        <table class="w-full text-sm relative">
+                        <table class="utama w-full text-sm relative">
                             <thead id="dataTableHead"></thead>
                             <tbody id="dataTableBody"></tbody>
                         </table>
@@ -474,8 +474,6 @@
             
             <!-- ===================== PAGE 3 CONTENT ===================== -->
             <div id="tab3Content" class="hidden space-y-6">
-                
-                <!-- Keseluruhan Subjek -->
                 <div id="blockKeseluruhanSubjek" class="glass-panel p-6 border-l-8 border-l-purple-600 relative bg-white">
                     <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 mb-6 border-b border-slate-100 pb-3">
                         <div class="flex items-center gap-2">
@@ -487,7 +485,6 @@
                             <i data-lucide="camera" class="w-3.5 h-3.5"></i> PNG
                         </button>
                     </div>
-
                     <div class="bg-slate-50/50 rounded-xl p-4 border border-slate-100">
                         <div class="flex flex-col items-center justify-center mb-6 text-center w-full pt-2">
                             <h3 class="text-sm font-semibold text-slate-600">Analisis PB & UASA: Menguasai vs Tidak Menguasai</h3>
@@ -498,14 +495,53 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Perbandingan Subjek Terperinci -->
                 <div id="containerSubjekComparison" class="space-y-8"></div>
-                
+            </div>
+
+            <!-- ===================== PAGE 4 CONTENT (TABURAN MURID) ===================== -->
+            <div id="tab4Content" class="hidden space-y-6">
+                <div id="blockPage4" class="glass-panel p-6 border-l-8 border-l-amber-500 relative bg-white">
+                    <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-4 mb-6 border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="crosshair" class="text-amber-600"></i>
+                            <h2 class="text-lg font-bold text-slate-800">Pemetaan Taburan Murid (TP vs Gred)</h2>
+                        </div>
+                        <div class="flex gap-2 no-print">
+                            <button onclick="downloadScatterImageP4()" class="p-2 px-4 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 text-xs font-bold flex items-center gap-2 transition-colors">
+                                <i data-lucide="image" class="w-3.5 h-3.5"></i> Muat Turun PNG
+                            </button>
+                            <button onclick="paparModalAnalisisRisiko()" class="p-2 px-4 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold flex items-center gap-2 shadow-sm transition-colors">
+                                <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Analisis Murid Berisiko
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Page 4 Local Filter: Zon Kritikal Toggle -->
+                    <div class="mb-6 bg-rose-50 border border-rose-200 p-3 rounded-lg flex items-center gap-3 no-print">
+                        <input type="checkbox" id="criticalFilterP4" onchange="janaCartaScatterP4()" class="w-5 h-5 text-rose-600 rounded border-rose-300 cursor-pointer">
+                        <label for="criticalFilterP4" class="text-sm font-bold text-rose-800 cursor-pointer mb-0">🚨 Papar Zon Kritikal Sahaja Pada Graf Ini</label>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6">
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                            <!-- Legends -->
+                            <div class="flex flex-wrap gap-4 items-center justify-center mb-6">
+                                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-red-200 border border-red-600"></span> <span class="text-xs font-bold text-slate-600">ZON LEMAH (Gred E/F & TP1/2)</span></div>
+                                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-yellow-200 border border-yellow-600"></span> <span class="text-xs font-bold text-slate-600">ANOMALI UJIAN (TP1/2, Gred Baik)</span></div>
+                                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-purple-200 border border-purple-600"></span> <span class="text-xs font-bold text-slate-600">ANOMALI PBD (PBD Baik, Gred Lemah)</span></div>
+                            </div>
+                            <!-- Canvas -->
+                            <div class="relative w-full h-[600px] bg-white rounded-lg p-2 border border-slate-100">
+                                <canvas id="scatterChartP4"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
 
+        <!-- Tiada Data Section -->
         <div id="emptyState" class="mt-20 flex flex-col items-center justify-center text-center glass-panel p-12 no-print">
             <div class="bg-blue-50 p-6 rounded-full mb-4 shadow-inner">
                 <i data-lucide="file-spreadsheet" class="w-16 h-16 text-blue-500"></i>
@@ -521,31 +557,111 @@
 
     </div>
 
-    <!-- Modal Senarai Murid Drilldown (Klik Graf Page 3) -->
-    <div id="modalSenaraiMurid" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex flex-col items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden ring-1 ring-slate-200">
-            <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-                <div>
-                    <h3 class="text-lg md:text-xl font-bold text-slate-800" id="modalSenaraiTajuk">Senarai Murid</h3>
-                    <p class="text-sm font-medium text-slate-500 mt-1" id="modalSenaraiSubtajuk">Detail</p>
+    <!-- ========================================================
+         MODALS UNTUK PAGE 3 (DRILLDOWN SENARAI MURID)
+         ======================================================== -->
+    <div id="modalSenaraiMurid" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-text">
+                    <h3 id="modalSenaraiTajuk">Senarai Murid</h3>
+                    <p id="modalSenaraiSubtajuk" class="text-sm text-slate-500 mt-1">Detail</p>
                 </div>
-                <button onclick="tutupModalSenarai()" class="p-2 bg-white hover:bg-rose-100 hover:text-rose-600 rounded-full text-slate-500 transition-colors shadow-sm ring-1 ring-slate-200">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+                <div class="flex gap-2">
+                    <span class="close-btn" onclick="tutupModalSenarai()">&times;</span>
+                </div>
             </div>
-            <div class="overflow-y-auto custom-scrollbar flex-1 relative bg-white p-0">
-                <table class="w-full text-xs text-left m-0">
-                    <thead class="text-[10px] uppercase bg-slate-100 text-slate-600 sticky top-0 z-10 shadow-sm" id="modalSenaraiHead">
-                        <!-- Headers generated by JS -->
-                    </thead>
-                    <tbody id="modalSenaraiBody" class="text-slate-700">
-                        <!-- Rows generated by JS -->
-                    </tbody>
+            <div class="table-container">
+                <table class="modaltable">
+                    <thead id="modalSenaraiHead"></thead>
+                    <tbody id="modalSenaraiBody"></tbody>
                 </table>
             </div>
         </div>
     </div>
 
+    <!-- ========================================================
+         MODALS UNTUK PAGE 4 (TABURAN MURID)
+         ======================================================== -->
+    
+    <!-- Modal 1: Senarai Murid dalam Buih -->
+    <div id="studentModalPage4" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-text">
+                    <h3 id="modalTitleP4">Senarai Murid</h3>
+                    <p id="modalSubtitleP4" class="text-sm text-slate-500 mt-1"></p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="btn-export flex items-center gap-2" onclick="downloadExcelP4()">
+                        <i data-lucide="download" class="w-4 h-4"></i> Muat Turun Excel
+                    </button>
+                    <span class="close-btn" onclick="tutupModal('studentModalPage4')">&times;</span>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="modaltable">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%; text-align: center;">Bil</th>
+                            <th style="width: 35%;">Nama Murid</th>
+                            <th style="width: 20%;">Tahun & Kelas</th>
+                            <th style="width: 20%;">Subjek</th>
+                            <th style="width: 10%; text-align: center;">TP (PB)</th>
+                            <th style="width: 10%; text-align: center;">Gred (UASA)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBodyP4"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Analisis Murid Berisiko Tinggi -->
+    <div id="riskModalPage4" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-text">
+                    <h3>Senarai Murid Berisiko Tinggi (Kritikal / Anomali)</h3>
+                    <p class="text-sm text-slate-500 mt-1">
+                        Menyenaraikan murid yang mempunyai mata pelajaran dalam Zon Kritikal berdasarkan tapisan minimum.
+                    </p>
+                </div>
+                <div class="flex gap-3 items-center">
+                    <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg">
+                        <label class="text-xs font-bold text-slate-600 mb-0">Minima Subjek:</label>
+                        <select id="minCriticalP4" onchange="prosesAnalisisRisiko()" class="text-xs p-1 bg-transparent border-none font-bold text-slate-800 cursor-pointer">
+                            <option value="1">1 Subjek</option>
+                            <option value="2" selected>2 Subjek</option>
+                            <option value="3">3 Subjek</option>
+                            <option value="4">4 Subjek</option>
+                            <option value="5">5 Subjek</option>
+                        </select>
+                    </div>
+                    <button class="btn-export flex items-center gap-2" onclick="downloadRiskExcelP4()">
+                        <i data-lucide="download" class="w-4 h-4"></i> Muat Turun Excel
+                    </button>
+                    <span class="close-btn" onclick="tutupModal('riskModalPage4')">&times;</span>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="modaltable">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%; text-align: center;">Bil</th>
+                            <th style="width: 25%;">Nama Murid</th>
+                            <th style="width: 15%;">Tahun & Kelas</th>
+                            <th style="width: 10%; text-align: center;">Jum. Subjek Kritikal</th>
+                            <th style="width: 45%;">Perincian Mata Pelajaran (Subjek: TP/Gred)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="riskTableBodyP4"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Utama -->
     <script>
         lucide.createIcons();
         Chart.register(ChartDataLabels);
@@ -553,26 +669,60 @@
         let dataGlobal = [];
         let senaraiSubjek = [];
         
-        // Instances for Page 1
+        // Instances for Page 1, 2, 3
         let chartInstancePB = null, chartInstanceUASA = null;
         let chartInstanceKelasStacked = null, chartInstanceJantinaGabung = null;
-        // Instances for Page 2
-        let chartInstancesMultiPB = [];
-        let chartInstancesMultiUASA = [];
-        // Instances for Page 3
-        let chartInstancesAllSubjek = [];
-        let chartInstancesSubjectPB = [];
-        let chartInstancesSubjectUASA = [];
+        let chartInstancesMultiPB = [], chartInstancesMultiUASA = [];
+        let chartInstancesAllSubjek = [], chartInstancesSubjectPB = [], chartInstancesSubjectUASA = [];
         
-        let dataPaparanSemasa = [];
+        // Variables & Plugins for Page 4
+        let scatterChartInstanceP4 = null;
+        let currentModalStudentsP4 = [];
+        let currentRiskStudentsP4 = [];
+        const gradeMapX = {'A':1, 'B':2, 'C':3, 'D':4, 'E':5, 'F':6};
+        const tpMapY = {'TP1':1, 'TP2':2, 'TP3':3, 'TP4':4, 'TP5':5, 'TP6':6};
 
+        const customCanvasBackgroundColor = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart, args, options) => {
+                const {ctx} = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = options.color || '#ffffff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
+
+        const dangerZonePlugin = {
+            id: 'dangerZone',
+            beforeDraw: (chart) => {
+                const { ctx, chartArea: { top, bottom, left, right }, scales: { x, y } } = chart;
+                ctx.save();
+                function drawZone(xMin, xMax, yMin, yMax, bgColor, textColor, label) {
+                    const startX = x.getPixelForValue(xMin); const endX = x.getPixelForValue(xMax);
+                    const startY = y.getPixelForValue(yMax); const endY = y.getPixelForValue(yMin);
+                    ctx.fillStyle = bgColor; ctx.fillRect(startX, startY, endX - startX, endY - startY);
+                    ctx.fillStyle = textColor; ctx.font = 'bold 12px "Poppins", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    const cX = startX + (endX - startX) / 2; const cY = startY + (endY - startY) / 2;
+                    const lines = label.split('\n'); const lh = 16; const startTextY = cY - ((lines.length - 1) * lh) / 2;
+                    lines.forEach((line, i) => ctx.fillText(line, cX, startTextY + (i * lh)));
+                }
+                drawZone(4.5, 6.5, 0.5, 2.5, 'rgba(254, 202, 202, 0.5)', 'rgba(185, 28, 28, 1)', 'Zon Lemah\n(Gred E/F & TP1/TP2)');
+                drawZone(0.5, 2.5, 0.5, 2.5, 'rgba(254, 240, 138, 0.5)', 'rgba(180, 83, 9, 1)', 'Anomali Ujian\n(Lemah PBD, Ujian Baik)');
+                drawZone(4.5, 6.5, 4.5, 6.5, 'rgba(233, 213, 255, 0.5)', 'rgba(126, 34, 206, 1)', 'Anomali PBD\n(PBD Baik, Ujian Lemah)');
+                ctx.restore();
+            }
+        };
+        Chart.register(customCanvasBackgroundColor);
+
+        // Helper Functions 
         function getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
             let pb = isSemuaPB ? "Semua TP" : (checkedPB.length > 0 ? checkedPB.join(', ') : "Tiada");
             let uasa = isSemuaUASA ? "Semua Gred" : (checkedUASA.length > 0 ? checkedUASA.join(', ') : "Tiada");
             return `<div class="mt-2 text-[10px] font-bold bg-blue-50 print:bg-transparent text-blue-700 print:text-slate-800 border border-blue-100 print:border-none px-2.5 print:px-0 py-1 rounded shadow-sm print:shadow-none inline-block text-left w-fit">📌 TAPISAN DATA: PB (${pb}) | UASA (${uasa})</div>`;
         }
 
-        // Heler functions for styling stacked charts selectively (fade/blur)
         function getStackedBgColor(ctx, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
             const labelStr = ctx.chart.data.labels[ctx.dataIndex];
             const isPB = labelStr ? labelStr.includes('(PB)') : false;
@@ -605,23 +755,16 @@
                 if (isPB && !isSemuaPB && !checkedPB.includes('TD')) isFaded = true;
                 if (!isPB && !isSemuaUASA && !checkedUASA.includes('TD')) isFaded = true;
             }
-            if (isFaded) return 'transparent'; // blur hide text
+            if (isFaded) return 'transparent'; 
             return '#ffffff';
         }
 
-        // Tutup dropdown apabila klik di luar
+        // Tutup dropdown apabila klik luar
         document.addEventListener('click', function(e) {
-            const dropdowns = [
-                { container: 'containerSubjek', dropdown: 'dropdownSubjek' },
-                { container: 'containerPB', dropdown: 'dropdownPB' },
-                { container: 'containerUASA', dropdown: 'dropdownUASA' }
-            ];
+            const dropdowns = [ { container: 'containerSubjek', dropdown: 'dropdownSubjek' }, { container: 'containerPB', dropdown: 'dropdownPB' }, { container: 'containerUASA', dropdown: 'dropdownUASA' } ];
             dropdowns.forEach(d => {
-                const c = document.getElementById(d.container);
-                const dd = document.getElementById(d.dropdown);
-                if (c && !c.contains(e.target) && dd && !dd.classList.contains('hidden')) {
-                    dd.classList.add('hidden');
-                }
+                const c = document.getElementById(d.container); const dd = document.getElementById(d.dropdown);
+                if (c && !c.contains(e.target) && dd && !dd.classList.contains('hidden')) dd.classList.add('hidden');
             });
         });
 
@@ -638,7 +781,7 @@
         });
 
         function tukarTab(tabIndex) {
-            const tabs = [1, 2, 3];
+            const tabs = [1, 2, 3, 4];
             tabs.forEach(t => {
                 const btn = document.getElementById(`tab${t}Btn`);
                 const content = document.getElementById(`tab${t}Content`);
@@ -650,20 +793,16 @@
                     content.classList.add('hidden');
                 }
             });
+            // Re-render chart for Page 4 if selected so animation runs smoothly
+            if(tabIndex === 4) janaCartaScatterP4();
         }
 
         function prosesWorkbook(workbook) {
             let sheetNamePB = workbook.SheetNames.find(n => n.toUpperCase().includes('PB')) || workbook.SheetNames[0];
             let sheetNameUASA = workbook.SheetNames.find(n => n.toUpperCase().includes('UASA'));
             if (!sheetNameUASA && workbook.SheetNames.length > 1) sheetNameUASA = workbook.SheetNames[1];
-            if (!sheetNamePB || !sheetNameUASA) {
-                const msg = document.createElement('div');
-                msg.className = "fixed top-10 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg shadow-xl z-50 font-bold";
-                msg.textContent = "Ralat: Fail Excel tidak mempunyai 2 lembaran (PB dan UASA).";
-                document.body.appendChild(msg);
-                setTimeout(() => msg.remove(), 4000);
-                return;
-            }
+            if (!sheetNamePB || !sheetNameUASA) { alert("Ralat: Fail Excel tidak mempunyai 2 lembaran (PB dan UASA)."); return; }
+            
             const rawPB = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNamePB], {defval: ""});
             const rawUASA = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameUASA], {defval: ""});
             let gabungan = {};
@@ -671,73 +810,45 @@
             const kolumAbai = ['NO BIL', 'SESI', 'TAHAP', 'KELAS', 'Bil.', 'Nama', 'MyKID/ID Pengenalan', 'Jantina'];
 
             rawPB.forEach(row => {
-                let id = row['MyKID/ID Pengenalan'] || row['Nama'];
+                let id = String(row['MyKID/ID Pengenalan'] || row['Nama']).trim();
                 if (!id) return;
                 gabungan[id] = { id, nama: row['Nama'], tahap: row['TAHAP'] || '', kelas: row['KELAS'] || '', jantina: row['Jantina'] || '', pb: {}, uasa: {} };
                 Object.keys(row).forEach(key => { if (!kolumAbai.includes(key)) { subjekSet.add(key); gabungan[id].pb[key] = String(row[key]).trim().toUpperCase(); } });
             });
             rawUASA.forEach(row => {
-                let id = row['MyKID/ID Pengenalan'] || row['Nama'];
-                if (!id) return;
-                if (!gabungan[id]) gabungan[id] = { id, nama: row['Nama'], tahap: row['TAHAP'] || '', kelas: row['KELAS'] || '', jantina: row['Jantina'] || '', pb: {}, uasa: {} };
+                let id = String(row['MyKID/ID Pengenalan'] || row['Nama']).trim();
+                if (!id || !gabungan[id]) return;
                 Object.keys(row).forEach(key => { if (!kolumAbai.includes(key)) { subjekSet.add(key); gabungan[id].uasa[key] = String(row[key]).trim().toUpperCase(); } });
             });
             dataGlobal = Object.values(gabungan);
-            
-            // Simpan original index untuk fungsi Drilldown Papar Murid
             dataGlobal.forEach((d, i) => d._index = i);
-
             senaraiSubjek = Array.from(subjekSet).sort();
             sediakanFilter();
         }
 
-        // Generic Multi-Select Logic
-        function toggleDropdown(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
-
+        function toggleDropdown(id) { document.getElementById(id).classList.toggle('hidden'); }
         function toggleAll(source, itemClass, labelId, defaultText) {
-            const checkboxes = document.querySelectorAll('.' + itemClass);
-            checkboxes.forEach(cb => cb.checked = source.checked);
-            updateLabel(itemClass, source.id, labelId, defaultText);
-            kemaskiniDashboard();
+            document.querySelectorAll('.' + itemClass).forEach(cb => cb.checked = source.checked);
+            updateLabel(itemClass, source.id, labelId, defaultText); kemaskiniDashboard();
         }
-
         function itemChanged(itemClass, cbSemuaId, labelId, defaultText) {
             const checkboxes = document.querySelectorAll('.' + itemClass);
             const allChecked = Array.from(checkboxes).every(cb => cb.checked);
             const someChecked = Array.from(checkboxes).some(cb => cb.checked);
-            
             const cbSemua = document.getElementById(cbSemuaId);
-            cbSemua.checked = allChecked;
-            cbSemua.indeterminate = someChecked && !allChecked;
-            
-            updateLabel(itemClass, cbSemuaId, labelId, defaultText);
-            kemaskiniDashboard();
+            cbSemua.checked = allChecked; cbSemua.indeterminate = someChecked && !allChecked;
+            updateLabel(itemClass, cbSemuaId, labelId, defaultText); kemaskiniDashboard();
         }
-
         function updateLabel(itemClass, cbSemuaId, labelId, defaultText) {
-            const cbSemua = document.getElementById(cbSemuaId);
-            const label = document.getElementById(labelId);
-            const checkboxes = document.querySelectorAll('.' + itemClass);
+            const cbSemua = document.getElementById(cbSemuaId); const label = document.getElementById(labelId);
             const checked = Array.from(document.querySelectorAll('.' + itemClass + ':checked'));
-            
-            if (cbSemua.checked || checked.length === checkboxes.length) {
-                label.textContent = defaultText;
-                label.classList.remove('text-blue-600', 'font-bold');
-                label.classList.remove('text-red-500');
+            if (cbSemua.checked || checked.length === document.querySelectorAll('.' + itemClass).length) {
+                label.textContent = defaultText; label.classList.remove('text-blue-600', 'font-bold', 'text-red-500');
             } else if (checked.length === 0) {
-                label.textContent = 'Tiada Pilihan';
-                label.classList.add('text-red-500');
-                label.classList.remove('text-blue-600', 'font-bold');
-            } else if (checked.length <= 2) {
-                label.textContent = checked.map(cb => cb.value).join(', ');
-                label.classList.add('text-blue-600', 'font-bold');
-                label.classList.remove('text-red-500');
+                label.textContent = 'Tiada Pilihan'; label.classList.add('text-red-500'); label.classList.remove('text-blue-600', 'font-bold');
             } else {
-                label.textContent = `${checked.length} Pilihan`;
-                label.classList.add('text-blue-600', 'font-bold');
-                label.classList.remove('text-red-500');
+                label.textContent = checked.length <= 2 ? checked.map(cb => cb.value).join(', ') : `${checked.length} Pilihan`;
+                label.classList.add('text-blue-600', 'font-bold'); label.classList.remove('text-red-500');
             }
         }
 
@@ -745,83 +856,45 @@
             const dropSubjekOptions = document.getElementById('multiSelectOptionsSubjek');
             const dropTambahan1 = document.getElementById('subjekTambahan1');
             const dropTambahan2 = document.getElementById('subjekTambahan2');
-            
             dropSubjekOptions.innerHTML = '';
             dropTambahan1.innerHTML = '<option value="">-- Pilih Subjek Tambahan 1 --</option>';
             dropTambahan2.innerHTML = '<option value="">-- Pilih Subjek Tambahan 2 --</option>';
-            
             senaraiSubjek.forEach(subjek => {
-                dropSubjekOptions.innerHTML += `
-                    <label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer">
-                        <input type="checkbox" value="${subjek}" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 subjek-checkbox" checked onchange="itemChanged('subjek-checkbox', 'cbSemuaSubjek', 'multiSelectLabelSubjek', 'Semua Mata Pelajaran')">
-                        <span class="ml-2 text-sm text-slate-700">${subjek}</span>
-                    </label>
-                `;
-                dropTambahan1.add(new Option(subjek, subjek));
-                dropTambahan2.add(new Option(subjek, subjek));
+                dropSubjekOptions.innerHTML += `<label class="flex items-center px-3 py-2 hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="${subjek}" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 subjek-checkbox" checked onchange="itemChanged('subjek-checkbox', 'cbSemuaSubjek', 'multiSelectLabelSubjek', 'Semua Mata Pelajaran')"><span class="ml-2 text-sm text-slate-700">${subjek}</span></label>`;
+                dropTambahan1.add(new Option(subjek, subjek)); dropTambahan2.add(new Option(subjek, subjek));
             });
+            document.getElementById('cbSemuaSubjek').checked = true; updateLabel('subjek-checkbox', 'cbSemuaSubjek', 'multiSelectLabelSubjek', 'Semua Mata Pelajaran');
             
-            // Set Subjek Default
-            document.getElementById('cbSemuaSubjek').checked = true;
-            document.getElementById('cbSemuaSubjek').indeterminate = false;
-            updateLabel('subjek-checkbox', 'cbSemuaSubjek', 'multiSelectLabelSubjek', 'Semua Mata Pelajaran');
-
             // Set PB & UASA Default
-            document.getElementById('cbSemuaPB').checked = true;
-            document.getElementById('cbSemuaPB').indeterminate = false;
-            document.querySelectorAll('.pb-checkbox').forEach(cb => cb.checked = true);
-            updateLabel('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP');
-
-            document.getElementById('cbSemuaUASA').checked = true;
-            document.getElementById('cbSemuaUASA').indeterminate = false;
-            document.querySelectorAll('.uasa-checkbox').forEach(cb => cb.checked = true);
-            updateLabel('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred');
+            document.getElementById('cbSemuaPB').checked = true; document.querySelectorAll('.pb-checkbox').forEach(cb => cb.checked = true); updateLabel('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP');
+            document.getElementById('cbSemuaUASA').checked = true; document.querySelectorAll('.uasa-checkbox').forEach(cb => cb.checked = true); updateLabel('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred');
 
             const setTahap = new Set(dataGlobal.map(d => d.tahap).filter(t => t));
-            const dropTahap = document.getElementById('filterTahap');
-            dropTahap.innerHTML = '<option value="Semua">Semua Tahap</option>';
+            const dropTahap = document.getElementById('filterTahap'); dropTahap.innerHTML = '<option value="Semua">Semua Tahap</option>';
             Array.from(setTahap).sort().forEach(tahap => dropTahap.add(new Option(tahap, tahap)));
-            
-            document.getElementById('emptyState').classList.add('hidden');
-            document.getElementById('dashboardSection').classList.remove('hidden');
+            document.getElementById('emptyState').classList.add('hidden'); document.getElementById('dashboardSection').classList.remove('hidden');
             kemaskiniFilterKelas(); 
-        }
-
-        function resetFilters() {
-            document.getElementById('filterTahap').value = 'Semua';
-            document.getElementById('filterKhas').value = 'SEMUA';
-            document.getElementById('subjekTambahan1').value = '';
-            document.getElementById('subjekTambahan2').value = '';
-
-            // Reset Subjek
-            document.getElementById('cbSemuaSubjek').checked = true;
-            document.getElementById('cbSemuaSubjek').indeterminate = false;
-            document.querySelectorAll('.subjek-checkbox').forEach(cb => cb.checked = true);
-            updateLabel('subjek-checkbox', 'cbSemuaSubjek', 'multiSelectLabelSubjek', 'Semua Mata Pelajaran');
-
-            // Reset PB
-            document.getElementById('cbSemuaPB').checked = true;
-            document.getElementById('cbSemuaPB').indeterminate = false;
-            document.querySelectorAll('.pb-checkbox').forEach(cb => cb.checked = true);
-            updateLabel('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP');
-
-            // Reset UASA
-            document.getElementById('cbSemuaUASA').checked = true;
-            document.getElementById('cbSemuaUASA').indeterminate = false;
-            document.querySelectorAll('.uasa-checkbox').forEach(cb => cb.checked = true);
-            updateLabel('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred');
-
-            kemaskiniFilterKelas();
         }
 
         function kemaskiniFilterKelas() {
             const tahapDipilih = document.getElementById('filterTahap').value;
             let dataTapis = tahapDipilih === 'Semua' ? dataGlobal : dataGlobal.filter(d => d.tahap === tahapDipilih);
             const setKelas = new Set(dataTapis.map(d => d.kelas).filter(k => k));
-            const dropKelas = document.getElementById('filterKelas');
-            dropKelas.innerHTML = '<option value="Semua">Semua Kelas</option>';
+            const dropKelas = document.getElementById('filterKelas'); dropKelas.innerHTML = '<option value="Semua">Semua Kelas</option>';
             Array.from(setKelas).sort().forEach(kelas => dropKelas.add(new Option(kelas, kelas)));
             kemaskiniDashboard();
+        }
+
+        function resetFilters() {
+            document.getElementById('filterTahap').value = 'Semua'; document.getElementById('filterKhas').value = 'SEMUA';
+            
+            document.getElementById('cbSemuaSubjek').checked = true; document.querySelectorAll('.subjek-checkbox').forEach(cb => cb.checked = true); updateLabel('subjek-checkbox', 'cbSemuaSubjek', 'multiSelectLabelSubjek', 'Semua Mata Pelajaran');
+            document.getElementById('cbSemuaPB').checked = true; document.querySelectorAll('.pb-checkbox').forEach(cb => cb.checked = true); updateLabel('pb-checkbox', 'cbSemuaPB', 'multiSelectLabelPB', 'Semua TP');
+            document.getElementById('cbSemuaUASA').checked = true; document.querySelectorAll('.uasa-checkbox').forEach(cb => cb.checked = true); updateLabel('uasa-checkbox', 'cbSemuaUASA', 'multiSelectLabelUASA', 'Semua Gred');
+            
+            document.getElementById('subjekTambahan1').value = ''; document.getElementById('subjekTambahan2').value = '';
+            
+            kemaskiniFilterKelas();
         }
 
         function kemaskiniDashboard() {
@@ -829,15 +902,14 @@
             const tahap = document.getElementById('filterTahap').value;
             const kelas = document.getElementById('filterKelas').value;
             const filterKhas = document.getElementById('filterKhas').value;
-
-            // Get selected Multi-Select values
+            
             let checkedSubjek = Array.from(document.querySelectorAll('.subjek-checkbox:checked')).map(cb => cb.value);
             let subjekUntukDikira = checkedSubjek.length > 0 ? checkedSubjek : senaraiSubjek;
             let isSemuaSubjek = document.getElementById('cbSemuaSubjek').checked || checkedSubjek.length === 0 || checkedSubjek.length === senaraiSubjek.length;
-
+            
             let checkedPB = Array.from(document.querySelectorAll('.pb-checkbox:checked')).map(cb => cb.value);
             let isSemuaPB = document.getElementById('cbSemuaPB').checked || checkedPB.length === 0 || checkedPB.length === 7;
-
+            
             let checkedUASA = Array.from(document.querySelectorAll('.uasa-checkbox:checked')).map(cb => cb.value);
             let isSemuaUASA = document.getElementById('cbSemuaUASA').checked || checkedUASA.length === 0 || checkedUASA.length === 7;
 
@@ -857,14 +929,10 @@
             const sub2 = document.getElementById('subjekTambahan2').value;
             
             senaraiSubjek.forEach(s => {
-                statSubjekComp[s] = {
-                    subjek: s, ambilPB: 0, ambilUASA: 0,
-                    pb: { meng: 0, gag: 0, td: 0, 'TP1':0, 'TP2':0, 'TP3':0, 'TP4':0, 'TP5':0, 'TP6':0, 'TD':0 },
-                    uasa: { meng: 0, gag: 0, td: 0, 'A':0, 'B':0, 'C':0, 'D':0, 'E':0, 'F':0, 'TD':0 }
-                };
+                statSubjekComp[s] = { subjek: s, ambilPB: 0, ambilUASA: 0, pb: { meng: 0, gag: 0, td: 0, 'TP1':0, 'TP2':0, 'TP3':0, 'TP4':0, 'TP5':0, 'TP6':0, 'TD':0 }, uasa: { meng: 0, gag: 0, td: 0, 'A':0, 'B':0, 'C':0, 'D':0, 'E':0, 'F':0, 'TD':0 } };
             });
 
-            // --- 1. Tapis Base Kohort Keseluruhan (TIDAK ditapis oleh Multi-select PB/UASA untuk pastikan graf kira keseluruhan) ---
+            // Tapis Data Kohort
             let dataKohort = dataGlobal.filter(d => {
                 let pTahap = (tahap === 'Semua' || d.tahap === tahap);
                 let pKelas = (kelas === 'Semua' || d.kelas === kelas);
@@ -892,7 +960,7 @@
                 return pTahap && pKelas && pJantina && pKhas && adaData;
             });
 
-            // --- 2. Tentukan Lajur Subjek Jadual ---
+            // Lajur Subjek Jadual
             let subjekPaparSet = new Set();
             if (isSemuaSubjek) {
                 const subjekUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJ', 'SEJARAH']; 
@@ -907,10 +975,8 @@
                     subjekUntukDikira.forEach(s => {
                         let hasData = (d.pb[s] && d.pb[s] !== '-' && d.pb[s] !== '') || (d.uasa[s] && d.uasa[s] !== '-' && d.uasa[s] !== '');
                         if (!hasData) return;
-
                         let mPB = isSemuaPB ? true : (d.pb[s] && checkedPB.includes(d.pb[s]));
                         let mUASA = isSemuaUASA ? true : (d.uasa[s] && checkedUASA.includes(d.uasa[s]));
-                        
                         if (mPB && mUASA) subjekPaparSet.add(s);
                     });
                 });
@@ -922,45 +988,30 @@
             let subjekPapar = Array.from(subjekPaparSet);
             const urutanUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJARAH', 'SEJ'];
             subjekPapar.sort((a, b) => {
-                let idxA = urutanUtama.indexOf(a);
-                let idxB = urutanUtama.indexOf(b);
+                let idxA = urutanUtama.indexOf(a); let idxB = urutanUtama.indexOf(b);
                 if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-                if (idxA !== -1) return -1;
-                if (idxB !== -1) return 1;
+                if (idxA !== -1) return -1; if (idxB !== -1) return 1;
                 return a.localeCompare(b);
             });
 
-            // Set Tajuk Header Table
             const jadualHead = document.getElementById('dataTableHead');
             let theadHTML = `<tr><th class="w-8 text-center border-r border-blue-800">Bil</th><th class="w-1/4 border-r border-blue-800">Nama Murid</th><th class="w-24 border-r border-blue-800">Tahap/Kelas</th><th class="w-12 text-center border-r border-blue-800">Jantina</th>`;
             subjekPapar.forEach(sub => { theadHTML += `<th class="text-center border-r border-blue-800 p-1 min-w-[80px]">${sub} <br><span class="text-[9px] text-blue-200 font-normal">PB <span class="mx-0.5 text-blue-300">|</span> UASA</span></th>`; });
             theadHTML += `</tr>`;
             jadualHead.innerHTML = theadHTML;
 
-            // --- 3. Kira Data Carta dan Jadual ---
+            // Kira Data
             let tableHTMLBuffer = [];
             let totalSenaraiMurid = 0;
             stat.jumlah = dataKohort.length;
             
             dataKohort.forEach(murid => {
                 let combinedKey = murid.tahap + "_" + murid.kelas;
-                if (!statKelasComp[combinedKey]) {
-                    statKelasComp[combinedKey] = { 
-                        tahap: murid.tahap, kelas: murid.kelas,
-                        uasa: { meng: 0, gag: 0, td: 0, ambil: 0 }, pb: { meng: 0, gag: 0, td: 0, ambil: 0 } 
-                    };
-                }
-                
-                if (!statTahapComp[murid.tahap]) {
-                    statTahapComp[murid.tahap] = {
-                        tahap: murid.tahap,
-                        jumlahMurid: 0, ambilPB: 0, ambilUASA: 0,
-                        pb: { 'TP1':0, 'TP2':0, 'TP3':0, 'TP4':0, 'TP5':0, 'TP6':0, 'TD':0 },
-                        uasa: { 'A':0, 'B':0, 'C':0, 'D':0, 'E':0, 'F':0, 'TD':0 }
-                    };
-                }
+                if (!statKelasComp[combinedKey]) statKelasComp[combinedKey] = { tahap: murid.tahap, kelas: murid.kelas, uasa: { meng: 0, gag: 0, td: 0, ambil: 0 }, pb: { meng: 0, gag: 0, td: 0, ambil: 0 } };
+                if (!statTahapComp[murid.tahap]) statTahapComp[murid.tahap] = { tahap: murid.tahap, jumlahMurid: 0, ambilPB: 0, ambilUASA: 0, pb: { 'TP1':0, 'TP2':0, 'TP3':0, 'TP4':0, 'TP5':0, 'TP6':0, 'TD':0 }, uasa: { 'A':0, 'B':0, 'C':0, 'D':0, 'E':0, 'F':0, 'TD':0 } };
 
-                // Kira denominator (Penuh)
+                statTahapComp[murid.tahap].jumlahMurid++;
+
                 subjekUntukDikira.forEach(s => {
                     let nPB = murid.pb[s] || '-';
                     let nU_sub = murid.uasa[s] || '-';
@@ -970,70 +1021,45 @@
                     let hasUASA = nU_sub !== '-' && nU_sub !== '';
 
                     if (hasPB) {
-                        stat.pbAmbil++;
-                        dataPB_Taburan[nPB]++;
-                        statTahapComp[murid.tahap].ambilPB++;
-                        statTahapComp[murid.tahap].pb[nPB]++;
-                        statSubjekComp[s].ambilPB++;
-                        statSubjekComp[s].pb[nPB]++;
+                        stat.pbAmbil++; dataPB_Taburan[nPB]++;
+                        statTahapComp[murid.tahap].ambilPB++; statTahapComp[murid.tahap].pb[nPB]++;
+                        statSubjekComp[s].ambilPB++; statSubjekComp[s].pb[nPB]++;
                         statKelasComp[combinedKey].pb.ambil++;
                         if (j) sjB[j].ambil++;
 
-                        if (['TP3','TP4','TP5','TP6'].includes(nPB)) {
-                            stat.pbLulus++; statKelasComp[combinedKey].pb.meng++; if(j) sjB[j].meng++; statSubjekComp[s].pb.meng++;
-                        } else if (['TP1', 'TP2'].includes(nPB)) {
-                            stat.pbGagal++; statKelasComp[combinedKey].pb.gag++; if(j) sjB[j].gag++; statSubjekComp[s].pb.gag++;
-                        } else if (nPB === 'TD') {
-                            statKelasComp[combinedKey].pb.td++; if(j) sjB[j].td++; statSubjekComp[s].pb.td++;
-                        }
-                        if (nPB === 'TP6') { stat.totalTP6++; }
+                        if (['TP3','TP4','TP5','TP6'].includes(nPB)) { stat.pbLulus++; statKelasComp[combinedKey].pb.meng++; if(j) sjB[j].meng++; statSubjekComp[s].pb.meng++; } 
+                        else if (['TP1', 'TP2'].includes(nPB)) { stat.pbGagal++; statKelasComp[combinedKey].pb.gag++; if(j) sjB[j].gag++; statSubjekComp[s].pb.gag++; } 
+                        else if (nPB === 'TD') { statKelasComp[combinedKey].pb.td++; if(j) sjB[j].td++; statSubjekComp[s].pb.td++; }
+                        if (nPB === 'TP6') stat.totalTP6++;
                     }
 
                     if (hasUASA) {
-                        stat.uasaAmbil++;
-                        dataUASA_Taburan[nU_sub]++;
-                        statTahapComp[murid.tahap].ambilUASA++;
-                        statTahapComp[murid.tahap].uasa[nU_sub]++;
-                        statSubjekComp[s].ambilUASA++;
-                        statSubjekComp[s].uasa[nU_sub]++;
+                        stat.uasaAmbil++; dataUASA_Taburan[nU_sub]++;
+                        statTahapComp[murid.tahap].ambilUASA++; statTahapComp[murid.tahap].uasa[nU_sub]++;
+                        statSubjekComp[s].ambilUASA++; statSubjekComp[s].uasa[nU_sub]++;
                         statKelasComp[combinedKey].uasa.ambil++;
                         if (j) sjU[j].ambil++;
 
-                        if (['A','B','C','D','E'].includes(nU_sub)) {
-                            stat.uasaLulus++; statKelasComp[combinedKey].uasa.meng++; if(j) sjU[j].meng++; statSubjekComp[s].uasa.meng++;
-                        } else if (['F'].includes(nU_sub)) {
-                            stat.uasaGagal++; statKelasComp[combinedKey].uasa.gag++; if(j) sjU[j].gag++; statSubjekComp[s].uasa.gag++;
-                        } else if (nU_sub === 'TD') {
-                            statKelasComp[combinedKey].uasa.td++; if(j) sjU[j].td++; statSubjekComp[s].uasa.td++;
-                        }
-                        if (nU_sub === 'A') { stat.totalA++; }
+                        if (['A','B','C','D','E'].includes(nU_sub)) { stat.uasaLulus++; statKelasComp[combinedKey].uasa.meng++; if(j) sjU[j].meng++; statSubjekComp[s].uasa.meng++; } 
+                        else if (['F'].includes(nU_sub)) { stat.uasaGagal++; statKelasComp[combinedKey].uasa.gag++; if(j) sjU[j].gag++; statSubjekComp[s].uasa.gag++; } 
+                        else if (nU_sub === 'TD') { statKelasComp[combinedKey].uasa.td++; if(j) sjU[j].td++; statSubjekComp[s].uasa.td++; }
+                        if (nU_sub === 'A') stat.totalA++;
                     }
                     if (['TP4','TP5','TP6'].includes(nPB) && ['F'].includes(nU_sub)) stat.jurang++;
                 });
 
-                // Kira Numerator Untuk Jadual Sahaja
                 let masukTable = false;
                 let rowHTMLSubjek = "";
                 let bilTP6 = 0, bilA = 0, bilTP12 = 0, bilF = 0;
 
                 subjekPapar.forEach(sub => {
-                    let nPB_sub = murid.pb[sub] || '-';
-                    let nU_sub = murid.uasa[sub] || '-';
-                    
+                    let nPB_sub = murid.pb[sub] || '-'; let nU_sub = murid.uasa[sub] || '-';
                     let validSubjek = subjekUntukDikira.includes(sub) || isSemuaSubjek;
-
                     let mPB = isSemuaPB ? true : checkedPB.includes(nPB_sub);
                     let mUASA = isSemuaUASA ? true : checkedUASA.includes(nU_sub);
 
-                    if (validSubjek && (nPB_sub !== '-' || nU_sub !== '-')) {
-                        if (mPB && mUASA) masukTable = true;
-                    }
-
-                    // Padamkan subjek yang tidak berkaitan dengan tapisan
-                    if (!validSubjek || !mPB || !mUASA) {
-                        nPB_sub = '-'; 
-                        nU_sub = '-';
-                    }
+                    if (validSubjek && (nPB_sub !== '-' || nU_sub !== '-')) { if (mPB && mUASA) masukTable = true; }
+                    if (!validSubjek || !mPB || !mUASA) { nPB_sub = '-'; nU_sub = '-'; }
 
                     let bPB = 'badge-white'; if (nPB_sub === 'TP6') bPB = 'badge-green'; else if (['TP3', 'TP4', 'TP5'].includes(nPB_sub)) bPB = 'badge-blue'; else if (['TP1', 'TP2'].includes(nPB_sub)) bPB = 'badge-red'; else if (nPB_sub === 'TD') bPB = 'bg-black text-white';
                     let bU = 'badge-white'; if (nU_sub === 'A') bU = 'badge-green'; else if (['B', 'C', 'D'].includes(nU_sub)) bU = 'badge-blue'; else if (nU_sub === 'F') bU = 'badge-red'; else if (nU_sub === 'E') bU = 'badge-orange'; else if (nU_sub === 'TD') bU = 'bg-black text-white';
@@ -1046,22 +1072,12 @@
 
                 if (masukTable) {
                     totalSenaraiMurid++;
-                    
                     subjekUntukDikira.forEach(s => {
-                        let nP = murid.pb[s] || '-';
-                        let nU = murid.uasa[s] || '-';
-                        if (nP === 'TP6') bilTP6++;
-                        if (nU === 'A') bilA++;
-                        if (['TP1','TP2'].includes(nP)) bilTP12++;
-                        if (nU === 'F') bilF++;
+                        let nP = murid.pb[s] || '-'; let nU = murid.uasa[s] || '-';
+                        if (nP === 'TP6') bilTP6++; if (nU === 'A') bilA++;
+                        if (['TP1','TP2'].includes(nP)) bilTP12++; if (nU === 'F') bilF++;
                     });
-
-                    senaraiMuridStats.push({ 
-                        originalIndex: murid._index,
-                        nama: murid.nama, tahap: murid.tahap, kelas: murid.kelas, 
-                        bilTP6, bilA, bilTP12, bilF, 
-                        bilTerbaik: bilTP6 + bilA, bilKritikal: bilTP12 + bilF 
-                    });
+                    senaraiMuridStats.push({ originalIndex: murid._index, nama: murid.nama, tahap: murid.tahap, kelas: murid.kelas, bilTP6, bilA, bilTP12, bilF, bilTerbaik: bilTP6 + bilA, bilKritikal: bilTP12 + bilF });
 
                     let rowHTML = `<tr class="hover:bg-blue-50 transition-colors"><td class="text-slate-500 text-center">${totalSenaraiMurid}</td><td class="font-bold text-blue-600 text-[11px] leading-tight cursor-pointer hover:underline hover:text-indigo-700 transition-colors no-print" onclick="paparDetailMurid(${murid._index})">${murid.nama || 'Tiada Nama'}</td><td class="font-bold text-slate-800 text-[11px] hidden print:table-cell">${murid.nama || 'Tiada Nama'}</td><td class="text-[11px] leading-tight"><span class="font-bold text-slate-500 block">${murid.tahap}</span>${murid.kelas}</td><td class="text-center border-r border-slate-200">${murid.jantina}</td>`;
                     rowHTML += rowHTMLSubjek + `</tr>`;
@@ -1071,7 +1087,6 @@
 
             document.getElementById('dataTableBody').innerHTML = tableHTMLBuffer.join('');
             
-            // KPI Data berpandukan cohort base
             document.getElementById('kpiJumlah').textContent = stat.jumlah; 
             document.getElementById('kpiJurang').textContent = stat.jurang;
             document.getElementById('kpiTotalTP6').textContent = stat.totalTP6;
@@ -1079,28 +1094,21 @@
             
             document.getElementById('kpiPBD').textContent = `${stat.pbAmbil > 0 ? ((stat.pbLulus / stat.pbAmbil) * 100).toFixed(1) : 0}%`;
             document.getElementById('kpiPBDDetail').textContent = `${stat.pbLulus} dari ${stat.pbAmbil} dinilai`;
-            
             document.getElementById('kpiPBDGagal').textContent = `${stat.pbAmbil > 0 ? ((stat.pbGagal / stat.pbAmbil) * 100).toFixed(1) : 0}%`;
             document.getElementById('kpiPBDGagalDetail').textContent = `${stat.pbGagal} dari ${stat.pbAmbil} dinilai`;
             
             document.getElementById('kpiUASA').textContent = `${stat.uasaAmbil > 0 ? ((stat.uasaLulus / stat.uasaAmbil) * 100).toFixed(1) : 0}%`;
             document.getElementById('kpiUASADetail').textContent = `${stat.uasaLulus} dari ${stat.uasaAmbil} dinilai`;
-            
             document.getElementById('kpiUASAGagal').textContent = `${stat.uasaAmbil > 0 ? ((stat.uasaGagal / stat.uasaAmbil) * 100).toFixed(1) : 0}%`;
             document.getElementById('kpiUASAGagalDetail').textContent = `${stat.uasaGagal} dari ${stat.uasaAmbil} dinilai`;
             
             document.getElementById('tableRecordCount').textContent = `${totalSenaraiMurid} Rekod Dipapar`;
 
-            // Papar Label Tapisan pada setiap bahagian UI
             let badgeHTML = getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
-            const lblPB = document.getElementById('lblFilterChartPB'); if(lblPB) lblPB.innerHTML = badgeHTML;
-            const lblUASA = document.getElementById('lblFilterChartUASA'); if(lblUASA) lblUASA.innerHTML = badgeHTML;
-            const lblKelas = document.getElementById('lblFilterKelas'); if(lblKelas) lblKelas.innerHTML = badgeHTML;
-            const lblJantina = document.getElementById('lblFilterJantina'); if(lblJantina) lblJantina.innerHTML = badgeHTML;
-            const lblTable = document.getElementById('lblFilterTableUtama'); if(lblTable) lblTable.innerHTML = badgeHTML;
-            const lblAllSub = document.getElementById('lblFilterAllSubjek'); if(lblAllSub) lblAllSub.innerHTML = badgeHTML;
+            const lbls = ['lblFilterChartPB','lblFilterChartUASA','lblFilterKelas','lblFilterJantina','lblFilterTableUtama','lblFilterAllSubjek'];
+            lbls.forEach(l => { const el = document.getElementById(l); if(el) el.innerHTML = badgeHTML; });
 
-            // Draw Charts with Visual Fading based on PB/UASA multi-selects
+            // Generate Semua Carta!
             janaCartaPB(dataPB_Taburan, stat.pbAmbil, isSemuaPB, checkedPB); 
             janaCartaUASA(dataUASA_Taburan, stat.uasaAmbil, isSemuaUASA, checkedUASA); 
             janaRankingTable(senaraiMuridStats);
@@ -1109,144 +1117,18 @@
             janaCartaPerbandinganTahap(statTahapComp, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
             janaCartaSemuaSubjek(statSubjekComp, subjekUntukDikira, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
             janaCartaPerbandinganSubjek(statSubjekComp, subjekUntukDikira, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
-        }
-
-        function janaRankingTable(senarai) {
-            let cemerlangAll = [...senarai].filter(m => m.bilTerbaik > 0).sort((a, b) => b.bilTerbaik - a.bilTerbaik);
-            let kritikalAll = [...senarai].filter(m => m.bilKritikal > 0).sort((a, b) => b.bilKritikal - a.bilKritikal);
             
-            let tH = '';
-            cemerlangAll.forEach((m, i) => { 
-                tH += `<tr class="ranking-row border-b border-slate-100"><td class="p-2 font-mono text-slate-400 border-r border-slate-100 w-12 text-center">${i+1}</td><td class="p-2 font-bold text-blue-600 cursor-pointer hover:underline truncate border-r border-slate-100 no-print" onclick="paparDetailMurid(${m.originalIndex})">${m.nama}</td><td class="p-2 font-bold text-slate-800 border-r border-slate-100 hidden print:table-cell">${m.nama}</td><td class="p-2 text-[10px] text-slate-500 border-r border-slate-100 w-20 text-center">${m.tahap}</td><td class="p-2 text-slate-500 border-r border-slate-100 w-24 text-center">${m.kelas}</td><td class="p-2 text-center font-bold text-emerald-600 border-r border-slate-100 w-20">${m.bilTP6}</td><td class="p-2 text-center font-bold text-emerald-600 w-24">${m.bilA}</td></tr>`; 
-            });
-            document.getElementById('top10Body').innerHTML = tH || '<tr><td colspan="6" class="p-4 text-center italic text-slate-400">Tiada Murid Cemerlang Ditemui</td></tr>';
-
-            let bH = '';
-            kritikalAll.forEach((m, i) => { 
-                bH += `<tr class="ranking-row border-b border-slate-100"><td class="p-2 font-mono text-slate-400 border-r border-slate-100 w-12 text-center">${i+1}</td><td class="p-2 font-bold text-rose-600 cursor-pointer hover:underline truncate border-r border-slate-100 no-print" onclick="paparDetailMurid(${m.originalIndex})">${m.nama}</td><td class="p-2 font-bold text-slate-800 border-r border-slate-100 hidden print:table-cell">${m.nama}</td><td class="p-2 text-[10px] text-slate-500 border-r border-slate-100 w-20 text-center">${m.tahap}</td><td class="p-2 text-slate-500 border-r border-slate-100 w-24 text-center">${m.kelas}</td><td class="p-2 text-center font-bold text-rose-600 border-r border-slate-100 w-24">${m.bilTP12}</td><td class="p-2 text-center font-bold text-rose-600 w-24">${m.bilF}</td></tr>`; 
-            });
-            document.getElementById('bottom10Body').innerHTML = bH || '<tr><td colspan="6" class="p-4 text-center italic text-slate-400">Tiada Murid Kritikal Ditemui</td></tr>';
+            // Re-render chart for Page 4 if active
+            const activeTab = [1,2,3,4].find(i => !document.getElementById(`tab${i}Content`).classList.contains('hidden'));
+            if(activeTab === 4) janaCartaScatterP4();
         }
 
-        function paparDetailMurid(index) {
-            const m = dataGlobal[index];
-            if (!m) return;
-            document.getElementById('detailNamaLengkap').textContent = m.nama;
-            document.getElementById('detailInfoLanjut').textContent = `${m.tahap} | Kelas: ${m.kelas} | Jantina: ${m.jantina}`;
-            const g = document.getElementById('detailGridSubjek'); g.innerHTML = '';
-            senaraiSubjek.forEach(s => {
-                let nP = m.pb[s] || '-', nU = m.uasa[s] || '-'; if (nP === '-' && nU === '-') return;
-                let bP = 'badge-white'; if (nP === 'TP6') bP = 'badge-green'; else if (['TP3', 'TP4', 'TP5'].includes(nP)) bP = 'badge-blue'; else if (['TP1', 'TP2'].includes(nP)) bP = 'badge-red'; else if (nP === 'TD') bP = 'bg-black text-white';
-                let bU = 'badge-white'; if (nU === 'A') bU = 'badge-green'; else if (['B', 'C', 'D'].includes(nU)) bU = 'badge-blue'; else if (nU === 'F') bU = 'badge-red'; else if (nU === 'E') bU = 'badge-orange'; else if (nU === 'TD') bU = 'bg-black text-white';
-                g.innerHTML += `<div class="bg-white border border-slate-200 p-3 rounded-lg flex flex-col justify-between shadow-sm"><span class="text-xs font-bold text-slate-700 mb-3 truncate" title="${s}">${s}</span><div class="flex items-center justify-between"><div class="flex flex-col items-center w-1/2"><span class="text-[10px] text-slate-400 mb-1">PBD</span><span class="badge ${bP} w-10 py-1 text-sm shadow-sm">${nP}</span></div><div class="w-px h-8 bg-slate-200 mx-1"></div><div class="flex flex-col items-center w-1/2"><span class="text-[10px] text-slate-400 mb-1">UASA</span><span class="badge ${bU} w-10 py-1 text-sm shadow-sm">${nU}</span></div></div></div>`;
-            });
-            const s = document.getElementById('detailMuridSection'); s.classList.remove('hidden');
-            setTimeout(() => { s.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
-        }
-
-        function tutupDetail() { document.getElementById('detailMuridSection').classList.add('hidden'); }
-
-        // ============================
-        // MODAL LIST MURID (PAGE 3 DRILLDOWN)
-        // ============================
-        function paparSenaraiMuridSubjekDrilldown(subjek, jenisUjian, kriteriaClick) {
-            let filteredData = dataGlobal.filter(m => {
-                const tahap = document.getElementById('filterTahap').value;
-                const kelas = document.getElementById('filterKelas').value;
-                if (tahap !== 'Semua' && m.tahap !== tahap) return false;
-                if (kelas !== 'Semua' && m.kelas !== kelas) return false;
-
-                let nilai = jenisUjian === 'pb' ? m.pb[subjek] : m.uasa[subjek];
-                if (!nilai || nilai === '-') return false;
-                
-                if (kriteriaClick === 'MENGUASAI') {
-                    if (jenisUjian === 'pb') return ['TP3','TP4','TP5','TP6'].includes(nilai);
-                    if (jenisUjian === 'uasa') return ['A','B','C','D','E'].includes(nilai);
-                } else if (kriteriaClick === 'TIDAK MENGUASAI') {
-                    if (jenisUjian === 'pb') return ['TP1','TP2'].includes(nilai);
-                    if (jenisUjian === 'uasa') return ['F'].includes(nilai);
-                } else {
-                    return nilai === kriteriaClick;
-                }
-                return false;
-            });
-
-            let labelKriteria = kriteriaClick;
-            if (kriteriaClick === 'MENGUASAI') labelKriteria = jenisUjian==='pb' ? 'Menguasai (TP3-6)' : 'Menguasai (A-E)';
-            else if (kriteriaClick === 'TIDAK MENGUASAI') labelKriteria = jenisUjian==='pb' ? 'Tidak Menguasai (TP1-2)' : 'Tidak Menguasai (F)';
-            
-            document.getElementById('modalSenaraiTajuk').textContent = `Senarai Murid: ${subjek} - ${jenisUjian.toUpperCase()} (${labelKriteria})`;
-            document.getElementById('modalSenaraiSubtajuk').textContent = `Jumlah: ${filteredData.length} Murid`;
-
-            let coreSubjekList = ['BM', 'BI', 'MM', 'SAINS', 'SEJARAH', 'SEJ'];
-            let matchedCore = coreSubjekList.filter(s => senaraiSubjek.includes(s));
-            if (matchedCore.includes('SEJARAH') && matchedCore.includes('SEJ')) {
-                matchedCore = matchedCore.filter(s => s !== 'SEJ');
-            }
-
-            let subjekPaparan = [subjek];
-            matchedCore.forEach(s => {
-                if (!subjekPaparan.includes(s)) subjekPaparan.push(s);
-            });
-
-            let thead = `<tr>
-                <th class="p-2.5 border-r border-slate-200 w-12 text-center">Bil</th>
-                <th class="p-2.5 border-r border-slate-200 min-w-[150px]">Nama Murid</th>
-                <th class="p-2.5 border-r border-slate-200 w-20 text-center">Kelas</th>`;
-            
-            subjekPaparan.forEach(s => {
-                let isClicked = s === subjek;
-                let bgClass = isClicked ? 'bg-indigo-100 text-indigo-800' : '';
-                thead += `<th class="p-2.5 text-center border-r border-slate-200 ${bgClass}">${s}<br><span class="text-[9px] font-normal">PB | UASA</span></th>`;
-            });
-            thead += `</tr>`;
-            document.getElementById('modalSenaraiHead').innerHTML = thead;
-
-            let tbody = '';
-            if (filteredData.length === 0) {
-                tbody = `<tr><td colspan="${3 + subjekPaparan.length}" class="p-6 text-center text-slate-500 italic">Tiada data murid untuk kategori ini.</td></tr>`;
-            } else {
-                filteredData.forEach((m, idx) => {
-                    tbody += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                        <td class="p-2 text-center text-slate-500">${idx + 1}</td>
-                        <td class="p-2 font-bold text-slate-700 truncate max-w-[200px]" title="${m.nama}">${m.nama}</td>
-                        <td class="p-2 text-center text-slate-600 text-[10px]"><span class="font-bold">${m.tahap}</span><br>${m.kelas}</td>`;
-                    
-                    subjekPaparan.forEach(s => {
-                        let nP = m.pb[s] || '-';
-                        let nU = m.uasa[s] || '-';
-                        
-                        let bP = 'badge-white'; if (nP === 'TP6') bP = 'badge-green'; else if (['TP3', 'TP4', 'TP5'].includes(nP)) bP = 'badge-blue'; else if (['TP1', 'TP2'].includes(nP)) bP = 'badge-red'; else if (nP === 'TD') bP = 'bg-black text-white';
-                        let bU = 'badge-white'; if (nU === 'A') bU = 'badge-green'; else if (['B', 'C', 'D'].includes(nU)) bU = 'badge-blue'; else if (nU === 'F') bU = 'badge-red'; else if (nU === 'E') bU = 'badge-orange'; else if (nU === 'TD') bU = 'bg-black text-white';
-
-                        let isClicked = s === subjek;
-                        let cellBg = isClicked ? 'bg-indigo-50/30' : '';
-
-                        tbody += `<td class="p-2 text-center border-r border-slate-100 ${cellBg}">
-                            <div class="flex items-center justify-center gap-1">
-                                <span class="badge ${bP} w-8 shadow-sm">${nP}</span>
-                                <span class="badge ${bU} w-8 shadow-sm">${nU}</span>
-                            </div>
-                        </td>`;
-                    });
-                    tbody += `</tr>`;
-                });
-            }
-            document.getElementById('modalSenaraiBody').innerHTML = tbody;
-            document.getElementById('modalSenaraiMurid').classList.remove('hidden');
-        }
-
-        function tutupModalSenarai() {
-            document.getElementById('modalSenaraiMurid').classList.add('hidden');
-        }
-
-        // ============================
-        // FUNGSI UNTUK PAGE 1 & 2
-        // ============================
+        // ==========================================
+        // FUNGSI JANA CARTA PAGE 1 & 2 & 3
+        // ==========================================
         function janaCartaPB(d, totalAmbil, isSemuaPB, checkedPB) {
             const ctx = document.getElementById('chartPB').getContext('2d'); if (chartInstancePB) chartInstancePB.destroy();
             const labels = ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD'];
-            
             const bgColors = labels.map(lbl => {
                 let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
                 if (['TP1','TP2'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
@@ -1254,45 +1136,15 @@
                 if (lbl === 'TP6') return isFaded ? '#dcfce7' : '#22c55e';
                 return isFaded ? '#f1f5f9' : '#cbd5e1';
             });
-
             chartInstancePB = new Chart(ctx, { 
-                type: 'bar', 
-                data: { 
-                    labels: labels, 
-                    datasets: [{ 
-                        data: [d.TP1, d.TP2, d.TP3, d.TP4, d.TP5, d.TP6, d.TD], 
-                        backgroundColor: bgColors, 
-                        borderRadius: 4 
-                    }] 
-                }, 
-                options: { 
-                    responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, 
-                    plugins: { 
-                        legend: { display: false }, 
-                        datalabels: { 
-                            anchor: 'end', align: 'top', 
-                            color: (ctx) => {
-                                let lbl = labels[ctx.dataIndex];
-                                let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
-                                return isFaded ? 'transparent' : '#475569';
-                            },
-                            font: { weight: 'bold', size: 10 }, 
-                            textAlign: 'center', 
-                            formatter: (v, c) => { 
-                                if(v===0) return ''; 
-                                return v+'\n('+ (totalAmbil>0?((v/totalAmbil)*100).toFixed(1):0) +'%)'; 
-                            } 
-                        } 
-                    }, 
-                    scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } 
-                } 
+                type: 'bar', data: { labels: labels, datasets: [{ data: [d.TP1, d.TP2, d.TP3, d.TP4, d.TP5, d.TP6, d.TD], backgroundColor: bgColors, borderRadius: 4 }] }, 
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: (ctx) => { let lbl = labels[ctx.dataIndex]; return (!isSemuaPB && !checkedPB.includes(lbl)) ? 'transparent' : '#475569'; }, font: { weight: 'bold', size: 10, family: 'Poppins' }, textAlign: 'center', formatter: (v) => { if(v===0) return ''; return v+'\n('+ (totalAmbil>0?((v/totalAmbil)*100).toFixed(1):0) +'%)'; } } }, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } } 
             });
         }
 
         function janaCartaUASA(d, totalAmbil, isSemuaUASA, checkedUASA) {
             const ctx = document.getElementById('chartUASA').getContext('2d'); if (chartInstanceUASA) chartInstanceUASA.destroy();
             const labels = ['A', 'B', 'C', 'D', 'E', 'F', 'TD'];
-            
             const bgColors = labels.map(lbl => {
                 let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
                 if (['A'].includes(lbl)) return isFaded ? '#dcfce7' : '#22c55e';
@@ -1300,611 +1152,468 @@
                 if (['E','F'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
                 return isFaded ? '#f1f5f9' : '#cbd5e1';
             });
-
             chartInstanceUASA = new Chart(ctx, { 
-                type: 'bar', 
-                data: { 
-                    labels: labels, 
-                    datasets: [{ 
-                        data: [d.A, d.B, d.C, d.D, d.E, d.F, d.TD], 
-                        backgroundColor: bgColors, 
-                        borderRadius: 4 
-                    }] 
-                }, 
-                options: { 
-                    responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, 
-                    plugins: { 
-                        legend: { display: false }, 
-                        datalabels: { 
-                            anchor: 'end', align: 'top', 
-                            color: (ctx) => {
-                                let lbl = labels[ctx.dataIndex];
-                                let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
-                                return isFaded ? 'transparent' : '#475569';
-                            }, 
-                            font: { weight: 'bold', size: 10 }, 
-                            textAlign: 'center', 
-                            formatter: (v, c) => { 
-                                if(v===0) return ''; 
-                                return v+'\n('+ (totalAmbil>0?((v/totalAmbil)*100).toFixed(1):0) +'%)'; 
-                            } 
-                        } 
-                    }, 
-                    scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } 
-                } 
+                type: 'bar', data: { labels: labels, datasets: [{ data: [d.A, d.B, d.C, d.D, d.E, d.F, d.TD], backgroundColor: bgColors, borderRadius: 4 }] }, 
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: (ctx) => { let lbl = labels[ctx.dataIndex]; return (!isSemuaUASA && !checkedUASA.includes(lbl)) ? 'transparent' : '#475569'; }, font: { weight: 'bold', size: 10, family: 'Poppins' }, textAlign: 'center', formatter: (v) => { if(v===0) return ''; return v+'\n('+ (totalAmbil>0?((v/totalAmbil)*100).toFixed(1):0) +'%)'; } } }, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } } 
             });
         }
 
-        function janaCartaKelasStacked(data, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
-            const ctx = document.getElementById('chartKelasStacked').getContext('2d');
-            if (chartInstanceKelasStacked) chartInstanceKelasStacked.destroy();
-            const keys = Object.keys(data).sort();
-            const container = document.getElementById('chartKelasContainer');
-            container.style.height = (keys.length * 60 + 100) + 'px';
+        function janaRankingTable(senarai) {
+            let cemerlangAll = [...senarai].filter(m => m.bilTerbaik > 0).sort((a, b) => b.bilTerbaik - a.bilTerbaik);
+            let kritikalAll = [...senarai].filter(m => m.bilKritikal > 0).sort((a, b) => b.bilKritikal - a.bilKritikal);
             
-            const labels = [];
-            const dM = [], dG = [], dTD = [];
-            const rM = [], rG = [], rTD = [];
+            let tH = ''; cemerlangAll.forEach((m, i) => { tH += `<tr class="ranking-row border-b border-slate-100"><td class="p-2 font-mono text-slate-400 border-r border-slate-100 w-12 text-center">${i+1}</td><td class="p-2 font-bold text-blue-600 cursor-pointer hover:underline truncate border-r border-slate-100 no-print" onclick="paparDetailMurid(${m.originalIndex})">${m.nama}</td><td class="p-2 font-bold text-slate-800 border-r border-slate-100 hidden print:table-cell">${m.nama}</td><td class="p-2 text-[10px] text-slate-500 border-r border-slate-100 w-20 text-center">${m.tahap}</td><td class="p-2 text-slate-500 border-r border-slate-100 w-24 text-center">${m.kelas}</td><td class="p-2 text-center font-bold text-emerald-600 border-r border-slate-100 w-20">${m.bilTP6}</td><td class="p-2 text-center font-bold text-emerald-600 w-24">${m.bilA}</td></tr>`; });
+            document.getElementById('top10Body').innerHTML = tH || '<tr><td colspan="6" class="p-4 text-center italic text-slate-400">Tiada Murid Cemerlang Ditemui</td></tr>';
 
+            let bH = ''; kritikalAll.forEach((m, i) => { bH += `<tr class="ranking-row border-b border-slate-100"><td class="p-2 font-mono text-slate-400 border-r border-slate-100 w-12 text-center">${i+1}</td><td class="p-2 font-bold text-rose-600 cursor-pointer hover:underline truncate border-r border-slate-100 no-print" onclick="paparDetailMurid(${m.originalIndex})">${m.nama}</td><td class="p-2 font-bold text-slate-800 border-r border-slate-100 hidden print:table-cell">${m.nama}</td><td class="p-2 text-[10px] text-slate-500 border-r border-slate-100 w-20 text-center">${m.tahap}</td><td class="p-2 text-slate-500 border-r border-slate-100 w-24 text-center">${m.kelas}</td><td class="p-2 text-center font-bold text-rose-600 border-r border-slate-100 w-24">${m.bilTP12}</td><td class="p-2 text-center font-bold text-rose-600 w-24">${m.bilF}</td></tr>`; });
+            document.getElementById('bottom10Body').innerHTML = bH || '<tr><td colspan="6" class="p-4 text-center italic text-slate-400">Tiada Murid Kritikal Ditemui</td></tr>';
+        }
+
+        function janaCartaKelasStacked(data, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
+            const ctx = document.getElementById('chartKelasStacked').getContext('2d'); if (chartInstanceKelasStacked) chartInstanceKelasStacked.destroy();
+            const keys = Object.keys(data).sort();
+            document.getElementById('chartKelasContainer').style.height = (keys.length * 60 + 100) + 'px';
+            
+            const labels = []; const dM = [], dG = [], dTD = []; const rM = [], rG = [], rTD = [];
             keys.forEach(key => {
-                const labelKelas = `${data[key].tahap} ${data[key].kelas}`;
-                labels.push(`${labelKelas} (PB)`, `${labelKelas} (UASA)`);
-                
-                let totalPB = data[key].pb.ambil;
-                rM.push(data[key].pb.meng); rG.push(data[key].pb.gag); rTD.push(data[key].pb.td);
-                if (totalPB === 0) { dM.push(0); dG.push(0); dTD.push(0); }
-                else {
-                    dM.push((data[key].pb.meng / totalPB * 100).toFixed(1));
-                    dG.push((data[key].pb.gag / totalPB * 100).toFixed(1));
-                    dTD.push((data[key].pb.td / totalPB * 100).toFixed(1));
-                }
-                
-                let totalUA = data[key].uasa.ambil;
-                rM.push(data[key].uasa.meng); rG.push(data[key].uasa.gag); rTD.push(data[key].uasa.td);
-                if (totalUA === 0) { dM.push(0); dG.push(0); dTD.push(0); }
-                else {
-                    dM.push((data[key].uasa.meng / totalUA * 100).toFixed(1));
-                    dG.push((data[key].uasa.gag / totalUA * 100).toFixed(1));
-                    dTD.push((data[key].uasa.td / totalUA * 100).toFixed(1));
-                }
+                const l = `${data[key].tahap} ${data[key].kelas}`; labels.push(`${l} (PB)`, `${l} (UASA)`);
+                let tpb = data[key].pb.ambil; rM.push(data[key].pb.meng); rG.push(data[key].pb.gag); rTD.push(data[key].pb.td);
+                if (tpb === 0) { dM.push(0); dG.push(0); dTD.push(0); } else { dM.push((data[key].pb.meng/tpb*100).toFixed(1)); dG.push((data[key].pb.gag/tpb*100).toFixed(1)); dTD.push((data[key].pb.td/tpb*100).toFixed(1)); }
+                let tua = data[key].uasa.ambil; rM.push(data[key].uasa.meng); rG.push(data[key].uasa.gag); rTD.push(data[key].uasa.td);
+                if (tua === 0) { dM.push(0); dG.push(0); dTD.push(0); } else { dM.push((data[key].uasa.meng/tua*100).toFixed(1)); dG.push((data[key].uasa.gag/tua*100).toFixed(1)); dTD.push((data[key].uasa.td/tua*100).toFixed(1)); }
             });
 
             chartInstanceKelasStacked = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: 'Menguasai', data: dM, rawCounts: rM, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
-                        { label: 'Tidak Menguasai', data: dG, rawCounts: rG, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
-                        { label: 'TD', data: dTD, rawCounts: rTD, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-                    layout: { padding: { right: 50 } },
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        datalabels: {
-                            color: (c) => getStackedFontColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA),
-                            anchor: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
-                            align: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
-                            font: { weight: 'bold', size: 10 },
-                            formatter: (v, ctx) => {
-                                if (v <= 0) return '';
-                                let raw = ctx.dataset.rawCounts[ctx.dataIndex];
-                                return `${v}% (${raw})`;
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: 'Peratus (%)' } },
-                        y: { stacked: true, grid: { display: false } }
-                    }
-                }
+                type: 'bar', data: { labels: labels, datasets: [
+                    { label: 'Menguasai', data: dM, rawCounts: rM, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                    { label: 'Tidak Menguasai', data: dG, rawCounts: rG, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                    { label: 'TD', data: dTD, rawCounts: rTD, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) }
+                ]},
+                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', layout: { padding: { right: 50 } }, plugins: { legend: { position: 'bottom' }, datalabels: { color: (c) => getStackedFontColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA), anchor: (c) => c.datasetIndex === 2 ? 'end' : 'center', align: (c) => c.datasetIndex === 2 ? 'end' : 'center', font: { weight: 'bold', size: 10, family: 'Poppins' }, formatter: (v, c) => { if (v <= 0) return ''; return `${v}% (${c.dataset.rawCounts[c.dataIndex]})`; } } }, scales: { x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: 'Peratus (%)' } }, y: { stacked: true, grid: { display: false } } } }
             });
         }
 
         function janaCartaJantinaGabung(sjU, sjB, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
-            const ctx = document.getElementById('chartJantinaGabung').getContext('2d');
-            if (chartInstanceJantinaGabung) chartInstanceJantinaGabung.destroy();
+            const ctx = document.getElementById('chartJantinaGabung').getContext('2d'); if (chartInstanceJantinaGabung) chartInstanceJantinaGabung.destroy();
             const labels = ['Lelaki (PB)', 'Lelaki (UASA)', 'Perempuan (PB)', 'Perempuan (UASA)'];
-            const raw = [
-                { m: sjB['L'].meng, g: sjB['L'].gag, t: sjB['L'].td, ambil: sjB['L'].ambil || 0 },
-                { m: sjU['L'].meng, g: sjU['L'].gag, t: sjU['L'].td, ambil: sjU['L'].ambil || 0 },
-                { m: sjB['P'].meng, g: sjB['P'].gag, t: sjB['P'].td, ambil: sjB['P'].ambil || 0 },
-                { m: sjU['P'].meng, g: sjU['P'].gag, t: sjU['P'].td, ambil: sjU['P'].ambil || 0 }
-            ];
-            const meng = [], gag = [], td = [];
-            const rM = [], rG = [], rTD = [];
-            raw.forEach(r => {
-                let total = r.ambil;
-                rM.push(r.m); rG.push(r.g); rTD.push(r.t);
-                if (total === 0) { meng.push(0); gag.push(0); td.push(0); }
-                else {
-                    meng.push((r.m / total * 100).toFixed(1));
-                    gag.push((r.g / total * 100).toFixed(1));
-                    td.push((r.t / total * 100).toFixed(1));
-                }
-            });
+            const raw = [ { m: sjB['L'].meng, g: sjB['L'].gag, t: sjB['L'].td, ambil: sjB['L'].ambil || 0 }, { m: sjU['L'].meng, g: sjU['L'].gag, t: sjU['L'].td, ambil: sjU['L'].ambil || 0 }, { m: sjB['P'].meng, g: sjB['P'].gag, t: sjB['P'].td, ambil: sjB['P'].ambil || 0 }, { m: sjU['P'].meng, g: sjU['P'].gag, t: sjU['P'].td, ambil: sjU['P'].ambil || 0 } ];
+            const meng = [], gag = [], td = []; const rM = [], rG = [], rTD = [];
+            raw.forEach(r => { let tot = r.ambil; rM.push(r.m); rG.push(r.g); rTD.push(r.t); if (tot === 0) { meng.push(0); gag.push(0); td.push(0); } else { meng.push((r.m/tot*100).toFixed(1)); gag.push((r.g/tot*100).toFixed(1)); td.push((r.t/tot*100).toFixed(1)); } });
 
             chartInstanceJantinaGabung = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: 'Menguasai', data: meng, rawCounts: rM, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
-                        { label: 'Tidak Menguasai', data: gag, rawCounts: rG, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
-                        { label: 'TD', data: td, rawCounts: rTD, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-                    layout: { padding: { right: 50 } },
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        datalabels: {
-                            color: (c) => getStackedFontColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA),
-                            anchor: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
-                            align: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
-                            font: { weight: 'bold' },
-                            formatter: (v, ctx) => {
-                                if (v <= 0) return '';
-                                let raw = ctx.dataset.rawCounts[ctx.dataIndex];
-                                return `${v}% (${raw})`;
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: 'Peratus (%)' } },
-                        y: { stacked: true, grid: { display: false } }
-                    }
-                }
+                type: 'bar', data: { labels: labels, datasets: [
+                    { label: 'Menguasai', data: meng, rawCounts: rM, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                    { label: 'Tidak Menguasai', data: gag, rawCounts: rG, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                    { label: 'TD', data: td, rawCounts: rTD, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) }
+                ]},
+                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', layout: { padding: { right: 50 } }, plugins: { legend: { position: 'bottom' }, datalabels: { color: (c) => getStackedFontColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA), anchor: (c) => c.datasetIndex === 2 ? 'end' : 'center', align: (c) => c.datasetIndex === 2 ? 'end' : 'center', font: { weight: 'bold', family: 'Poppins' }, formatter: (v, c) => { if (v <= 0) return ''; return `${v}% (${c.dataset.rawCounts[c.dataIndex]})`; } } }, scales: { x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: 'Peratus (%)' } }, y: { stacked: true, grid: { display: false } } } }
             });
         }
 
         function janaCartaPerbandinganTahap(data, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
-            chartInstancesMultiPB.forEach(c => c.destroy());
-            chartInstancesMultiUASA.forEach(c => c.destroy());
-            chartInstancesMultiPB = [];
-            chartInstancesMultiUASA = [];
-            
-            const container = document.getElementById('containerTahapComparison');
-            container.innerHTML = ''; 
-            
-            const keys = Object.keys(data).sort();
-            const pbKeys = ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD'];
-            const uasaKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'TD'];
+            chartInstancesMultiPB.forEach(c => c.destroy()); chartInstancesMultiUASA.forEach(c => c.destroy());
+            chartInstancesMultiPB = []; chartInstancesMultiUASA = [];
+            const container = document.getElementById('containerTahapComparison'); container.innerHTML = ''; 
+            const keys = Object.keys(data).sort(); const pbKeys = ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD']; const uasaKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'TD'];
 
             keys.forEach((key, index) => {
-                const tahapData = data[key];
-                let totalSesiPB = tahapData.ambilPB || 0;
-                let countTP1 = tahapData.pb['TP1'] || 0;
-                let countTP2 = tahapData.pb['TP2'] || 0;
-                let sumTP12 = countTP1 + countTP2;
-                let percTP12 = totalSesiPB > 0 ? ((sumTP12 / totalSesiPB) * 100).toFixed(1) : 0;
-                
-                let totalSesiUASA = tahapData.ambilUASA || 0;
-                let countF = tahapData.uasa['F'] || 0;
-                let sumF = countF;
-                let percF = totalSesiUASA > 0 ? ((sumF / totalSesiUASA) * 100).toFixed(1) : 0;
-                
-                const wrapper = document.createElement('div');
-                wrapper.id = `block_tahap_${index}`;
-                wrapper.className = 'glass-panel p-6 border-t-4 border-t-indigo-500 mb-6 bg-white';
-                wrapper.innerHTML = `
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 border-b border-slate-100 pb-4">
-                        <div>
-                            <h2 class="text-xl font-black text-slate-800 uppercase tracking-wide">${tahapData.tahap}</h2>
-                            ${getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA)}
-                        </div>
-                        <div class="flex items-center gap-2 no-print mt-2 sm:mt-0">
-                            <div class="bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 shadow-sm">
-                                <i data-lucide="users" class="w-4 h-4"></i>
-                                <span class="text-sm font-bold">Jumlah Murid: ${tahapData.jumlahMurid}</span>
-                            </div>
-                            <button data-html2canvas-ignore="true" onclick="muatTurunImej('block_tahap_${index}', 'Analisis_${tahapData.tahap.replace(/ /g, '_')}')" class="p-2.5 px-4 bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 rounded-lg text-slate-600 transition-colors shadow-sm flex items-center gap-1.5 text-sm font-bold" title="Muat Turun Gambar">
-                                <i data-lucide="camera" class="w-4 h-4"></i> PNG
-                            </button>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div class="bg-slate-50/50 border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col">
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                    <h3 class="text-sm font-bold text-slate-700">Prestasi PBD (Tahap Penguasaan)</h3>
-                                </div>
-                                <div class="bg-red-50 border border-red-200 rounded-md px-3 py-1 flex flex-col items-end gap-1">
-                                    <div class="flex items-center gap-1">
-                                        <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-500"></i>
-                                        <span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span>
-                                    </div>
-                                    <span class="text-sm font-black text-red-600">${percTP12}% (${sumTP12} Murid)</span>
-                                </div>
-                            </div>
-                            <div class="relative h-64 w-full mt-auto">
-                                <canvas id="chart_pb_tahap_${index}"></canvas>
-                            </div>
-                        </div>
-                        <div class="bg-slate-50/50 border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col">
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                                    <h3 class="text-sm font-bold text-slate-700">Prestasi UASA (Gred Ujian)</h3>
-                                </div>
-                                <div class="bg-red-50 border border-red-200 rounded-md px-3 py-1 flex flex-col items-end gap-1">
-                                    <div class="flex items-center gap-1">
-                                        <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-500"></i>
-                                        <span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span>
-                                    </div>
-                                    <span class="text-sm font-black text-red-600">${percF}% (${sumF} Murid)</span>
-                                </div>
-                            </div>
-                            <div class="relative h-64 w-full mt-auto">
-                                <canvas id="chart_uasa_tahap_${index}"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(wrapper);
+                const tD = data[key]; let tPB = tD.ambilPB || 0; let percTP12 = tPB > 0 ? (((tD.pb['TP1']||0)+(tD.pb['TP2']||0)) / tPB * 100).toFixed(1) : 0;
+                let tU = tD.ambilUASA || 0; let percF = tU > 0 ? ((tD.uasa['F']||0) / tU * 100).toFixed(1) : 0;
+                const wr = document.createElement('div'); wr.id = `block_tahap_${index}`; wr.className = 'glass-panel p-6 border-t-4 border-t-indigo-500 mb-6 bg-white';
+                wr.innerHTML = `<div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 border-b border-slate-100 pb-4"><div><h2 class="text-xl font-black text-slate-800 uppercase tracking-wide">${tD.tahap}</h2>${getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA)}</div><div class="flex items-center gap-2 no-print mt-2 sm:mt-0"><div class="bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 shadow-sm"><i data-lucide="users" class="w-4 h-4"></i><span class="text-sm font-bold">Jumlah Murid: ${tD.jumlahMurid}</span></div><button data-html2canvas-ignore="true" onclick="muatTurunImej('block_tahap_${index}', 'Analisis_${tD.tahap.replace(/ /g, '_')}')" class="p-2.5 px-4 bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 rounded-lg text-slate-600 transition-colors shadow-sm flex items-center gap-1.5 text-sm font-bold"><i data-lucide="camera" class="w-4 h-4"></i> PNG</button></div></div><div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><div class="bg-slate-50/50 border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col"><div class="flex items-center justify-between mb-4"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><h3 class="text-sm font-bold text-slate-700">Prestasi PBD (Tahap Penguasaan)</h3></div><div class="bg-red-50 border border-red-200 rounded-md px-3 py-1 flex flex-col items-end gap-1"><div class="flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-500"></i><span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span></div><span class="text-sm font-black text-red-600">${percTP12}% (${(tD.pb['TP1']||0)+(tD.pb['TP2']||0)} Murid)</span></div></div><div class="relative h-64 w-full mt-auto"><canvas id="chart_pb_tahap_${index}"></canvas></div></div><div class="bg-slate-50/50 border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col"><div class="flex items-center justify-between mb-4"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span><h3 class="text-sm font-bold text-slate-700">Prestasi UASA (Gred Ujian)</h3></div><div class="bg-red-50 border border-red-200 rounded-md px-3 py-1 flex flex-col items-end gap-1"><div class="flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-500"></i><span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span></div><span class="text-sm font-black text-red-600">${percF}% (${tD.uasa['F']||0} Murid)</span></div></div><div class="relative h-64 w-full mt-auto"><canvas id="chart_uasa_tahap_${index}"></canvas></div></div></div>`;
+                container.appendChild(wr);
 
-                const bgColorsPB = pbKeys.map(lbl => {
-                    let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
-                    if (['TP1','TP2'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
-                    if (['TP3','TP4','TP5'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6';
-                    if (lbl === 'TP6') return isFaded ? '#dcfce7' : '#22c55e';
-                    return isFaded ? '#f1f5f9' : '#cbd5e1';
-                });
-                
-                const ctxPB = document.getElementById(`chart_pb_tahap_${index}`).getContext('2d');
-                let dMPB = [], rMPB = [];
-                pbKeys.forEach(pk => {
-                    let count = tahapData.pb[pk]; rMPB.push(count);
-                    dMPB.push(totalSesiPB === 0 ? 0 : ((count / totalSesiPB) * 100).toFixed(1));
-                });
-                chartInstancesMultiPB.push(new Chart(ctxPB, {
-                    type: 'bar',
-                    data: { labels: pbKeys, datasets: [{ data: dMPB, rawCounts: rMPB, backgroundColor: bgColorsPB, borderRadius: 4 }] },
-                    options: { 
-                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, 
-                        plugins: { legend: { display: false }, datalabels: { 
-                            color: (ctx) => {
-                                let lbl = pbKeys[ctx.dataIndex];
-                                let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
-                                return isFaded ? 'transparent' : '#475569';
-                            }, 
-                            anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', 
-                            formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } 
-                        }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
-                }));
+                const bColorPB = pbKeys.map(lbl => { let isFaded = !isSemuaPB && !checkedPB.includes(lbl); if (['TP1','TP2'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444'; if (['TP3','TP4','TP5'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6'; if (lbl === 'TP6') return isFaded ? '#dcfce7' : '#22c55e'; return isFaded ? '#f1f5f9' : '#cbd5e1'; });
+                let dMPB = [], rMPB = []; pbKeys.forEach(pk => { let c = tD.pb[pk]; rMPB.push(c); dMPB.push(tPB === 0 ? 0 : ((c/tPB)*100).toFixed(1)); });
+                chartInstancesMultiPB.push(new Chart(document.getElementById(`chart_pb_tahap_${index}`).getContext('2d'), { type: 'bar', data: { labels: pbKeys, datasets: [{ data: dMPB, rawCounts: rMPB, backgroundColor: bColorPB, borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, plugins: { legend: { display: false }, datalabels: { color: (ctx) => { return (!isSemuaPB && !checkedPB.includes(pbKeys[ctx.dataIndex])) ? 'transparent' : '#475569'; }, anchor: 'end', align: 'top', font: { weight: 'bold', size: 10, family: 'Poppins' }, textAlign: 'center', formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } } }));
 
-                const bgColorsUASA = uasaKeys.map(lbl => {
-                    let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
-                    if (['A'].includes(lbl)) return isFaded ? '#dcfce7' : '#22c55e';
-                    if (['B','C','D'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6';
-                    if (['E','F'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
-                    return isFaded ? '#f1f5f9' : '#cbd5e1';
-                });
-
-                const ctxUASA = document.getElementById(`chart_uasa_tahap_${index}`).getContext('2d');
-                let dMUASA = [], rMUASA = [];
-                uasaKeys.forEach(uk => {
-                    let count = tahapData.uasa[uk]; rMUASA.push(count);
-                    dMUASA.push(totalSesiUASA === 0 ? 0 : ((count / totalSesiUASA) * 100).toFixed(1));
-                });
-                chartInstancesMultiUASA.push(new Chart(ctxUASA, {
-                    type: 'bar',
-                    data: { labels: uasaKeys, datasets: [{ data: dMUASA, rawCounts: rMUASA, backgroundColor: bgColorsUASA, borderRadius: 4 }] },
-                    options: { 
-                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, 
-                        plugins: { legend: { display: false }, datalabels: { 
-                            color: (ctx) => {
-                                let lbl = uasaKeys[ctx.dataIndex];
-                                let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
-                                return isFaded ? 'transparent' : '#475569';
-                            }, 
-                            anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', 
-                            formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } 
-                        }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
-                }));
+                const bColorUA = uasaKeys.map(lbl => { let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl); if (['A'].includes(lbl)) return isFaded ? '#dcfce7' : '#22c55e'; if (['B','C','D'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6'; if (['E','F'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444'; return isFaded ? '#f1f5f9' : '#cbd5e1'; });
+                let dMUA = [], rMUA = []; uasaKeys.forEach(uk => { let c = tD.uasa[uk]; rMUA.push(c); dMUA.push(tU === 0 ? 0 : ((c/tU)*100).toFixed(1)); });
+                chartInstancesMultiUASA.push(new Chart(document.getElementById(`chart_uasa_tahap_${index}`).getContext('2d'), { type: 'bar', data: { labels: uasaKeys, datasets: [{ data: dMUA, rawCounts: rMUA, backgroundColor: bColorUA, borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, plugins: { legend: { display: false }, datalabels: { color: (ctx) => { return (!isSemuaUASA && !checkedUASA.includes(uasaKeys[ctx.dataIndex])) ? 'transparent' : '#475569'; }, anchor: 'end', align: 'top', font: { weight: 'bold', size: 10, family: 'Poppins' }, textAlign: 'center', formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } } }));
             });
             lucide.createIcons();
         }
 
-        // ============================
-        // FUNGSI UNTUK PAGE 3 (SUBJEK)
-        // ============================
         function janaCartaSemuaSubjek(data, subjekList, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
-            chartInstancesAllSubjek.forEach(c => c.destroy());
-            chartInstancesAllSubjek = [];
-
+            chartInstancesAllSubjek.forEach(c => c.destroy()); chartInstancesAllSubjek = [];
             let validSubjects = subjekList.filter(s => data[s].ambilPB > 0 || data[s].ambilUASA > 0);
-            
             const urutanUtama = ['BM', 'BI', 'MM', 'SAINS', 'SEJARAH', 'SEJ'];
-            validSubjects.sort((a, b) => {
-                let idxA = urutanUtama.indexOf(a);
-                let idxB = urutanUtama.indexOf(b);
-                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-                if (idxA !== -1) return -1;
-                if (idxB !== -1) return 1;
-                return a.localeCompare(b);
-            });
+            validSubjects.sort((a, b) => { let idxA = urutanUtama.indexOf(a); let idxB = urutanUtama.indexOf(b); if (idxA !== -1 && idxB !== -1) return idxA - idxB; if (idxA !== -1) return -1; if (idxB !== -1) return 1; return a.localeCompare(b); });
 
-            const labels = [];
-            const dataM = [], dataG = [], dataTD = [];
-            const rawM = [], rawG = [], rawTD = [];
-
+            const labels = []; const dataM = [], dataG = [], dataTD = []; const rawM = [], rawG = [], rawTD = [];
             validSubjects.forEach(s => {
                 const d = data[s];
-                
-                // Data PB
-                labels.push(`${s} (PB)`);
-                let totPB = d.ambilPB;
-                rawM.push(d.pb.meng); rawG.push(d.pb.gag); rawTD.push(d.pb.td);
-                dataM.push(totPB === 0 ? 0 : ((d.pb.meng/totPB)*100).toFixed(1));
-                dataG.push(totPB === 0 ? 0 : ((d.pb.gag/totPB)*100).toFixed(1));
-                dataTD.push(totPB === 0 ? 0 : ((d.pb.td/totPB)*100).toFixed(1));
-
-                // Data UASA
-                labels.push(`${s} (UASA)`);
-                let totUASA = d.ambilUASA;
-                rawM.push(d.uasa.meng); rawG.push(d.uasa.gag); rawTD.push(d.uasa.td);
-                dataM.push(totUASA === 0 ? 0 : ((d.uasa.meng/totUASA)*100).toFixed(1));
-                dataG.push(totUASA === 0 ? 0 : ((d.uasa.gag/totUASA)*100).toFixed(1));
-                dataTD.push(totUASA === 0 ? 0 : ((d.uasa.td/totUASA)*100).toFixed(1));
+                labels.push(`${s} (PB)`); let tPB = d.ambilPB; rawM.push(d.pb.meng); rawG.push(d.pb.gag); rawTD.push(d.pb.td);
+                dataM.push(tPB === 0 ? 0 : ((d.pb.meng/tPB)*100).toFixed(1)); dataG.push(tPB === 0 ? 0 : ((d.pb.gag/tPB)*100).toFixed(1)); dataTD.push(tPB === 0 ? 0 : ((d.pb.td/tPB)*100).toFixed(1));
+                labels.push(`${s} (UASA)`); let tUA = d.ambilUASA; rawM.push(d.uasa.meng); rawG.push(d.uasa.gag); rawTD.push(d.uasa.td);
+                dataM.push(tUA === 0 ? 0 : ((d.uasa.meng/tUA)*100).toFixed(1)); dataG.push(tUA === 0 ? 0 : ((d.uasa.gag/tUA)*100).toFixed(1)); dataTD.push(tUA === 0 ? 0 : ((d.uasa.td/tUA)*100).toFixed(1));
             });
-            
-            const chartHeight = Math.max(labels.length * 35 + 80, 400);
-            document.getElementById('chartAllSubjekGabunganContainer').style.height = chartHeight + 'px';
-
-            const ctx = document.getElementById('chartAllSubjekGabungan').getContext('2d');
-            chartInstancesAllSubjek.push(new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: 'Menguasai (TP3-6 / A-E)', data: dataM, rawCounts: rawM, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
-                        { label: 'Tidak Menguasai (TP1-2 / F)', data: dataG, rawCounts: rawG, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
-                        { label: 'TD', data: dataTD, rawCounts: rawTD, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-                    layout: { padding: { right: 50 } },
-                    onHover: (event, chartElement) => {
-                        event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
-                    },
-                    onClick: (e, elements, chart) => {
-                        if (elements.length > 0) {
-                            const index = elements[0].index;
-                            const datasetIndex = elements[0].datasetIndex;
-                            
-                            const labelStr = chart.data.labels[index];
-                            const subjek = labelStr.split(' (')[0];
-                            const jenisUjian = labelStr.includes('(PB)') ? 'pb' : 'uasa';
-                            
-                            let kriteria = '';
-                            if (datasetIndex === 0) kriteria = 'MENGUASAI';
-                            else if (datasetIndex === 1) kriteria = 'TIDAK MENGUASAI';
-                            else if (datasetIndex === 2) kriteria = 'TD';
-                            
-                            paparSenaraiMuridSubjekDrilldown(subjek, jenisUjian, kriteria);
-                        }
-                    },
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        datalabels: {
-                            color: (c) => getStackedFontColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA),
-                            anchor: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
-                            align: (ctx) => ctx.datasetIndex === 2 ? 'end' : 'center',
-                            font: { weight: 'bold', size: 10 },
-                            formatter: (v, ctx) => {
-                                if (v <= 0) return '';
-                                let raw = ctx.dataset.rawCounts[ctx.dataIndex];
-                                return `${v}% (${raw})`;
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: 'Peratus (%)' } },
-                        y: { stacked: true, grid: { display: false } }
-                    }
-                }
+            document.getElementById('chartAllSubjekGabunganContainer').style.height = Math.max(labels.length * 35 + 80, 400) + 'px';
+            chartInstancesAllSubjek.push(new Chart(document.getElementById('chartAllSubjekGabungan').getContext('2d'), {
+                type: 'bar', data: { labels: labels, datasets: [
+                    { label: 'Menguasai (TP3-6 / A-E)', data: dataM, rawCounts: rawM, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                    { label: 'Tidak Menguasai (TP1-2 / F)', data: dataG, rawCounts: rawG, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) },
+                    { label: 'TD', data: dataTD, rawCounts: rawTD, backgroundColor: (c) => getStackedBgColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) }
+                ]},
+                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', layout: { padding: { right: 50 } }, onHover: (ev, el) => { ev.native.target.style.cursor = el[0] ? 'pointer' : 'default'; }, onClick: (e, el, chart) => { if (el.length > 0) { const i = el[0].index; const ds = el[0].datasetIndex; const l = chart.data.labels[i]; const sub = l.split(' (')[0]; const jU = l.includes('(PB)') ? 'pb' : 'uasa'; let kr = ''; if (ds === 0) kr = 'MENGUASAI'; else if (ds === 1) kr = 'TIDAK MENGUASAI'; else if (ds === 2) kr = 'TD'; paparSenaraiMuridSubjekDrilldown(sub, jU, kr); } }, plugins: { legend: { position: 'bottom' }, datalabels: { color: (c) => getStackedFontColor(c, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA), anchor: (c) => c.datasetIndex === 2 ? 'end' : 'center', align: (c) => c.datasetIndex === 2 ? 'end' : 'center', font: { weight: 'bold', size: 10, family: 'Poppins' }, formatter: (v, c) => { if (v <= 0) return ''; return `${v}% (${c.dataset.rawCounts[c.dataIndex]})`; } } }, scales: { x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: 'Peratus (%)' } }, y: { stacked: true, grid: { display: false } } } }
             }));
         }
 
         function janaCartaPerbandinganSubjek(data, subjekList, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
-            chartInstancesSubjectPB.forEach(c => c.destroy());
-            chartInstancesSubjectUASA.forEach(c => c.destroy());
-            chartInstancesSubjectPB = [];
-            chartInstancesSubjectUASA = [];
-            
-            const container = document.getElementById('containerSubjekComparison');
-            container.innerHTML = ''; 
-            
+            chartInstancesSubjectPB.forEach(c => c.destroy()); chartInstancesSubjectUASA.forEach(c => c.destroy());
+            chartInstancesSubjectPB = []; chartInstancesSubjectUASA = [];
+            const container = document.getElementById('containerSubjekComparison'); container.innerHTML = ''; 
             const labels = subjekList.filter(s => data[s].ambilPB > 0 || data[s].ambilUASA > 0);
-            
-            const pbKeys = ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD'];
-            const uasaKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'TD'];
+            const pbKeys = ['TP1', 'TP2', 'TP3', 'TP4', 'TP5', 'TP6', 'TD']; const uasaKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'TD'];
 
             labels.forEach((s, index) => {
-                const subjekData = data[s];
-                
-                let totalSesiPB = subjekData.ambilPB;
-                let countTP1 = subjekData.pb['TP1'] || 0;
-                let countTP2 = subjekData.pb['TP2'] || 0;
-                let sumTP12 = countTP1 + countTP2;
-                let percTP12 = totalSesiPB > 0 ? ((sumTP12 / totalSesiPB) * 100).toFixed(1) : 0;
-                
-                let totalSesiUASA = subjekData.ambilUASA;
-                let countF = subjekData.uasa['F'] || 0;
-                let sumF = countF;
-                let percF = totalSesiUASA > 0 ? ((sumF / totalSesiUASA) * 100).toFixed(1) : 0;
-                
-                const wrapper = document.createElement('div');
-                wrapper.id = `block_subjek_${index}`;
-                wrapper.className = 'glass-panel p-6 border-t-4 border-t-purple-500 mb-6 bg-white';
-                wrapper.innerHTML = `
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 border-b border-slate-100 pb-4">
-                        <div>
-                            <h2 class="text-xl font-black text-slate-800 uppercase tracking-wide">${subjekData.subjek}</h2>
-                            ${getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA)}
-                        </div>
-                        <div class="flex items-center gap-2 no-print mt-2 sm:mt-0">
-                            <div class="bg-purple-50 border border-purple-100 text-purple-700 px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 shadow-sm">
-                                <i data-lucide="book-open" class="w-4 h-4"></i>
-                                <span class="text-sm font-bold">PBD (${totalSesiPB} Murid) | UASA (${totalSesiUASA} Murid)</span>
-                            </div>
-                            <button data-html2canvas-ignore="true" onclick="muatTurunImej('block_subjek_${index}', 'Subjek_${subjekData.subjek.replace(/ /g, '_')}')" class="p-2.5 px-4 bg-slate-100 hover:bg-purple-100 hover:text-purple-700 rounded-lg text-slate-600 transition-colors shadow-sm flex items-center gap-1.5 text-sm font-bold" title="Muat Turun Gambar">
-                                <i data-lucide="camera" class="w-4 h-4"></i> PNG
-                            </button>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div class="bg-slate-50/50 border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col">
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                    <h3 class="text-sm font-bold text-slate-700">Prestasi PBD (Tahap Penguasaan)</h3>
-                                </div>
-                                <div class="bg-red-50 border border-red-200 rounded-md px-3 py-1 flex flex-col items-end gap-1">
-                                    <div class="flex items-center gap-1">
-                                        <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-500"></i>
-                                        <span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span>
-                                    </div>
-                                    <span class="text-sm font-black text-red-600">${percTP12}% (${sumTP12} Murid)</span>
-                                </div>
-                            </div>
-                            <div class="relative h-64 w-full mt-auto">
-                                <canvas id="chart_pb_subjek_${index}"></canvas>
-                            </div>
-                        </div>
-                        <div class="bg-slate-50/50 border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col">
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                                    <h3 class="text-sm font-bold text-slate-700">Prestasi UASA (Gred Ujian)</h3>
-                                </div>
-                                <div class="bg-red-50 border border-red-200 rounded-md px-3 py-1 flex flex-col items-end gap-1">
-                                    <div class="flex items-center gap-1">
-                                        <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-500"></i>
-                                        <span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span>
-                                    </div>
-                                    <span class="text-sm font-black text-red-600">${percF}% (${sumF} Murid)</span>
-                                </div>
-                            </div>
-                            <div class="relative h-64 w-full mt-auto">
-                                <canvas id="chart_uasa_subjek_${index}"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(wrapper);
+                const sD = data[s]; let tPB = sD.ambilPB; let pTP12 = tPB > 0 ? (((sD.pb['TP1']||0)+(sD.pb['TP2']||0)) / tPB * 100).toFixed(1) : 0;
+                let tUA = sD.ambilUASA; let pF = tUA > 0 ? ((sD.uasa['F']||0) / tUA * 100).toFixed(1) : 0;
+                const wr = document.createElement('div'); wr.id = `block_subjek_${index}`; wr.className = 'glass-panel p-6 border-t-4 border-t-purple-500 mb-6 bg-white';
+                wr.innerHTML = `<div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 border-b border-slate-100 pb-4"><div><h2 class="text-xl font-black text-slate-800 uppercase tracking-wide">${sD.subjek}</h2>${getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA)}</div><div class="flex items-center gap-2 no-print mt-2 sm:mt-0"><div class="bg-purple-50 border border-purple-100 text-purple-700 px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 shadow-sm"><i data-lucide="book-open" class="w-4 h-4"></i><span class="text-sm font-bold">PBD (${tPB} Murid) | UASA (${tUA} Murid)</span></div><button data-html2canvas-ignore="true" onclick="muatTurunImej('block_subjek_${index}', 'Subjek_${sD.subjek.replace(/ /g, '_')}')" class="p-2.5 px-4 bg-slate-100 hover:bg-purple-100 hover:text-purple-700 rounded-lg text-slate-600 transition-colors shadow-sm flex items-center gap-1.5 text-sm font-bold"><i data-lucide="camera" class="w-4 h-4"></i> PNG</button></div></div><div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><div class="bg-slate-50/50 border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col"><div class="flex items-center justify-between mb-4"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><h3 class="text-sm font-bold text-slate-700">Prestasi PBD (Tahap Penguasaan)</h3></div><div class="bg-red-50 border border-red-200 rounded-md px-3 py-1 flex flex-col items-end gap-1"><div class="flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-500"></i><span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span></div><span class="text-sm font-black text-red-600">${pTP12}% (${(sD.pb['TP1']||0)+(sD.pb['TP2']||0)} Murid)</span></div></div><div class="relative h-64 w-full mt-auto"><canvas id="chart_pb_subjek_${index}"></canvas></div></div><div class="bg-slate-50/50 border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col"><div class="flex items-center justify-between mb-4"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span><h3 class="text-sm font-bold text-slate-700">Prestasi UASA (Gred Ujian)</h3></div><div class="bg-red-50 border border-red-200 rounded-md px-3 py-1 flex flex-col items-end gap-1"><div class="flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-500"></i><span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span></div><span class="text-sm font-black text-red-600">${pF}% (${sD.uasa['F']||0} Murid)</span></div></div><div class="relative h-64 w-full mt-auto"><canvas id="chart_uasa_subjek_${index}"></canvas></div></div></div>`;
+                container.appendChild(wr);
 
-                const bgColorsPB = pbKeys.map(lbl => {
-                    let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
-                    if (['TP1','TP2'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
-                    if (['TP3','TP4','TP5'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6';
-                    if (lbl === 'TP6') return isFaded ? '#dcfce7' : '#22c55e';
-                    return isFaded ? '#f1f5f9' : '#cbd5e1';
-                });
+                const bColorPB = pbKeys.map(lbl => { let isFaded = !isSemuaPB && !checkedPB.includes(lbl); if (['TP1','TP2'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444'; if (['TP3','TP4','TP5'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6'; if (lbl === 'TP6') return isFaded ? '#dcfce7' : '#22c55e'; return isFaded ? '#f1f5f9' : '#cbd5e1'; });
+                let dMPB = [], rMPB = []; pbKeys.forEach(pk => { let c = sD.pb[pk]; rMPB.push(c); dMPB.push(tPB === 0 ? 0 : ((c/tPB)*100).toFixed(1)); });
+                chartInstancesSubjectPB.push(new Chart(document.getElementById(`chart_pb_subjek_${index}`).getContext('2d'), { type: 'bar', data: { labels: pbKeys, datasets: [{ data: dMPB, rawCounts: rMPB, backgroundColor: bColorPB, borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, onHover: (ev, el) => { ev.native.target.style.cursor = el[0] ? 'pointer' : 'default'; }, onClick: (e, el, chart) => { if (el.length > 0) { paparSenaraiMuridSubjekDrilldown(sD.subjek, 'pb', chart.data.labels[el[0].index]); } }, plugins: { legend: { display: false }, datalabels: { color: (ctx) => { return (!isSemuaPB && !checkedPB.includes(pbKeys[ctx.dataIndex])) ? 'transparent' : '#475569'; }, anchor: 'end', align: 'top', font: { weight: 'bold', size: 10, family: 'Poppins' }, textAlign: 'center', formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } } }));
 
-                const ctxPB = document.getElementById(`chart_pb_subjek_${index}`).getContext('2d');
-                let dMPB = [], rMPB = [];
-                pbKeys.forEach(pk => {
-                    let count = subjekData.pb[pk]; rMPB.push(count);
-                    dMPB.push(totalSesiPB === 0 ? 0 : ((count / totalSesiPB) * 100).toFixed(1));
-                });
-                chartInstancesSubjectPB.push(new Chart(ctxPB, {
-                    type: 'bar',
-                    data: { labels: pbKeys, datasets: [{ data: dMPB, rawCounts: rMPB, backgroundColor: bgColorsPB, borderRadius: 4 }] },
-                    options: { 
-                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } },
-                        onHover: (event, chartElement) => { event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default'; },
-                        onClick: (e, elements, chart) => {
-                            if (elements.length > 0) {
-                                const i = elements[0].index;
-                                const label = chart.data.labels[i];
-                                paparSenaraiMuridSubjekDrilldown(subjekData.subjek, 'pb', label);
-                            }
-                        },
-                        plugins: { legend: { display: false }, datalabels: { 
-                            color: (ctx) => {
-                                let lbl = pbKeys[ctx.dataIndex];
-                                let isFaded = !isSemuaPB && !checkedPB.includes(lbl);
-                                return isFaded ? 'transparent' : '#475569';
-                            }, 
-                            anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', 
-                            formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } 
-                        }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
-                }));
-
-                const bgColorsUASA = uasaKeys.map(lbl => {
-                    let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
-                    if (['A'].includes(lbl)) return isFaded ? '#dcfce7' : '#22c55e';
-                    if (['B','C','D'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6';
-                    if (['E','F'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444';
-                    return isFaded ? '#f1f5f9' : '#cbd5e1';
-                });
-
-                const ctxUASA = document.getElementById(`chart_uasa_subjek_${index}`).getContext('2d');
-                let dMUASA = [], rMUASA = [];
-                uasaKeys.forEach(uk => {
-                    let count = subjekData.uasa[uk]; rMUASA.push(count);
-                    dMUASA.push(totalSesiUASA === 0 ? 0 : ((count / totalSesiUASA) * 100).toFixed(1));
-                });
-                chartInstancesSubjectUASA.push(new Chart(ctxUASA, {
-                    type: 'bar',
-                    data: { labels: uasaKeys, datasets: [{ data: dMUASA, rawCounts: rMUASA, backgroundColor: bgColorsUASA, borderRadius: 4 }] },
-                    options: { 
-                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } },
-                        onHover: (event, chartElement) => { event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default'; },
-                        onClick: (e, elements, chart) => {
-                            if (elements.length > 0) {
-                                const i = elements[0].index;
-                                const label = chart.data.labels[i];
-                                paparSenaraiMuridSubjekDrilldown(subjekData.subjek, 'uasa', label);
-                            }
-                        },
-                        plugins: { legend: { display: false }, datalabels: { 
-                            color: (ctx) => {
-                                let lbl = uasaKeys[ctx.dataIndex];
-                                let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl);
-                                return isFaded ? 'transparent' : '#475569';
-                            }, 
-                            anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, textAlign: 'center', 
-                            formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } 
-                        }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } }
-                }));
+                const bColorUA = uasaKeys.map(lbl => { let isFaded = !isSemuaUASA && !checkedUASA.includes(lbl); if (['A'].includes(lbl)) return isFaded ? '#dcfce7' : '#22c55e'; if (['B','C','D'].includes(lbl)) return isFaded ? '#dbeafe' : '#3b82f6'; if (['E','F'].includes(lbl)) return isFaded ? '#fee2e2' : '#ef4444'; return isFaded ? '#f1f5f9' : '#cbd5e1'; });
+                let dMUA = [], rMUA = []; uasaKeys.forEach(uk => { let c = sD.uasa[uk]; rMUA.push(c); dMUA.push(tUA === 0 ? 0 : ((c/tUA)*100).toFixed(1)); });
+                chartInstancesSubjectUASA.push(new Chart(document.getElementById(`chart_uasa_subjek_${index}`).getContext('2d'), { type: 'bar', data: { labels: uasaKeys, datasets: [{ data: dMUA, rawCounts: rMUA, backgroundColor: bColorUA, borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, onHover: (ev, el) => { ev.native.target.style.cursor = el[0] ? 'pointer' : 'default'; }, onClick: (e, el, chart) => { if (el.length > 0) { paparSenaraiMuridSubjekDrilldown(sD.subjek, 'uasa', chart.data.labels[el[0].index]); } }, plugins: { legend: { display: false }, datalabels: { color: (ctx) => { return (!isSemuaUASA && !checkedUASA.includes(uasaKeys[ctx.dataIndex])) ? 'transparent' : '#475569'; }, anchor: 'end', align: 'top', font: { weight: 'bold', size: 10, family: 'Poppins' }, textAlign: 'center', formatter: (v, ctx) => v > 0 ? `${ctx.dataset.rawCounts[ctx.dataIndex]}\n(${v}%)` : '' } }, scales: { y: { beginAtZero: true, max: 100 }, x: { grid: { display: false } } } } }));
             });
             lucide.createIcons();
         }
 
-        // ============================
-        // FUNGSI MUAT TURUN GAMBAR
-        // ============================
+        // ==========================================
+        // FUNGSI DRILLDOWN PADA CARTA (PAGE 3)
+        // ==========================================
+        function paparSenaraiMuridSubjekDrilldown(subjek, jenisUjian, kriteriaClick) {
+            const tahap = document.getElementById('filterTahap').value; const kelas = document.getElementById('filterKelas').value;
+            let filteredData = dataGlobal.filter(m => {
+                if (tahap !== 'Semua' && m.tahap !== tahap) return false;
+                if (kelas !== 'Semua' && m.kelas !== kelas) return false;
+                let nilai = jenisUjian === 'pb' ? m.pb[subjek] : m.uasa[subjek];
+                if (!nilai || nilai === '-') return false;
+                if (kriteriaClick === 'MENGUASAI') { if (jenisUjian === 'pb') return ['TP3','TP4','TP5','TP6'].includes(nilai); if (jenisUjian === 'uasa') return ['A','B','C','D','E'].includes(nilai); } 
+                else if (kriteriaClick === 'TIDAK MENGUASAI') { if (jenisUjian === 'pb') return ['TP1','TP2'].includes(nilai); if (jenisUjian === 'uasa') return ['F'].includes(nilai); } 
+                else { return nilai === kriteriaClick; } return false;
+            });
+
+            let labelKr = kriteriaClick;
+            if (kriteriaClick === 'MENGUASAI') labelKr = jenisUjian==='pb' ? 'Menguasai (TP3-6)' : 'Menguasai (A-E)';
+            else if (kriteriaClick === 'TIDAK MENGUASAI') labelKr = jenisUjian==='pb' ? 'Tidak Menguasai (TP1-2)' : 'Tidak Menguasai (F)';
+            
+            document.getElementById('modalSenaraiTajuk').textContent = `Senarai Murid: ${subjek} - ${jenisUjian.toUpperCase()} (${labelKr})`;
+            document.getElementById('modalSenaraiSubtajuk').textContent = `Jumlah: ${filteredData.length} Murid`;
+
+            let subjekPaparan = [subjek];
+            ['BM', 'BI', 'MM', 'SAINS', 'SEJARAH'].forEach(s => { if (senaraiSubjek.includes(s) && !subjekPaparan.includes(s)) subjekPaparan.push(s); });
+
+            let thead = `<tr><th class="p-2.5 border-r border-slate-200 w-12 text-center">Bil</th><th class="p-2.5 border-r border-slate-200 min-w-[150px]">Nama Murid</th><th class="p-2.5 border-r border-slate-200 w-20 text-center">Kelas</th>`;
+            subjekPaparan.forEach(s => { let isClick = s === subjek; let bgC = isClick ? 'bg-indigo-100 text-indigo-800' : ''; thead += `<th class="p-2.5 text-center border-r border-slate-200 ${bgC}">${s}<br><span class="text-[9px] font-normal">PB | UASA</span></th>`; });
+            thead += `</tr>`; document.getElementById('modalSenaraiHead').innerHTML = thead;
+
+            let tbody = '';
+            if (filteredData.length === 0) { tbody = `<tr><td colspan="${3 + subjekPaparan.length}" class="p-6 text-center text-slate-500 italic">Tiada data murid.</td></tr>`; } 
+            else {
+                filteredData.forEach((m, idx) => {
+                    tbody += `<tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors"><td class="p-2 text-center text-slate-500">${idx + 1}</td><td class="p-2 font-bold text-slate-700 truncate max-w-[200px]" title="${m.nama}">${m.nama}</td><td class="p-2 text-center text-slate-600 text-[10px]"><span class="font-bold">${m.tahap}</span><br>${m.kelas}</td>`;
+                    subjekPaparan.forEach(s => {
+                        let nP = m.pb[s] || '-'; let nU = m.uasa[s] || '-';
+                        let bP = 'badge-white'; if (nP === 'TP6') bP = 'badge-green'; else if (['TP3', 'TP4', 'TP5'].includes(nP)) bP = 'badge-blue'; else if (['TP1', 'TP2'].includes(nP)) bP = 'badge-red'; else if (nP === 'TD') bP = 'bg-black text-white';
+                        let bU = 'badge-white'; if (nU === 'A') bU = 'badge-green'; else if (['B', 'C', 'D'].includes(nU)) bU = 'badge-blue'; else if (nU === 'F') bU = 'badge-red'; else if (nU === 'E') bU = 'badge-orange'; else if (nU === 'TD') bU = 'bg-black text-white';
+                        let cBg = s === subjek ? 'bg-indigo-50/30' : '';
+                        tbody += `<td class="p-2 text-center border-r border-slate-100 ${cBg}"><div class="flex items-center justify-center gap-1"><span class="badge ${bP} w-8 shadow-sm">${nP}</span><span class="badge ${bU} w-8 shadow-sm">${nU}</span></div></td>`;
+                    });
+                    tbody += `</tr>`;
+                });
+            }
+            document.getElementById('modalSenaraiBody').innerHTML = tbody;
+            document.getElementById('modalSenaraiMurid').style.display = "block";
+        }
+
+        function tutupModalSenarai() { document.getElementById('modalSenaraiMurid').style.display = "none"; }
+
+        // ==========================================
+        // FUNGSI UTAMA PAGE 4: JANA CARTA TABURAN (SCATTER/BUBBLE)
+        // ==========================================
+        function janaCartaScatterP4() {
+            const ctx = document.getElementById('scatterChartP4').getContext('2d');
+            if (scatterChartInstanceP4) scatterChartInstanceP4.destroy();
+
+            const tahap = document.getElementById('filterTahap').value;
+            const kelas = document.getElementById('filterKelas').value;
+            const filterKhas = document.getElementById('filterKhas').value;
+            const isCriticalFilter = document.getElementById('criticalFilterP4').checked; // Checkbox Lokal P4
+            
+            let checkedSubjek = Array.from(document.querySelectorAll('.subjek-checkbox:checked')).map(cb => cb.value);
+            let subjekList = checkedSubjek.length > 0 ? checkedSubjek : senaraiSubjek;
+
+            let bubbleMap = {};
+            let maxCount = 0;
+
+            // Loop data base pada filter Tahap, Kelas, FilterKhas
+            dataGlobal.filter(d => {
+                let pTahap = (tahap === 'Semua' || d.tahap === tahap);
+                let pKelas = (kelas === 'Semua' || d.kelas === kelas);
+                let pJantina = (filterKhas === 'L' || filterKhas === 'P' ? d.jantina === filterKhas : true);
+                return pTahap && pKelas && pJantina;
+            }).forEach(m => {
+                subjekList.forEach(s => {
+                    const tp = String(m.pb[s] || '').trim().toUpperCase();
+                    const gr = String(m.uasa[s] || '').trim().toUpperCase();
+                    const y = tpMapY[tp]; const x = gradeMapX[gr];
+                    
+                    if (x && y) {
+                        const isLemah = (x >= 5 && y <= 2);
+                        const isAnomaliUjian = (x <= 2 && y <= 2);
+                        const isAnomaliPBD = (x >= 5 && y >= 5);
+                        const isCritical = isLemah || isAnomaliUjian || isAnomaliPBD;
+
+                        // Jika checkbox "Papar Zon Kritikal Sahaja" aktif, buang yang bukan kritikal
+                        if (isCriticalFilter && !isCritical) return;
+
+                        const key = `${tp}_${gr}`;
+                        if (!bubbleMap[key]) bubbleMap[key] = { count: 0, students: [] };
+                        bubbleMap[key].count++;
+                        bubbleMap[key].students.push({
+                            nama: m.nama,
+                            kelas: `${m.tahap} ${m.kelas}`,
+                            subjek: s,
+                            tp: tp,
+                            gred: gr
+                        });
+                        if (bubbleMap[key].count > maxCount) maxCount = bubbleMap[key].count;
+                    }
+                });
+            });
+
+            const points = [];
+            const bgColors = [];
+            const borderColors = [];
+
+            Object.keys(bubbleMap).forEach(key => {
+                const [tp, gr] = key.split('_');
+                const dataPoint = bubbleMap[key];
+                
+                points.push({
+                    x: gradeMapX[gr], y: tpMapY[tp],
+                    r: Math.min(60, Math.max(15, Math.sqrt(dataPoint.count) * 4)),
+                    count: dataPoint.count,
+                    label: `TP: ${tp}, Gred: ${gr}`,
+                    students: dataPoint.students
+                });
+
+                // Warna dinamik berpandukan kepadatan
+                if (dataPoint.count >= maxCount * 0.7 && maxCount > 0) {
+                    bgColors.push('rgba(220, 38, 38, 0.75)'); borderColors.push('rgba(220, 38, 38, 1)');
+                } else if (dataPoint.count >= maxCount * 0.3 && maxCount > 0) {
+                    bgColors.push('rgba(234, 88, 12, 0.75)'); borderColors.push('rgba(234, 88, 12, 1)');
+                } else {
+                    bgColors.push('rgba(37, 99, 235, 0.75)'); borderColors.push('rgba(37, 99, 235, 1)');
+                }
+            });
+
+            scatterChartInstanceP4 = new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: 'Taburan Murid',
+                        data: points,
+                        backgroundColor: bgColors,
+                        borderColor: borderColors,
+                        borderWidth: 2,
+                        hoverBorderWidth: 4,
+                        hoverBorderColor: '#000'
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    onClick: (event, elements, chart) => {
+                        if (elements.length > 0) {
+                            const dataIndex = elements[0].index;
+                            bukaModalP4(chart.data.datasets[0].data[dataIndex]);
+                        }
+                    },
+                    onHover: (event, chartElement) => {
+                        event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+                    },
+                    plugins: {
+                        customCanvasBackgroundColor: { color: 'white' },
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: (ctx) => `${ctx.raw.label} | Klik untuk lihat ${ctx.raw.count} murid` } },
+                        datalabels: { color: '#ffffff', font: { weight: 'bold', size: 14, family: 'Poppins' }, formatter: (v) => v.count }
+                    },
+                    scales: {
+                        x: { min: 0.5, max: 6.5, title: { display: true, text: 'Gred Ujian (A ➔ F)', font: { size: 14, weight: 'bold', family: 'Poppins' } }, ticks: { callback: v => { const l = {1:'A', 2:'B', 3:'C', 4:'D', 5:'E', 6:'F'}; return l[v]||''; }, font: {size: 14, weight: 'bold'} } },
+                        y: { min: 0.5, max: 6.5, title: { display: true, text: 'Tahap Penguasaan PBD', font: { size: 14, weight: 'bold', family: 'Poppins' } }, ticks: { callback: v => { const l = {1:'TP1', 2:'TP2', 3:'TP3', 4:'TP4', 5:'TP5', 6:'TP6'}; return l[v]||''; }, font: {size: 14, weight: 'bold'} } }
+                    }
+                },
+                plugins: [dangerZonePlugin]
+            });
+        }
+
+        // MODAL 1 (SENARAI MURID BUIH P4)
+        function bukaModalP4(dataPoint) {
+            document.getElementById("modalTitleP4").innerText = `Kumpulan: ${dataPoint.label}`;
+            document.getElementById("modalSubtitleP4").innerText = `Jumlah: ${dataPoint.count} rekod ditemui dalam kategori ini.`;
+            
+            const tbody = document.getElementById("studentTableBodyP4");
+            tbody.innerHTML = "";
+            currentModalStudentsP4 = dataPoint.students;
+            // Sorting by name
+            currentModalStudentsP4.sort((a, b) => a.nama.localeCompare(b.nama));
+
+            currentModalStudentsP4.forEach((student, index) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="text-align: center;">${index + 1}</td>
+                    <td><b>${student.nama}</b></td>
+                    <td>${student.kelas}</td>
+                    <td>${student.subjek}</td>
+                    <td style="text-align: center; font-weight: bold; color: #1e3a8a;">${student.tp}</td>
+                    <td style="text-align: center; font-weight: bold; color: #1e3a8a;">${student.gred}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById("studentModalPage4").style.display = "block";
+            lucide.createIcons();
+        }
+
+        // MODAL 2 (ANALISIS MURID BERISIKO P4)
+        function paparModalAnalisisRisiko() {
+            prosesAnalisisRisiko();
+            document.getElementById('riskModalPage4').style.display = 'block';
+            lucide.createIcons();
+        }
+
+        function prosesAnalisisRisiko() {
+            const minCriticalSub = parseInt(document.getElementById('minCriticalP4').value);
+            const tahap = document.getElementById('filterTahap').value;
+            const kelas = document.getElementById('filterKelas').value;
+            const filterKhas = document.getElementById('filterKhas').value;
+            let checkedSubjek = Array.from(document.querySelectorAll('.subjek-checkbox:checked')).map(cb => cb.value);
+            let subjekList = checkedSubjek.length > 0 ? checkedSubjek : senaraiSubjek;
+
+            let studentAnomalies = {};
+
+            dataGlobal.filter(d => {
+                let pTahap = (tahap === 'Semua' || d.tahap === tahap);
+                let pKelas = (kelas === 'Semua' || d.kelas === kelas);
+                let pJantina = (filterKhas === 'L' || filterKhas === 'P' ? d.jantina === filterKhas : true);
+                return pTahap && pKelas && pJantina;
+            }).forEach(m => {
+                let anomalyList = [];
+                subjekList.forEach(sub => {
+                    const tp = String(m.pb[sub] || '').trim().toUpperCase();
+                    const grade = String(m.uasa[sub] || '').trim().toUpperCase();
+                    const tpNum = tpMapY[tp]; const gradeNum = gradeMapX[grade];
+
+                    if (tpNum && gradeNum) {
+                        let type = null; let badgeClass = '';
+                        if (gradeNum >= 5 && tpNum <= 2) { type = 'Zon Lemah'; badgeClass = 'badge-lemah'; } 
+                        else if (gradeNum <= 2 && tpNum <= 2) { type = 'Anomali Ujian'; badgeClass = 'badge-ujian'; } 
+                        else if (gradeNum >= 5 && tpNum >= 5) { type = 'Anomali PBD'; badgeClass = 'badge-pbd'; }
+
+                        if (type) {
+                            anomalyList.push({ subjek: sub, tp: tp, gred: grade, type: type, badge: badgeClass });
+                        }
+                    }
+                });
+
+                if (anomalyList.length >= minCriticalSub) {
+                    studentAnomalies[m.id] = {
+                        nama: m.nama,
+                        kelas: `${m.tahap} ${m.kelas}`,
+                        anomalies: anomalyList,
+                        count: anomalyList.length
+                    };
+                }
+            });
+
+            let riskArray = Object.values(studentAnomalies);
+            riskArray.sort((a, b) => b.count - a.count || a.nama.localeCompare(b.nama));
+            currentRiskStudentsP4 = riskArray;
+
+            const tbody = document.getElementById("riskTableBodyP4");
+            tbody.innerHTML = "";
+
+            if (riskArray.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px; font-style: italic; color: #64748b;">Tiada murid dengan ${minCriticalSub} atau lebih subjek kritikal ditemui.</td></tr>`;
+            } else {
+                riskArray.forEach((student, index) => {
+                    let subjectsHtml = student.anomalies.map(a => `<span class="badge-p4 ${a.badge}">${a.subjek} (${a.tp}/${a.gred})</span>`).join(' ');
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td style="text-align: center;">${index + 1}</td>
+                        <td><b>${student.nama}</b></td>
+                        <td>${student.kelas}</td>
+                        <td style="text-align: center; color: red; font-size: 16px; font-weight: bold;">${student.count}</td>
+                        <td>${subjectsHtml}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        function tutupModal(modalId) { document.getElementById(modalId).style.display = "none"; }
+        window.onclick = function(event) { if (event.target.classList.contains('modal')) event.target.style.display = "none"; }
+
+        // FUNGSI MUAT TURUN (P4)
+        function downloadChartAsImageP4() { muatTurunImej('blockPage4', 'Pemetaan_TP_vs_Gred'); }
+        function downloadScatterImageP4() { downloadChartAsImageP4(); }
+
+        function downloadExcelP4() {
+            if (currentModalStudentsP4.length === 0) return;
+            const excelData = currentModalStudentsP4.map((s, index) => ({
+                "Bil": index + 1, "Nama Murid": s.nama, "Tahun & Kelas": s.kelas, 
+                "Subjek": s.subjek, "TP (PB)": s.tp, "Gred (UASA)": s.gred
+            }));
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Senarai Murid");
+            const labelTitle = document.getElementById("modalTitleP4").innerText.replace(/[^a-zA-Z0-9]/g, "_");
+            XLSX.writeFile(wb, `${labelTitle}.xlsx`);
+        }
+
+        function downloadRiskExcelP4() {
+            if (currentRiskStudentsP4.length === 0) return;
+            const excelData = currentRiskStudentsP4.map((s, index) => {
+                let detailSubjek = s.anomalies.map(a => `${a.subjek} (${a.tp}/${a.gred} - ${a.type})`).join(', ');
+                return {
+                    "Bil": index + 1, "Nama Murid": s.nama, "Tahun & Kelas": s.kelas,
+                    "Jumlah Subjek Kritikal": s.count, "Perincian Masalah": detailSubjek
+                };
+            });
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Murid Berisiko Tinggi");
+            XLSX.writeFile(wb, `Senarai_Murid_Berisiko_Tinggi.xlsx`);
+        }
+
+        // FUNGSI UMUM DARI 1.6
+        function paparDetailMurid(idx) {
+            const m = dataGlobal.find(d => d._index === idx);
+            if(!m) return;
+            document.getElementById('detailNamaLengkap').textContent = m.nama;
+            document.getElementById('detailInfoLanjut').textContent = `${m.tahap} ${m.kelas} | ${m.jantina}`;
+            let grid = "";
+            senaraiSubjek.forEach(s => {
+                if(m.pb[s] || m.uasa[s]) {
+                    grid += `<div class="bg-slate-50 p-3 rounded-lg border text-center"><div class="text-[10px] font-bold text-slate-500 mb-1 truncate">${s}</div><div class="flex justify-center gap-1"><span class="badge ${tpMapY[m.pb[s]]>=3?'badge-blue':(tpMapY[m.pb[s]]?'badge-red':'badge-white')}">${m.pb[s]||'-'}</span><span class="badge ${gradeMapX[m.uasa[s]]<=5?'badge-green':(gradeMapX[m.uasa[s]]?'badge-red':'badge-white')}">${m.uasa[s]||'-'}</span></div></div>`;
+                }
+            });
+            document.getElementById('detailGridSubjek').innerHTML = grid;
+            document.getElementById('detailMuridSection').classList.remove('hidden');
+            document.getElementById('detailMuridSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function tutupDetail() { document.getElementById('detailMuridSection').classList.add('hidden'); }
+
         function muatTurunImej(elementId, namaFail) {
             const element = document.getElementById(elementId);
             if (!element) return;
-
-            // html2canvas menangkap elemen sebagai canvas
-            html2canvas(element, {
-                scale: 2, // Resolusi tinggi untuk kualiti PowerPoint
-                useCORS: true,
-                backgroundColor: '#ffffff' // Pastikan latar belakang putih
-            }).then(canvas => {
-                // Menukar canvas kepada imej dan trigger muat turun
-                const link = document.createElement('a');
-                link.download = namaFail + '.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            }).catch(err => {
-                console.error("Ralat memuat turun imej:", err);
-                const msg = document.createElement('div');
-                msg.className = "fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg shadow-xl z-50 font-bold";
-                msg.textContent = "Ralat semasa memuat turun imej. Pastikan pelayar web anda menyokong fungsi ini.";
-                document.body.appendChild(msg);
-                setTimeout(() => msg.remove(), 4000);
+            html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
+                const link = document.createElement('a'); link.download = namaFail + '.png';
+                link.href = canvas.toDataURL('image/png'); link.click();
             });
         }
     </script>
