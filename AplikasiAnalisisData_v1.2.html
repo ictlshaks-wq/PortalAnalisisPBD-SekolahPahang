@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Analisis PBD JPN Pahang 2026</title>
+    <title>APLIKASI ANALISIS PBD JPN PAHANG 2026</title>
     
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
             theme: {
                 extend: {
                     colors: {
-                        jpn: { maroon: '#800000', blue: '#1e3a8a', light: '#f8fafc' }
+                        jpn: { maroon: '#88042A', blue: '#1e3a8a', light: '#f8fafc' }
                     },
                     fontFamily: { sans: ['Poppins', 'sans-serif'] }
                 }
@@ -110,7 +110,7 @@
 
     <div class="max-w-7xl mx-auto space-y-6">
         
-        <header class="bg-[#800000] rounded-xl shadow-md p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <header class="bg-[#88042A] rounded-xl shadow-md p-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">
                 <img src="https://raw.githubusercontent.com/ictlshaks-wq/LOGODGURU/main/LOGO%20JPN%20PUTIH.png" 
                      alt="Logo JPN" 
@@ -118,9 +118,10 @@
                      onerror="this.src='https://via.placeholder.com/60?text=JPN'">
                 <div>
                     <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-                        Aplikasi Analisis PBD 1.6
+                        APLIKASI ANALISIS PBD V9.0
                     </h1>
                     <p class="text-white/80 mt-1 text-sm md:text-base">Aplikasi ini dibangunkan oleh JK PBD, Sektor Pembelajaran JPN Pahang 2026.</p>
+                    <div id="modeDataBadge" class="hidden mt-3 w-fit rounded-lg border border-white/25 bg-white/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white"></div>
                 </div>
             </div>
             
@@ -128,7 +129,7 @@
                 <label for="excelFileInput" class="text-sm font-semibold text-white mb-2 cursor-pointer hover:text-gray-200 flex items-center gap-2">
                     <i data-lucide="file-up" class="w-4 h-4"></i> Muat Naik Fail Excel (.xlsx)
                 </label>
-                <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="text-sm text-white/80 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-white file:text-[#800000] hover:file:bg-gray-100 cursor-pointer transition-colors">
+                <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="text-sm text-white/80 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-white file:text-[#88042A] hover:file:bg-gray-100 cursor-pointer transition-colors">
             </div>
         </header>
 
@@ -339,7 +340,7 @@
                     <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 mb-6 border-b border-slate-100 pb-3">
                         <div class="flex items-center gap-2">
                             <i data-lucide="bar-chart-big" class="text-blue-600 no-print"></i>
-                            <h2 class="text-lg font-bold text-slate-800">Analisis Bersepadu Pentaksiran Berterusan dan Ujian Akhir Sesi Akademik</h2>
+                            <h2 id="tajukAnalisisBersepadu" class="text-lg font-bold text-slate-800">Analisis Bersepadu Pentaksiran Berterusan dan Ujian Akhir Sesi Akademik</h2>
                         </div>
                         <button data-html2canvas-ignore="true" onclick="muatTurunImej('blockAnalisisBersepadu', 'Analisis_Bersepadu')" class="p-1.5 px-3 bg-slate-100 hover:bg-blue-100 hover:text-blue-700 rounded text-slate-500 transition-colors shadow-sm flex items-center gap-1.5 text-xs font-bold no-print" title="Muat Turun Gambar">
                             <i data-lucide="camera" class="w-3.5 h-3.5"></i> PNG
@@ -399,7 +400,7 @@
                                         <th class="p-2 border-r border-slate-200 w-20">Tahun</th>
                                         <th class="p-2 border-r border-slate-200 w-24">Kelas</th>
                                         <th class="p-2 text-center font-bold border-r border-slate-200 w-20">MP TP6</th>
-                                        <th class="p-2 text-center font-bold w-24">MP UASA A</th>
+                                        <th class="uasa-only p-2 text-center font-bold w-24">MP UASA A</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -423,7 +424,7 @@
                                         <th class="p-2 border-r border-slate-200 w-20">Tahun</th>
                                         <th class="p-2 border-r border-slate-200 w-24">Kelas</th>
                                         <th class="p-2 text-center font-bold border-r border-slate-200 w-24">MP TP1 & 2</th>
-                                        <th class="p-2 text-center font-bold w-24">MP UASA F</th>
+                                        <th class="uasa-only p-2 text-center font-bold w-24">MP UASA F</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -487,7 +488,7 @@
                     </div>
                     <div class="bg-slate-50/50 rounded-xl p-4 border border-slate-100">
                         <div class="flex flex-col items-center justify-center mb-6 text-center w-full pt-2">
-                            <h3 class="text-sm font-semibold text-slate-600">Analisis PB & UASA: Menguasai vs Tidak Menguasai</h3>
+                            <h3 id="tajukAnalisisSubjek" class="text-sm font-semibold text-slate-600">Analisis PB & UASA: Menguasai vs Tidak Menguasai</h3>
                             <div id="lblFilterAllSubjek"></div>
                         </div>
                         <div id="chartAllSubjekGabunganContainer" class="relative w-full">
@@ -668,6 +669,7 @@
 
         let dataGlobal = [];
         let senaraiSubjek = [];
+        let adaDataUASA = true;
         
         // Instances for Page 1, 2, 3
         let chartInstancePB = null, chartInstanceUASA = null;
@@ -719,6 +721,9 @@
         // Helper Functions 
         function getFilterBadge(isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
             let pb = isSemuaPB ? "Semua TP" : (checkedPB.length > 0 ? checkedPB.join(', ') : "Tiada");
+            if (!adaDataUASA) {
+                return `<div class="mt-2 text-[10px] font-bold bg-blue-50 print:bg-transparent text-blue-700 print:text-slate-800 border border-blue-100 print:border-none px-2.5 print:px-0 py-1 rounded shadow-sm print:shadow-none inline-block text-left w-fit">📌 TAPISAN DATA: PB (${pb})</div>`;
+            }
             let uasa = isSemuaUASA ? "Semua Gred" : (checkedUASA.length > 0 ? checkedUASA.join(', ') : "Tiada");
             return `<div class="mt-2 text-[10px] font-bold bg-blue-50 print:bg-transparent text-blue-700 print:text-slate-800 border border-blue-100 print:border-none px-2.5 print:px-0 py-1 rounded shadow-sm print:shadow-none inline-block text-left w-fit">📌 TAPISAN DATA: PB (${pb}) | UASA (${uasa})</div>`;
         }
@@ -781,6 +786,7 @@
         });
 
         function tukarTab(tabIndex) {
+            if (tabIndex === 4 && !adaDataUASA) tabIndex = 1;
             const tabs = [1, 2, 3, 4];
             tabs.forEach(t => {
                 const btn = document.getElementById(`tab${t}Btn`);
@@ -793,21 +799,28 @@
                     content.classList.add('hidden');
                 }
             });
-            // Re-render chart for Page 4 if selected so animation runs smoothly
-            if(tabIndex === 4) janaCartaScatterP4();
+            if (!adaDataUASA) {
+                const tab4Btn = document.getElementById('tab4Btn');
+                if (tab4Btn) tab4Btn.classList.add('hidden');
+            }
+            if(tabIndex === 4 && adaDataUASA) janaCartaScatterP4();
         }
 
         function prosesWorkbook(workbook) {
             let sheetNamePB = workbook.SheetNames.find(n => n.toUpperCase().includes('PB')) || workbook.SheetNames[0];
             let sheetNameUASA = workbook.SheetNames.find(n => n.toUpperCase().includes('UASA'));
-            if (!sheetNameUASA && workbook.SheetNames.length > 1) sheetNameUASA = workbook.SheetNames[1];
-            if (!sheetNamePB || !sheetNameUASA) { alert("Ralat: Fail Excel tidak mempunyai 2 lembaran (PB dan UASA)."); return; }
-            
+
+            if (!sheetNamePB) {
+                alert("Ralat: Fail Excel tidak mempunyai lembaran data PB.");
+                return;
+            }
+
+            adaDataUASA = !!sheetNameUASA;
             const rawPB = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNamePB], {defval: ""});
-            const rawUASA = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameUASA], {defval: ""});
+            const rawUASA = adaDataUASA ? XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameUASA], {defval: ""}) : [];
             let gabungan = {};
             let subjekSet = new Set();
-            const kolumAbai = ['NO BIL', 'SESI', 'TAHAP', 'KELAS', 'Bil.', 'Nama', 'MyKID/ID Pengenalan', 'Jantina'];
+            const kolumAbai = ['NO BIL', 'SESI', 'TAHUN/SESI', 'TAHUN', 'TAHAP', 'KELAS', 'Bil.', 'Nama', 'MyKID/ID Pengenalan', 'Jantina'];
 
             rawPB.forEach(row => {
                 let id = String(row['MyKID/ID Pengenalan'] || row['Nama']).trim();
@@ -817,13 +830,72 @@
             });
             rawUASA.forEach(row => {
                 let id = String(row['MyKID/ID Pengenalan'] || row['Nama']).trim();
-                if (!id || !gabungan[id]) return;
+                if (!id) return;
+                if (!gabungan[id]) gabungan[id] = { id, nama: row['Nama'], tahap: row['TAHAP'] || '', kelas: row['KELAS'] || '', jantina: row['Jantina'] || '', pb: {}, uasa: {} };
                 Object.keys(row).forEach(key => { if (!kolumAbai.includes(key)) { subjekSet.add(key); gabungan[id].uasa[key] = String(row[key]).trim().toUpperCase(); } });
             });
             dataGlobal = Object.values(gabungan);
             dataGlobal.forEach((d, i) => d._index = i);
             senaraiSubjek = Array.from(subjekSet).sort();
+            kemaskiniModData();
             sediakanFilter();
+        }
+
+        function kemaskiniModData() {
+            const hideWhenPBOnly = ['kpiJurang', 'kpiUASA', 'kpiUASAGagal', 'kpiTotalA'];
+            hideWhenPBOnly.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const card = el.closest('.glass-panel');
+                    if (card) card.classList.toggle('hidden', !adaDataUASA);
+                }
+            });
+
+            const containerUASA = document.getElementById('containerUASA');
+            if (containerUASA) containerUASA.classList.toggle('hidden', !adaDataUASA);
+
+            const chartUASA = document.getElementById('chartUASA');
+            if (chartUASA) {
+                const box = chartUASA.closest('.glass-panel');
+                if (box) {
+                    box.classList.toggle('hidden', !adaDataUASA);
+                    const grid = box.parentElement;
+                    if (grid) {
+                        grid.classList.toggle('lg:grid-cols-2', adaDataUASA);
+                        grid.classList.toggle('lg:grid-cols-1', !adaDataUASA);
+                    }
+                }
+            }
+
+            const tab4Btn = document.getElementById('tab4Btn');
+            if (tab4Btn) tab4Btn.classList.toggle('hidden', !adaDataUASA);
+            if (!adaDataUASA) document.getElementById('tab4Content').classList.add('hidden');
+
+            document.querySelectorAll('.uasa-only').forEach(el => el.classList.toggle('hidden', !adaDataUASA));
+
+            const filterKhas = document.getElementById('filterKhas');
+            if (filterKhas) {
+                const optMeng = filterKhas.querySelector('option[value="MENGUASAI"]');
+                const optKrit = filterKhas.querySelector('option[value="KRITIKAL"]');
+                if (optMeng) optMeng.textContent = adaDataUASA ? 'Menguasai (PB TP3+ & UASA A-E)' : 'Menguasai PBD (TP3+)';
+                if (optKrit) optKrit.textContent = adaDataUASA ? 'Tidak Menguasai (PB TP1-2 / UASA F)' : 'Tidak Menguasai PBD (TP1-2)';
+                ['GAGAL_SEMUA_UASA','JURANG_F_TP36'].forEach(v => {
+                    const op = filterKhas.querySelector(`option[value="${v}"]`);
+                    if (op) { op.hidden = !adaDataUASA; op.disabled = !adaDataUASA; }
+                });
+                if (!adaDataUASA && ['GAGAL_SEMUA_UASA','JURANG_F_TP36'].includes(filterKhas.value)) filterKhas.value = 'SEMUA';
+            }
+
+            const t1 = document.getElementById('tajukAnalisisBersepadu');
+            if (t1) t1.textContent = adaDataUASA ? 'Analisis Bersepadu Pentaksiran Berterusan dan Ujian Akhir Sesi Akademik' : 'Analisis Pentaksiran Berterusan (PB)';
+            const t3 = document.getElementById('tajukAnalisisSubjek');
+            if (t3) t3.textContent = adaDataUASA ? 'Analisis PB & UASA: Menguasai vs Tidak Menguasai' : 'Analisis PB: Menguasai vs Tidak Menguasai';
+
+            const badge = document.getElementById('modeDataBadge');
+            if (badge) {
+                badge.textContent = adaDataUASA ? 'AKHIR TAHUN • DATA PB + UASA' : 'PERTENGAHAN TAHUN • DATA PB SAHAJA';
+                badge.classList.remove('hidden');
+            }
         }
 
         function toggleDropdown(id) { document.getElementById(id).classList.toggle('hidden'); }
@@ -911,7 +983,7 @@
             let isSemuaPB = document.getElementById('cbSemuaPB').checked || checkedPB.length === 0 || checkedPB.length === 7;
             
             let checkedUASA = Array.from(document.querySelectorAll('.uasa-checkbox:checked')).map(cb => cb.value);
-            let isSemuaUASA = document.getElementById('cbSemuaUASA').checked || checkedUASA.length === 0 || checkedUASA.length === 7;
+            let isSemuaUASA = !adaDataUASA || document.getElementById('cbSemuaUASA').checked || checkedUASA.length === 0 || checkedUASA.length === 7;
 
             let dataPB_Taburan = { 'TP1':0, 'TP2':0, 'TP3':0, 'TP4':0, 'TP5':0, 'TP6':0, 'TD':0 };
             let dataUASA_Taburan = { 'A':0, 'B':0, 'C':0, 'D':0, 'E':0, 'F':0, 'TD':0 };
@@ -996,7 +1068,7 @@
 
             const jadualHead = document.getElementById('dataTableHead');
             let theadHTML = `<tr><th class="w-8 text-center border-r border-blue-800">Bil</th><th class="w-1/4 border-r border-blue-800">Nama Murid</th><th class="w-24 border-r border-blue-800">Tahap/Kelas</th><th class="w-12 text-center border-r border-blue-800">Jantina</th>`;
-            subjekPapar.forEach(sub => { theadHTML += `<th class="text-center border-r border-blue-800 p-1 min-w-[80px]">${sub} <br><span class="text-[9px] text-blue-200 font-normal">PB <span class="mx-0.5 text-blue-300">|</span> UASA</span></th>`; });
+            subjekPapar.forEach(sub => { const labelJenis = adaDataUASA ? `PB <span class="mx-0.5 text-blue-300">|</span> UASA` : 'PB'; theadHTML += `<th class="text-center border-r border-blue-800 p-1 min-w-[80px]">${sub} <br><span class="text-[9px] text-blue-200 font-normal">${labelJenis}</span></th>`; });
             theadHTML += `</tr>`;
             jadualHead.innerHTML = theadHTML;
 
@@ -1067,7 +1139,7 @@
                     let dPB = nPB_sub !== '-' ? `<span class="badge ${bPB} w-8 shadow-sm">${nPB_sub}</span>` : `<span class="w-8 text-center text-slate-300 font-medium">-</span>`;
                     let dU = nU_sub !== '-' ? `<span class="badge ${bU} w-8 shadow-sm">${nU_sub}</span>` : `<span class="w-8 text-center text-slate-300 font-medium">-</span>`;
 
-                    rowHTMLSubjek += `<td class="text-center border-r border-slate-100 p-1"><div class="flex items-center justify-center gap-1">${dPB}${dU}</div></td>`;
+                    rowHTMLSubjek += `<td class="text-center border-r border-slate-100 p-1"><div class="flex items-center justify-center gap-1">${dPB}${adaDataUASA ? dU : ''}</div></td>`;
                 });
 
                 if (masukTable) {
@@ -1077,7 +1149,7 @@
                         if (nP === 'TP6') bilTP6++; if (nU === 'A') bilA++;
                         if (['TP1','TP2'].includes(nP)) bilTP12++; if (nU === 'F') bilF++;
                     });
-                    senaraiMuridStats.push({ originalIndex: murid._index, nama: murid.nama, tahap: murid.tahap, kelas: murid.kelas, bilTP6, bilA, bilTP12, bilF, bilTerbaik: bilTP6 + bilA, bilKritikal: bilTP12 + bilF });
+                    senaraiMuridStats.push({ originalIndex: murid._index, nama: murid.nama, tahap: murid.tahap, kelas: murid.kelas, bilTP6, bilA, bilTP12, bilF, bilTerbaik: bilTP6 + (adaDataUASA ? bilA : 0), bilKritikal: bilTP12 + (adaDataUASA ? bilF : 0) });
 
                     let rowHTML = `<tr class="hover:bg-blue-50 transition-colors"><td class="text-slate-500 text-center">${totalSenaraiMurid}</td><td class="font-bold text-blue-600 text-[11px] leading-tight cursor-pointer hover:underline hover:text-indigo-700 transition-colors no-print" onclick="paparDetailMurid(${murid._index})">${murid.nama || 'Tiada Nama'}</td><td class="font-bold text-slate-800 text-[11px] hidden print:table-cell">${murid.nama || 'Tiada Nama'}</td><td class="text-[11px] leading-tight"><span class="font-bold text-slate-500 block">${murid.tahap}</span>${murid.kelas}</td><td class="text-center border-r border-slate-200">${murid.jantina}</td>`;
                     rowHTML += rowHTMLSubjek + `</tr>`;
@@ -1109,18 +1181,27 @@
             lbls.forEach(l => { const el = document.getElementById(l); if(el) el.innerHTML = badgeHTML; });
 
             // Generate Semua Carta!
-            janaCartaPB(dataPB_Taburan, stat.pbAmbil, isSemuaPB, checkedPB); 
-            janaCartaUASA(dataUASA_Taburan, stat.uasaAmbil, isSemuaUASA, checkedUASA); 
+            janaCartaPB(dataPB_Taburan, stat.pbAmbil, isSemuaPB, checkedPB);
             janaRankingTable(senaraiMuridStats);
-            janaCartaJantinaGabung(sjU, sjB, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA); 
-            janaCartaKelasStacked(statKelasComp, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
-            janaCartaPerbandinganTahap(statTahapComp, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
-            janaCartaSemuaSubjek(statSubjekComp, subjekUntukDikira, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
-            janaCartaPerbandinganSubjek(statSubjekComp, subjekUntukDikira, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
-            
-            // Re-render chart for Page 4 if active
+
+            if (adaDataUASA) {
+                janaCartaUASA(dataUASA_Taburan, stat.uasaAmbil, isSemuaUASA, checkedUASA);
+                janaCartaJantinaGabung(sjU, sjB, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
+                janaCartaKelasStacked(statKelasComp, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
+                janaCartaPerbandinganTahap(statTahapComp, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
+                janaCartaSemuaSubjek(statSubjekComp, subjekUntukDikira, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
+                janaCartaPerbandinganSubjek(statSubjekComp, subjekUntukDikira, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA);
+            } else {
+                if (chartInstanceUASA) { chartInstanceUASA.destroy(); chartInstanceUASA = null; }
+                janaCartaJantinaPB(sjB, isSemuaPB, checkedPB);
+                janaCartaKelasPB(statKelasComp, isSemuaPB, checkedPB);
+                janaCartaPerbandinganTahapPB(statTahapComp, isSemuaPB, checkedPB);
+                janaCartaSemuaSubjekPB(statSubjekComp, subjekUntukDikira, isSemuaPB, checkedPB);
+                janaCartaPerbandinganSubjekPB(statSubjekComp, subjekUntukDikira, isSemuaPB, checkedPB);
+            }
+
             const activeTab = [1,2,3,4].find(i => !document.getElementById(`tab${i}Content`).classList.contains('hidden'));
-            if(activeTab === 4) janaCartaScatterP4();
+            if(activeTab === 4 && adaDataUASA) janaCartaScatterP4();
         }
 
         // ==========================================
@@ -1161,12 +1242,88 @@
         function janaRankingTable(senarai) {
             let cemerlangAll = [...senarai].filter(m => m.bilTerbaik > 0).sort((a, b) => b.bilTerbaik - a.bilTerbaik);
             let kritikalAll = [...senarai].filter(m => m.bilKritikal > 0).sort((a, b) => b.bilKritikal - a.bilKritikal);
-            
-            let tH = ''; cemerlangAll.forEach((m, i) => { tH += `<tr class="ranking-row border-b border-slate-100"><td class="p-2 font-mono text-slate-400 border-r border-slate-100 w-12 text-center">${i+1}</td><td class="p-2 font-bold text-blue-600 cursor-pointer hover:underline truncate border-r border-slate-100 no-print" onclick="paparDetailMurid(${m.originalIndex})">${m.nama}</td><td class="p-2 font-bold text-slate-800 border-r border-slate-100 hidden print:table-cell">${m.nama}</td><td class="p-2 text-[10px] text-slate-500 border-r border-slate-100 w-20 text-center">${m.tahap}</td><td class="p-2 text-slate-500 border-r border-slate-100 w-24 text-center">${m.kelas}</td><td class="p-2 text-center font-bold text-emerald-600 border-r border-slate-100 w-20">${m.bilTP6}</td><td class="p-2 text-center font-bold text-emerald-600 w-24">${m.bilA}</td></tr>`; });
-            document.getElementById('top10Body').innerHTML = tH || '<tr><td colspan="6" class="p-4 text-center italic text-slate-400">Tiada Murid Cemerlang Ditemui</td></tr>';
+            let tH = '';
+            cemerlangAll.forEach((m, i) => {
+                tH += `<tr class="ranking-row border-b border-slate-100"><td class="p-2 font-mono text-slate-400 border-r border-slate-100 w-12 text-center">${i+1}</td><td class="p-2 font-bold text-blue-600 cursor-pointer hover:underline truncate border-r border-slate-100 no-print" onclick="paparDetailMurid(${m.originalIndex})">${m.nama}</td><td class="p-2 font-bold text-slate-800 border-r border-slate-100 hidden print:table-cell">${m.nama}</td><td class="p-2 text-[10px] text-slate-500 border-r border-slate-100 w-20 text-center">${m.tahap}</td><td class="p-2 text-slate-500 border-r border-slate-100 w-24 text-center">${m.kelas}</td><td class="p-2 text-center font-bold text-emerald-600 border-r border-slate-100 w-20">${m.bilTP6}</td>${adaDataUASA ? `<td class="p-2 text-center font-bold text-emerald-600 w-24">${m.bilA}</td>` : ''}</tr>`;
+            });
+            document.getElementById('top10Body').innerHTML = tH || `<tr><td colspan="${adaDataUASA ? 6 : 5}" class="p-4 text-center italic text-slate-400">Tiada Murid Cemerlang Ditemui</td></tr>`;
 
-            let bH = ''; kritikalAll.forEach((m, i) => { bH += `<tr class="ranking-row border-b border-slate-100"><td class="p-2 font-mono text-slate-400 border-r border-slate-100 w-12 text-center">${i+1}</td><td class="p-2 font-bold text-rose-600 cursor-pointer hover:underline truncate border-r border-slate-100 no-print" onclick="paparDetailMurid(${m.originalIndex})">${m.nama}</td><td class="p-2 font-bold text-slate-800 border-r border-slate-100 hidden print:table-cell">${m.nama}</td><td class="p-2 text-[10px] text-slate-500 border-r border-slate-100 w-20 text-center">${m.tahap}</td><td class="p-2 text-slate-500 border-r border-slate-100 w-24 text-center">${m.kelas}</td><td class="p-2 text-center font-bold text-rose-600 border-r border-slate-100 w-24">${m.bilTP12}</td><td class="p-2 text-center font-bold text-rose-600 w-24">${m.bilF}</td></tr>`; });
-            document.getElementById('bottom10Body').innerHTML = bH || '<tr><td colspan="6" class="p-4 text-center italic text-slate-400">Tiada Murid Kritikal Ditemui</td></tr>';
+            let bH = '';
+            kritikalAll.forEach((m, i) => {
+                bH += `<tr class="ranking-row border-b border-slate-100"><td class="p-2 font-mono text-slate-400 border-r border-slate-100 w-12 text-center">${i+1}</td><td class="p-2 font-bold text-rose-600 cursor-pointer hover:underline truncate border-r border-slate-100 no-print" onclick="paparDetailMurid(${m.originalIndex})">${m.nama}</td><td class="p-2 font-bold text-slate-800 border-r border-slate-100 hidden print:table-cell">${m.nama}</td><td class="p-2 text-[10px] text-slate-500 border-r border-slate-100 w-20 text-center">${m.tahap}</td><td class="p-2 text-slate-500 border-r border-slate-100 w-24 text-center">${m.kelas}</td><td class="p-2 text-center font-bold text-rose-600 border-r border-slate-100 w-24">${m.bilTP12}</td>${adaDataUASA ? `<td class="p-2 text-center font-bold text-rose-600 w-24">${m.bilF}</td>` : ''}</tr>`;
+            });
+            document.getElementById('bottom10Body').innerHTML = bH || `<tr><td colspan="${adaDataUASA ? 6 : 5}" class="p-4 text-center italic text-slate-400">Tiada Murid Kritikal Ditemui</td></tr>`;
+        }
+
+        function janaCartaKelasPB(data, isSemuaPB, checkedPB) {
+            const ctx = document.getElementById('chartKelasStacked').getContext('2d');
+            if (chartInstanceKelasStacked) chartInstanceKelasStacked.destroy();
+            const keys = Object.keys(data).sort();
+            document.getElementById('chartKelasContainer').style.height = (keys.length * 50 + 100) + 'px';
+            const labels = [], dM = [], dG = [], dTD = [], rM = [], rG = [], rTD = [];
+            keys.forEach(key => {
+                labels.push(`${data[key].tahap} ${data[key].kelas} (PB)`);
+                const t = data[key].pb.ambil || 0;
+                rM.push(data[key].pb.meng); rG.push(data[key].pb.gag); rTD.push(data[key].pb.td);
+                dM.push(t ? (data[key].pb.meng/t*100).toFixed(1) : 0);
+                dG.push(t ? (data[key].pb.gag/t*100).toFixed(1) : 0);
+                dTD.push(t ? (data[key].pb.td/t*100).toFixed(1) : 0);
+            });
+            chartInstanceKelasStacked = new Chart(ctx, { type:'bar', data:{ labels, datasets:[
+                {label:'Menguasai',data:dM,rawCounts:rM,backgroundColor:(c)=>getStackedBgColor(c,isSemuaPB,checkedPB,true,[])},
+                {label:'Tidak Menguasai',data:dG,rawCounts:rG,backgroundColor:(c)=>getStackedBgColor(c,isSemuaPB,checkedPB,true,[])},
+                {label:'TD',data:dTD,rawCounts:rTD,backgroundColor:(c)=>getStackedBgColor(c,isSemuaPB,checkedPB,true,[])}
+            ]}, options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:50}},plugins:{legend:{position:'bottom'},datalabels:{color:(c)=>getStackedFontColor(c,isSemuaPB,checkedPB,true,[]),anchor:(c)=>c.datasetIndex===2?'end':'center',align:(c)=>c.datasetIndex===2?'end':'center',font:{weight:'bold',size:10,family:'Poppins'},formatter:(v,c)=>v>0?`${v}% (${c.dataset.rawCounts[c.dataIndex]})`:''}},scales:{x:{stacked:true,beginAtZero:true,max:100,title:{display:true,text:'Peratus (%)'}},y:{stacked:true,grid:{display:false}}}}});
+        }
+
+        function janaCartaJantinaPB(sjB, isSemuaPB, checkedPB) {
+            const ctx = document.getElementById('chartJantinaGabung').getContext('2d');
+            if (chartInstanceJantinaGabung) chartInstanceJantinaGabung.destroy();
+            const labels = ['Lelaki (PB)', 'Perempuan (PB)'];
+            const raw = [sjB['L'], sjB['P']];
+            const meng=[],gag=[],td=[],rM=[],rG=[],rTD=[];
+            raw.forEach(r=>{const t=r.ambil||0;rM.push(r.meng);rG.push(r.gag);rTD.push(r.td);meng.push(t?(r.meng/t*100).toFixed(1):0);gag.push(t?(r.gag/t*100).toFixed(1):0);td.push(t?(r.td/t*100).toFixed(1):0);});
+            chartInstanceJantinaGabung = new Chart(ctx,{type:'bar',data:{labels,datasets:[
+                {label:'Menguasai',data:meng,rawCounts:rM,backgroundColor:(c)=>getStackedBgColor(c,isSemuaPB,checkedPB,true,[])},
+                {label:'Tidak Menguasai',data:gag,rawCounts:rG,backgroundColor:(c)=>getStackedBgColor(c,isSemuaPB,checkedPB,true,[])},
+                {label:'TD',data:td,rawCounts:rTD,backgroundColor:(c)=>getStackedBgColor(c,isSemuaPB,checkedPB,true,[])}
+            ]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:50}},plugins:{legend:{position:'bottom'},datalabels:{color:(c)=>getStackedFontColor(c,isSemuaPB,checkedPB,true,[]),anchor:(c)=>c.datasetIndex===2?'end':'center',align:(c)=>c.datasetIndex===2?'end':'center',font:{weight:'bold',family:'Poppins'},formatter:(v,c)=>v>0?`${v}% (${c.dataset.rawCounts[c.dataIndex]})`:''}},scales:{x:{stacked:true,beginAtZero:true,max:100,title:{display:true,text:'Peratus (%)'}},y:{stacked:true,grid:{display:false}}}}});
+        }
+
+        function janaCartaPerbandinganTahapPB(data, isSemuaPB, checkedPB) {
+            chartInstancesMultiPB.forEach(c=>c.destroy()); chartInstancesMultiUASA.forEach(c=>c.destroy());
+            chartInstancesMultiPB=[]; chartInstancesMultiUASA=[];
+            const container=document.getElementById('containerTahapComparison'); container.innerHTML='';
+            const keys=Object.keys(data).sort(); const pbKeys=['TP1','TP2','TP3','TP4','TP5','TP6','TD'];
+            keys.forEach((key,index)=>{
+                const tD=data[key], tPB=tD.ambilPB||0;
+                const percTP12=tPB?((((tD.pb.TP1||0)+(tD.pb.TP2||0))/tPB)*100).toFixed(1):0;
+                const wr=document.createElement('div'); wr.id=`block_tahap_${index}`; wr.className='glass-panel p-6 border-t-4 border-t-indigo-500 mb-6 bg-white';
+                wr.innerHTML=`<div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 border-b border-slate-100 pb-4"><div><h2 class="text-xl font-black text-slate-800 uppercase tracking-wide">${tD.tahap}</h2>${getFilterBadge(isSemuaPB,checkedPB,true,[])}</div><div class="flex items-center gap-2 no-print mt-2 sm:mt-0"><div class="bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 shadow-sm"><i data-lucide="users" class="w-4 h-4"></i><span class="text-sm font-bold">Jumlah Murid: ${tD.jumlahMurid}</span></div><button data-html2canvas-ignore="true" onclick="muatTurunImej('block_tahap_${index}','Analisis_${tD.tahap.replace(/ /g,'_')}')" class="p-2.5 px-4 bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 rounded-lg text-slate-600 transition-colors shadow-sm flex items-center gap-1.5 text-sm font-bold"><i data-lucide="camera" class="w-4 h-4"></i> PNG</button></div></div><div class="bg-slate-50/50 border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col"><div class="flex items-center justify-between mb-4"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><h3 class="text-sm font-bold text-slate-700">Prestasi PBD (Tahap Penguasaan)</h3></div><div class="bg-red-50 border border-red-200 rounded-md px-3 py-1 flex flex-col items-end gap-1"><span class="text-[11px] font-bold text-red-700 uppercase">Tidak Menguasai</span><span class="text-sm font-black text-red-600">${percTP12}% (${(tD.pb.TP1||0)+(tD.pb.TP2||0)} Murid)</span></div></div><div class="relative h-64 w-full mt-auto"><canvas id="chart_pb_tahap_${index}"></canvas></div></div>`;
+                container.appendChild(wr);
+                const colors=pbKeys.map(lbl=>{let faded=!isSemuaPB&&!checkedPB.includes(lbl);if(['TP1','TP2'].includes(lbl))return faded?'#fee2e2':'#ef4444';if(['TP3','TP4','TP5'].includes(lbl))return faded?'#dbeafe':'#3b82f6';if(lbl==='TP6')return faded?'#dcfce7':'#22c55e';return faded?'#f1f5f9':'#cbd5e1';});
+                const vals=[],raw=[]; pbKeys.forEach(k=>{let c=tD.pb[k]||0;raw.push(c);vals.push(tPB?((c/tPB)*100).toFixed(1):0);});
+                chartInstancesMultiPB.push(new Chart(document.getElementById(`chart_pb_tahap_${index}`).getContext('2d'),{type:'bar',data:{labels:pbKeys,datasets:[{data:vals,rawCounts:raw,backgroundColor:colors,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:30}},plugins:{legend:{display:false},datalabels:{color:(c)=>(!isSemuaPB&&!checkedPB.includes(pbKeys[c.dataIndex]))?'transparent':'#475569',anchor:'end',align:'top',font:{weight:'bold',size:10,family:'Poppins'},formatter:(v,c)=>v>0?`${c.dataset.rawCounts[c.dataIndex]}\n(${v}%)`:''}},scales:{y:{beginAtZero:true,max:100},x:{grid:{display:false}}}}}));
+            });
+            lucide.createIcons();
+        }
+
+        function janaCartaSemuaSubjekPB(data, subjekList, isSemuaPB, checkedPB) {
+            chartInstancesAllSubjek.forEach(c=>c.destroy()); chartInstancesAllSubjek=[];
+            let valid=subjekList.filter(s=>data[s].ambilPB>0);
+            const urutan=['BM','BI','MM','SAINS','SEJARAH','SEJ'];
+            valid.sort((a,b)=>{let ia=urutan.indexOf(a),ib=urutan.indexOf(b);if(ia!==-1&&ib!==-1)return ia-ib;if(ia!==-1)return-1;if(ib!==-1)return 1;return a.localeCompare(b);});
+            const labels=[],m=[],g=[],td=[],rM=[],rG=[],rTD=[];
+            valid.forEach(s=>{const d=data[s],t=d.ambilPB||0;labels.push(`${s} (PB)`);rM.push(d.pb.meng);rG.push(d.pb.gag);rTD.push(d.pb.td);m.push(t?(d.pb.meng/t*100).toFixed(1):0);g.push(t?(d.pb.gag/t*100).toFixed(1):0);td.push(t?(d.pb.td/t*100).toFixed(1):0);});
+            document.getElementById('chartAllSubjekGabunganContainer').style.height=Math.max(labels.length*45+80,400)+'px';
+            chartInstancesAllSubjek.push(new Chart(document.getElementById('chartAllSubjekGabungan').getContext('2d'),{type:'bar',data:{labels,datasets:[{label:'Menguasai (TP3-6)',data:m,rawCounts:rM,backgroundColor:(c)=>getStackedBgColor(c,isSemuaPB,checkedPB,true,[])},{label:'Tidak Menguasai (TP1-2)',data:g,rawCounts:rG,backgroundColor:(c)=>getStackedBgColor(c,isSemuaPB,checkedPB,true,[])},{label:'TD',data:td,rawCounts:rTD,backgroundColor:(c)=>getStackedBgColor(c,isSemuaPB,checkedPB,true,[])}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:50}},onHover:(ev,el)=>{ev.native.target.style.cursor=el[0]?'pointer':'default';},onClick:(e,el,chart)=>{if(el.length){const i=el[0].index,ds=el[0].datasetIndex,sub=chart.data.labels[i].split(' (')[0];let kr=ds===0?'MENGUASAI':ds===1?'TIDAK MENGUASAI':'TD';paparSenaraiMuridSubjekDrilldown(sub,'pb',kr);}},plugins:{legend:{position:'bottom'},datalabels:{color:(c)=>getStackedFontColor(c,isSemuaPB,checkedPB,true,[]),anchor:(c)=>c.datasetIndex===2?'end':'center',align:(c)=>c.datasetIndex===2?'end':'center',font:{weight:'bold',size:10,family:'Poppins'},formatter:(v,c)=>v>0?`${v}% (${c.dataset.rawCounts[c.dataIndex]})`:''}},scales:{x:{stacked:true,beginAtZero:true,max:100,title:{display:true,text:'Peratus (%)'}},y:{stacked:true,grid:{display:false}}}}}));
+        }
+
+        function janaCartaPerbandinganSubjekPB(data, subjekList, isSemuaPB, checkedPB) {
+            chartInstancesSubjectPB.forEach(c=>c.destroy()); chartInstancesSubjectUASA.forEach(c=>c.destroy()); chartInstancesSubjectPB=[]; chartInstancesSubjectUASA=[];
+            const container=document.getElementById('containerSubjekComparison'); container.innerHTML='';
+            const labels=subjekList.filter(s=>data[s].ambilPB>0); const pbKeys=['TP1','TP2','TP3','TP4','TP5','TP6','TD'];
+            labels.forEach((s,index)=>{const d=data[s],t=d.ambilPB||0,p12=t?((((d.pb.TP1||0)+(d.pb.TP2||0))/t)*100).toFixed(1):0;const wr=document.createElement('div');wr.id=`block_subjek_${index}`;wr.className='glass-panel p-6 border-t-4 border-t-purple-500 mb-6 bg-white';wr.innerHTML=`<div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 border-b border-slate-100 pb-4"><div><h2 class="text-xl font-black text-slate-800 uppercase tracking-wide">${d.subjek}</h2>${getFilterBadge(isSemuaPB,checkedPB,true,[])}</div><div class="flex items-center gap-2 no-print mt-2 sm:mt-0"><div class="bg-purple-50 border border-purple-100 text-purple-700 px-4 py-2.5 rounded-lg shadow-sm"><span class="text-sm font-bold">PBD (${t} Murid)</span></div><button data-html2canvas-ignore="true" onclick="muatTurunImej('block_subjek_${index}','Subjek_${d.subjek.replace(/ /g,'_')}')" class="p-2.5 px-4 bg-slate-100 hover:bg-purple-100 hover:text-purple-700 rounded-lg text-slate-600 shadow-sm flex items-center gap-1.5 text-sm font-bold"><i data-lucide="camera" class="w-4 h-4"></i> PNG</button></div></div><div class="bg-slate-50/50 border border-slate-200 p-4 rounded-xl shadow-sm flex flex-col"><div class="flex items-center justify-between mb-4"><h3 class="text-sm font-bold text-slate-700">Prestasi PBD (Tahap Penguasaan)</h3><div class="bg-red-50 border border-red-200 rounded-md px-3 py-1 text-right"><span class="text-[11px] font-bold text-red-700 uppercase block">Tidak Menguasai</span><span class="text-sm font-black text-red-600">${p12}% (${(d.pb.TP1||0)+(d.pb.TP2||0)} Murid)</span></div></div><div class="relative h-64 w-full"><canvas id="chart_pb_subjek_${index}"></canvas></div></div>`;container.appendChild(wr);const colors=pbKeys.map(lbl=>{let faded=!isSemuaPB&&!checkedPB.includes(lbl);if(['TP1','TP2'].includes(lbl))return faded?'#fee2e2':'#ef4444';if(['TP3','TP4','TP5'].includes(lbl))return faded?'#dbeafe':'#3b82f6';if(lbl==='TP6')return faded?'#dcfce7':'#22c55e';return faded?'#f1f5f9':'#cbd5e1';});const vals=[],raw=[];pbKeys.forEach(k=>{let c=d.pb[k]||0;raw.push(c);vals.push(t?((c/t)*100).toFixed(1):0);});chartInstancesSubjectPB.push(new Chart(document.getElementById(`chart_pb_subjek_${index}`).getContext('2d'),{type:'bar',data:{labels:pbKeys,datasets:[{data:vals,rawCounts:raw,backgroundColor:colors,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:30}},onHover:(ev,el)=>{ev.native.target.style.cursor=el[0]?'pointer':'default';},onClick:(e,el,chart)=>{if(el.length)paparSenaraiMuridSubjekDrilldown(d.subjek,'pb',chart.data.labels[el[0].index]);},plugins:{legend:{display:false},datalabels:{color:(c)=>(!isSemuaPB&&!checkedPB.includes(pbKeys[c.dataIndex]))?'transparent':'#475569',anchor:'end',align:'top',font:{weight:'bold',size:10,family:'Poppins'},formatter:(v,c)=>v>0?`${c.dataset.rawCounts[c.dataIndex]}\n(${v}%)`:''}},scales:{y:{beginAtZero:true,max:100},x:{grid:{display:false}}}}}));});lucide.createIcons();
         }
 
         function janaCartaKelasStacked(data, isSemuaPB, checkedPB, isSemuaUASA, checkedUASA) {
@@ -1310,7 +1467,7 @@
             ['BM', 'BI', 'MM', 'SAINS', 'SEJARAH'].forEach(s => { if (senaraiSubjek.includes(s) && !subjekPaparan.includes(s)) subjekPaparan.push(s); });
 
             let thead = `<tr><th class="p-2.5 border-r border-slate-200 w-12 text-center">Bil</th><th class="p-2.5 border-r border-slate-200 min-w-[150px]">Nama Murid</th><th class="p-2.5 border-r border-slate-200 w-20 text-center">Kelas</th>`;
-            subjekPaparan.forEach(s => { let isClick = s === subjek; let bgC = isClick ? 'bg-indigo-100 text-indigo-800' : ''; thead += `<th class="p-2.5 text-center border-r border-slate-200 ${bgC}">${s}<br><span class="text-[9px] font-normal">PB | UASA</span></th>`; });
+            subjekPaparan.forEach(s => { let isClick = s === subjek; let bgC = isClick ? 'bg-indigo-100 text-indigo-800' : ''; thead += `<th class="p-2.5 text-center border-r border-slate-200 ${bgC}">${s}<br><span class="text-[9px] font-normal">${adaDataUASA ? 'PB | UASA' : 'PB'}</span></th>`; });
             thead += `</tr>`; document.getElementById('modalSenaraiHead').innerHTML = thead;
 
             let tbody = '';
@@ -1323,7 +1480,7 @@
                         let bP = 'badge-white'; if (nP === 'TP6') bP = 'badge-green'; else if (['TP3', 'TP4', 'TP5'].includes(nP)) bP = 'badge-blue'; else if (['TP1', 'TP2'].includes(nP)) bP = 'badge-red'; else if (nP === 'TD') bP = 'bg-black text-white';
                         let bU = 'badge-white'; if (nU === 'A') bU = 'badge-green'; else if (['B', 'C', 'D'].includes(nU)) bU = 'badge-blue'; else if (nU === 'F') bU = 'badge-red'; else if (nU === 'E') bU = 'badge-orange'; else if (nU === 'TD') bU = 'bg-black text-white';
                         let cBg = s === subjek ? 'bg-indigo-50/30' : '';
-                        tbody += `<td class="p-2 text-center border-r border-slate-100 ${cBg}"><div class="flex items-center justify-center gap-1"><span class="badge ${bP} w-8 shadow-sm">${nP}</span><span class="badge ${bU} w-8 shadow-sm">${nU}</span></div></td>`;
+                        tbody += `<td class="p-2 text-center border-r border-slate-100 ${cBg}"><div class="flex items-center justify-center gap-1"><span class="badge ${bP} w-8 shadow-sm">${nP}</span>${adaDataUASA ? `<span class="badge ${bU} w-8 shadow-sm">${nU}</span>` : ''}</div></td>`;
                     });
                     tbody += `</tr>`;
                 });
@@ -1338,6 +1495,7 @@
         // FUNGSI UTAMA PAGE 4: JANA CARTA TABURAN (SCATTER/BUBBLE)
         // ==========================================
         function janaCartaScatterP4() {
+            if (!adaDataUASA) return;
             const ctx = document.getElementById('scatterChartP4').getContext('2d');
             if (scatterChartInstanceP4) scatterChartInstanceP4.destroy();
 
@@ -1598,7 +1756,7 @@
             let grid = "";
             senaraiSubjek.forEach(s => {
                 if(m.pb[s] || m.uasa[s]) {
-                    grid += `<div class="bg-slate-50 p-3 rounded-lg border text-center"><div class="text-[10px] font-bold text-slate-500 mb-1 truncate">${s}</div><div class="flex justify-center gap-1"><span class="badge ${tpMapY[m.pb[s]]>=3?'badge-blue':(tpMapY[m.pb[s]]?'badge-red':'badge-white')}">${m.pb[s]||'-'}</span><span class="badge ${gradeMapX[m.uasa[s]]<=5?'badge-green':(gradeMapX[m.uasa[s]]?'badge-red':'badge-white')}">${m.uasa[s]||'-'}</span></div></div>`;
+                    grid += `<div class="bg-slate-50 p-3 rounded-lg border text-center"><div class="text-[10px] font-bold text-slate-500 mb-1 truncate">${s}</div><div class="flex justify-center gap-1"><span class="badge ${tpMapY[m.pb[s]]>=3?'badge-blue':(tpMapY[m.pb[s]]?'badge-red':'badge-white')}">${m.pb[s]||'-'}</span>${adaDataUASA ? `<span class="badge ${gradeMapX[m.uasa[s]]<=5?'badge-green':(gradeMapX[m.uasa[s]]?'badge-red':'badge-white')}">${m.uasa[s]||'-'}</span>` : ''}</div></div>`;
                 }
             });
             document.getElementById('detailGridSubjek').innerHTML = grid;
