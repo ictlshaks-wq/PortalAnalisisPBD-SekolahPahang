@@ -57,15 +57,15 @@
     <div class="relative z-10">
         <div class="mb-10 rounded-[2.5rem] bg-[#7a1630] p-5 md:p-6 shadow-2xl">
             <div class="flex flex-col md:flex-row items-center gap-6">
-                <div class="flex-shrink-0 inline-flex items-center justify-center p-6 bg-white/10 rounded-[2rem] shadow-lg border border-white/20">
+                <div class="flex-shrink-0 inline-flex items-center justify-center">
                     <img src="https://raw.githubusercontent.com/ictlshaks-wq/LOGODGURU/main/LOGO%20JPN%20PUTIH.png"
                          alt="Logo JPN"
-                         class="h-16 w-auto object-contain"
+                         class="h-20 w-auto object-contain"
                          onerror="this.onerror=null; this.src='https://www.moe.gov.my/images/logo_kpm.png';">
                 </div>
                 <div class="flex-1 w-full">
                     <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight uppercase">Aplikasi Gabung Data PBD JPN Pahang</h1>
-                    <p class="text-white/85 font-bold text-sm italic">Automatik: Tahun/Sesi, Tingkatan, Kelas, PB &amp; UASA • v7</p>
+                    <p class="text-white/85 font-bold text-sm italic">Automatik: Tahun/Sesi, Tingkatan, Kelas, PB &amp; UASA • v9</p>
 
                     <div class="mt-4 grid grid-cols-1">
                         <div class="bg-white/95 p-3 rounded-2xl border border-white/30">
@@ -181,7 +181,7 @@
     let queue = [];
 
     const LEVEL_WORDS = {
-        SATU: '1', DUA: '2', TIGA: '3', EMPAT: '4', LIMA: '5', ENAM: '6',
+        SATU: '1', DUA: '2', TIGA: '3', EMPAT: '4', LIMA: '5', ENAM: '6', PERALIHAN: 'PERALIHAN',
         '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6'
     };
 
@@ -221,7 +221,7 @@
         // 1) Format sekolah menengah:
         // LAPORAN PBD TINGKATAN DUA ADVANCE TAHUN 2026
         // LAPORAN PBD TINGKATAN DUA AMANAH SESI AKADEMIK 2025 2026
-        const sm = name.match(/\bTINGKATAN\s+(SATU|DUA|TIGA|EMPAT|LIMA|1|2|3|4|5)\s+(.+?)\s+(?=TAHUN\s+\d{4}\b|SESI\s+AKADEMIK\s+\d{4}\s+\d{4}\b)/i);
+        const sm = name.match(/\bTINGKATAN\s+(SATU|DUA|TIGA|EMPAT|LIMA|PERALIHAN|1|2|3|4|5)\s+(.+?)\s+(?=TAHUN\s+\d{4}\b|SESI\s+AKADEMIK\s+\d{4}\s+\d{4}\b)/i);
         if (sm) {
             detectedGrade = `TINGKATAN ${LEVEL_WORDS[sm[1].toUpperCase()]}`;
             className = normalizeClassName(sm[2]);
