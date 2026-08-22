@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Gabung Data PBD JPN Pahang</title>
+    <title>APLIKASI GABUNG DATA PBD V9.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: #f8fafc;
             min-height: 100vh;
         }
         .glass-card {
-            background: rgba(255,255,255,.98);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,.2);
+            background: transparent;
+            border: 0;
+            box-shadow: none;
         }
         .btn-gradient {
-            background: linear-gradient(135deg,#0f172a 0%,#334155 100%);
+            background: linear-gradient(135deg,#1E3A8A 0%,#172554 100%);
             transition: all .3s ease;
         }
         .btn-gradient:hover:not(:disabled) {
@@ -49,26 +49,37 @@
         .type-badge-uasa { background:#fef9c3; color:#854d0e; }
         .type-badge-default { background:#e0e7ff; color:#3730a3; }
         .warning-badge { background:#fee2e2; color:#991b1b; }
+        .app-title {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: .035em;
+            line-height: 1.05;
+        }
+        .brand-header { background: #1E3A8A; }
+        .brand-accent { color: #1E3A8A; }
+        .brand-badge { background: #1E3A8A; color: #fff; }
+        .brand-dropzone:hover { border-color: #1E3A8A; background: #eff6ff; }
     </style>
 </head>
-<body class="flex items-center justify-center p-4 md:p-8">
+<body class="p-4 md:p-6 lg:p-8">
 
-<div class="glass-card w-full max-w-4xl rounded-[2.5rem] shadow-2xl p-6 md:p-12 relative overflow-hidden">
+<div class="glass-card w-full max-w-7xl mx-auto relative">
     <div class="relative z-10">
-        <div class="mb-10 rounded-[2.5rem] bg-[#7a1630] p-5 md:p-6 shadow-2xl">
-            <div class="flex flex-col md:flex-row items-center gap-6">
+        <header class="brand-header mb-6 rounded-xl shadow-md p-6">
+            <div class="flex flex-col md:flex-row items-center gap-4">
                 <div class="flex-shrink-0 inline-flex items-center justify-center">
                     <img src="https://raw.githubusercontent.com/ictlshaks-wq/LOGODGURU/main/LOGO%20JPN%20PUTIH.png"
                          alt="Logo JPN"
-                         class="h-20 w-auto object-contain"
+                         class="h-16 w-auto object-contain"
                          onerror="this.onerror=null; this.src='https://www.moe.gov.my/images/logo_kpm.png';">
                 </div>
                 <div class="flex-1 w-full">
-                    <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight uppercase">Aplikasi Gabung Data PBD JPN Pahang</h1>
-                    <p class="text-white/85 font-bold text-sm italic">Automatik: Tahun/Sesi, Tingkatan, Kelas, PB &amp; UASA • V9.0</p>
+                    <h1 class="app-title text-2xl md:text-3xl font-bold text-white">APLIKASI GABUNG DATA PBD V9.0</h1>
+                    <p class="text-white/80 mt-1 text-sm md:text-base">Aplikasi ini dibangunkan oleh JK PBD, Sektor Pembelajaran JPN Pahang 2026.</p>
+                    <p class="text-white/65 mt-1 text-xs">Automatik: Tahun/Sesi, Tingkatan, Kelas, PB &amp; UASA • Versi 9.0</p>
 
                     <div class="mt-4 grid grid-cols-1">
-                        <div class="bg-white/95 p-3 rounded-2xl border border-white/30">
+                        <div class="bg-white/95 p-3 rounded-xl border border-white/30">
                             <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Tahun / Sesi Persekolahan (Fallback)</label>
                             <select id="sessionSelect" class="w-full bg-transparent text-sm font-bold text-slate-700 focus:outline-none">
                                 <option value="2024/2025">2024/2025</option>
@@ -80,14 +91,14 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </header>
 
         <div class="mb-8">
-            <div id="dropzone" class="relative border-2 border-dashed border-blue-200 rounded-[2rem] p-8 hover:border-blue-400 hover:bg-blue-50/30 transition-all cursor-pointer group text-center bg-slate-50/30">
+            <div id="dropzone" class="brand-dropzone relative border-2 border-dashed border-rose-200 rounded-xl p-8 transition-all cursor-pointer group text-center bg-slate-50/30">
                 <input type="file" id="excelInput" accept=".xlsx,.xls" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                 <div class="flex flex-col items-center">
-                    <div class="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                     </div>
                     <p class="text-sm font-extrabold text-slate-700">Muat Naik Fail Excel Kelas</p>
                     <p class="text-[10px] text-slate-400 mt-1 italic">Sokong format portal .xls serta .xlsx • Fail pendua diabaikan</p>
@@ -102,22 +113,22 @@
                 <span id="summaryStatus" class="text-[9px] font-bold text-slate-400">Dikemas kini automatik</span>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div class="rounded-2xl border border-blue-100 bg-blue-50 p-4">
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
                     <p class="text-[9px] font-black uppercase tracking-wider text-blue-500">Jumlah</p>
                     <p id="summaryTotalFiles" class="mt-1 text-2xl font-extrabold text-slate-800">0</p>
                     <p id="summaryTotalRows" class="text-[10px] font-semibold text-slate-500">0 rekod</p>
                 </div>
-                <div class="rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
+                <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
                     <p class="text-[9px] font-black uppercase tracking-wider text-emerald-600">Data PB</p>
                     <p id="summaryPBFiles" class="mt-1 text-2xl font-extrabold text-emerald-700">0</p>
                     <p id="summaryPBRows" class="text-[10px] font-semibold text-emerald-700/70">0 rekod</p>
                 </div>
-                <div class="rounded-2xl border border-amber-100 bg-amber-50 p-4">
+                <div class="rounded-xl border border-amber-100 bg-amber-50 p-4">
                     <p class="text-[9px] font-black uppercase tracking-wider text-amber-600">Data UASA</p>
                     <p id="summaryUASAFiles" class="mt-1 text-2xl font-extrabold text-amber-700">0</p>
                     <p id="summaryUASARows" class="text-[10px] font-semibold text-amber-700/70">0 rekod</p>
                 </div>
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
                     <p class="text-[9px] font-black uppercase tracking-wider text-slate-500">Belum Dikenal Pasti</p>
                     <p id="summaryOtherFiles" class="mt-1 text-2xl font-extrabold text-slate-700">0</p>
                     <p id="summaryOtherRows" class="text-[10px] font-semibold text-slate-500">0 rekod</p>
@@ -129,13 +140,13 @@
         <div id="fileListContainer" class="space-y-4 hidden">
             <div class="flex items-center justify-between px-2">
                 <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Senarai Fail Diproses</h3>
-                <span id="fileCountBadge" class="bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">0 FAIL</span>
+                <span id="fileCountBadge" class="brand-badge text-[10px] font-bold px-3 py-1 rounded-full">0 FAIL</span>
             </div>
             <div id="fileList" class="space-y-3 max-h-96 overflow-y-auto pr-2"></div>
         </div>
 
         <div class="mt-10">
-            <div class="bg-slate-900 rounded-2xl p-5 mb-4 flex flex-col md:flex-row md:items-center justify-between text-white gap-4 border border-slate-700">
+            <div class="bg-slate-900 rounded-xl p-5 mb-4 flex flex-col md:flex-row md:items-center justify-between text-white gap-4 border border-slate-700">
                 <div class="flex-1 min-w-0">
                     <p class="text-[9px] uppercase font-bold text-slate-500 mb-1 tracking-wider">Pratinjau Nama Fail Akhir</p>
                     <p id="previewFileName" class="text-xs font-mono truncate italic text-blue-300">Sila muat naik fail...</p>
@@ -147,12 +158,16 @@
                 </div>
             </div>
 
-            <button id="convertBtn" class="w-full btn-gradient text-white font-extrabold py-5 rounded-2xl shadow-xl active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed transition-all" disabled>
+            <button id="convertBtn" class="w-full btn-gradient text-white font-extrabold py-5 rounded-xl shadow-xl active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed transition-all" disabled>
                 GABUNG & MUAT TURUN EXCEL (.XLSX)
             </button>
         </div>
 
         <div id="statusBox" class="hidden mt-6 p-4 rounded-xl text-[11px] font-bold text-center"></div>
+        <footer class="mt-8 text-center text-xs font-semibold text-slate-400 pb-2">
+            <p class="uppercase tracking-widest mb-1">Sektor Pembelajaran</p>
+            <p>HAKCIPTA TERPELIHARA@2026</p>
+        </footer>
     </div>
 </div>
 
@@ -499,7 +514,7 @@
             const gradeWarning = item.detectedGrade.includes('TIDAK DIKETAHUI');
 
             return `
-            <div class="file-list-item bg-white border border-slate-100 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+            <div class="file-list-item bg-white border border-slate-100 p-4 rounded-xl shadow-sm flex items-center gap-4">
                 <div class="flex-1 min-w-0">
                     <div class="flex flex-wrap items-center gap-2 mb-1">
                         <span class="text-[10px] font-black ${gradeWarning ? 'text-red-600' : 'text-blue-600'}">${escapeHtml(item.detectedGrade)}</span>
