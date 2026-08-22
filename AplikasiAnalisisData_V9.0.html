@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APLIKASI ANALISIS PBD JPN PAHANG 2026</title>
+    <title>APLIKASI ANALISIS PBD V9.0</title>
     
-    <!-- Google Fonts: Poppins -->
+    <!-- Google Fonts: Oswald (tajuk) + Poppins (teks) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -22,7 +22,7 @@
             theme: {
                 extend: {
                     colors: {
-                        jpn: { maroon: '#88042A', blue: '#1e3a8a', light: '#f8fafc' }
+                        jpn: { maroon: '#1E3A8A', blue: '#1e3a8a', light: '#f8fafc' }
                     },
                     fontFamily: { sans: ['Poppins', 'sans-serif'] }
                 }
@@ -32,6 +32,13 @@
 
     <style>
         body { background-color: #f8fafc; font-family: 'Poppins', sans-serif; margin: 0; padding: 0;}
+        .app-title {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: .035em;
+            line-height: 1.05;
+        }
+        .brand-header { background: #1E3A8A; }
         .glass-panel { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid #f1f5f9; }
         
         /* GAYA JADUAL UTAMA PBD/UASA */
@@ -110,17 +117,16 @@
 
     <div class="max-w-7xl mx-auto space-y-6">
         
-        <header class="bg-[#88042A] rounded-xl shadow-md p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <header class="brand-header rounded-xl shadow-md p-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">
                 <img src="https://raw.githubusercontent.com/ictlshaks-wq/LOGODGURU/main/LOGO%20JPN%20PUTIH.png" 
                      alt="Logo JPN" 
                      class="h-16 w-auto object-contain"
                      onerror="this.src='https://via.placeholder.com/60?text=JPN'">
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-                        APLIKASI ANALISIS PBD V9.0
-                    </h1>
+                    <h1 class="app-title text-2xl md:text-3xl font-bold text-white">APLIKASI ANALISIS PBD V9.0</h1>
                     <p class="text-white/80 mt-1 text-sm md:text-base">Aplikasi ini dibangunkan oleh JK PBD, Sektor Pembelajaran JPN Pahang 2026.</p>
+                    <p class="text-white/65 mt-1 text-xs">Versi 9.0 • PB Pertengahan Tahun / PB + UASA Akhir Tahun</p>
                     <div id="modeDataBadge" class="hidden mt-3 w-fit rounded-lg border border-white/25 bg-white/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white"></div>
                 </div>
             </div>
@@ -129,7 +135,7 @@
                 <label for="excelFileInput" class="text-sm font-semibold text-white mb-2 cursor-pointer hover:text-gray-200 flex items-center gap-2">
                     <i data-lucide="file-up" class="w-4 h-4"></i> Muat Naik Fail Excel (.xlsx)
                 </label>
-                <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="text-sm text-white/80 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-white file:text-[#88042A] hover:file:bg-gray-100 cursor-pointer transition-colors">
+                <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="text-sm text-white/80 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-white file:text-[#1E3A8A] hover:file:bg-gray-100 cursor-pointer transition-colors">
             </div>
         </header>
 
